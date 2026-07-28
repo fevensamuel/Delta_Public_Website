@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/* GLOBAL THEME COLOR & STYLING VARIABLES 
+   Change these variables or classes anytime to easily re-style the whole website! */
+:root {
+  --primary-color: #C8102E;
+  --primary-hover: #a60d25;
+  --primary-light: #fef2f2;
+  --primary-border: #fecaca;
+  
+  --dark-header-bg: #0b0f19;
+  --dark-header-border: #1e293b;
+  --dark-footer-bg: #070a11;
+  
+  --body-bg: #F9F9F9;
+  --text-main: #1F2937;
+  --text-muted: #6B7280;
+  
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-arabic: 'Amiri', serif;
+  --font-amharic: 'Noto Sans Ethiopic', 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
+@theme {
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: var(--font-sans);
+  --font-arabic: var(--font-arabic);
+  --font-amharic: var(--font-amharic);
+
+  --color-brand-primary: var(--primary-color);
+  --color-brand-hover: var(--primary-hover);
+  --color-brand-dark: var(--dark-header-bg);
+  --color-offwhite: var(--body-bg);
+}
+
+/* Base Styles */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--body-bg);
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+/* Amharic & Arabic typography helpers */
+.font-amharic {
+  font-family: var(--font-amharic);
+}
+
+.font-arabic {
+  font-family: var(--font-arabic);
+}
+
+/* Reusable UI Theme Classes for Easy Customization */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.text-brand-primary {
+  color: var(--primary-color);
+}
+
+.bg-brand-primary {
+  background-color: var(--primary-color);
+}
+
+.bg-brand-dark {
+  background-color: var(--dark-header-bg);
+}
+
+.border-brand-dark {
+  border-color: var(--dark-header-border);
+}
+
+.card-theme {
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+}
+
+/* Decorative Islamic Pattern Overlay */
+.bg-islamic-pattern {
+  background-image: radial-gradient(circle at 2px 2px, rgba(200, 16, 46, 0.15) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+
+/* RTL Support */
+[dir="rtl"] {
+  text-align: right;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F1F1;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--primary-color);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}

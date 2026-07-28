@@ -1,0 +1,6 @@
+{
+  "name": "Delta Travel & Tour",
+  "description": "Licensed Umrah Travel & Tour Agency providing premium and economy Umrah packages, direct flight seats with Ethiopian Airlines and Saudia, live currency rate calculation, and SMS alerts.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
