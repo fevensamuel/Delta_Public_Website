@@ -1,6 +1,7 @@
-export type Language = 'EN' | 'AR' | 'AM';
+// src/types.ts
+export type Language = 'EN' | 'AR' | 'AM' | 'OM';
 
-export type Currency = 'USD' | 'ETB';
+export type Currency = 'USD' | 'ETB' | 'SAR';
 
 export type PageId = 
   | 'home' 
@@ -14,12 +15,15 @@ export type PackageCategory = 'Economy' | 'Standard' | 'Premium' | 'VIP';
 
 export interface PackageItem {
   id: string;
-  title: string;
+  titleEn: string;
   titleAr: string;
   titleAm?: string;
+  titleOm?: string;
   category: PackageCategory;
-  price: number; // USD price
-  priceUsd?: number; // USD price alias from API
+  price: number;
+  priceUsd?: number;
+  priceEtb?: number;
+  priceSar?: number;
   durationDays: number;
   departureCity: string;
   inclusions: string[];
@@ -29,9 +33,20 @@ export interface PackageItem {
   featured?: boolean;
   popular?: boolean;
   image: string;
+  imageUrl?: string;
   availableDates: string[];
-  itinerary: { day: number; title: string; description: string; titleEn?: string; descriptionEn?: string }[];
+  itinerary: { 
+    day: number; 
+    title: string; 
+    description: string; 
+    titleEn?: string; 
+    descriptionEn?: string;
+    dayNumber?: number;
+  }[];
   whatsappClicks?: number;
+  isActive?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface SmsSubscriber {
@@ -54,14 +69,20 @@ export interface InquiryForm {
 
 export interface GalleryItem {
   id: string;
-  title: string;
+  titleEn: string;
   titleAr: string;
   type: 'photo' | 'video';
-  imageUrl: string; // Image or Video Thumbnail
-  videoUrl?: string; // MP4 video source for video items
-  duration?: string; // Video duration e.g. "3:15"
+  imageUrl: string;
+  thumbnailUrl?: string; // ADDED: For video thumbnails
+  videoUrl?: string;
+  duration?: string;
   location: string;
   description: string;
+  isActive?: boolean;
+  sortOrder?: number;
+  uploadDate?: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface Testimonial {

@@ -127,7 +127,7 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
                   </div>
                 </div>
 
-                {/* Info Footer Strip (No seat booking button - view only) */}
+                {/* Info Footer Strip - NO BOOKING BUTTON, ONLY DISPLAY */}
                 <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
                   <span className="text-slate-300 font-semibold flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-emerald-400" /> Guaranteed Group Seats & Direct Routes
@@ -142,7 +142,7 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
         </div>
       </section>
 
-      {/* Direct Assistance CTA */}
+      {/* Direct Assistance CTA - Contact via WhatsApp/Phone only */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-slate-800">
           <div className="space-y-1.5 text-center md:text-left rtl:md:text-right">
@@ -153,7 +153,14 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
             <p className="text-xs text-slate-300">Contact our senior flight ticketing experts in Addis Ababa for direct flight assistance.</p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap justify-center">
+            <button
+              onClick={() => trackAndOpenWhatsApp(undefined, 'Flight Booking Inquiry')}
+              className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow transition-colors flex items-center gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              <span>WhatsApp Inquiry</span>
+            </button>
             <a
               href="tel:+251911234567"
               className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-5 py-3 rounded-xl shadow transition-colors flex items-center gap-2"

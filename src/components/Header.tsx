@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { Currency, Language, PageId } from '../types';
 import { translations } from '../translations';
+import { Logo } from './Logo';
 
 interface HeaderProps {
   activePage: PageId;
@@ -73,7 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <span className="text-slate-700">|</span>
 
-            {/* Currency Selector ($ USD / ETB) */}
+            {/* Currency Selector ($ USD / ETB / SAR) */}
             <div className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5">
               <DollarSign className="w-3 h-3 text-red-400" />
               <select
@@ -84,12 +85,13 @@ export const Header: React.FC<HeaderProps> = ({
               >
                 <option value="USD" className="bg-slate-900 text-white">$ USD</option>
                 <option value="ETB" className="bg-slate-900 text-white">ETB (ብር)</option>
+                <option value="SAR" className="bg-slate-900 text-white">SAR (﷼)</option>
               </select>
             </div>
 
             <span className="text-slate-700">|</span>
 
-            {/* 3-Language Selector (EN / AR / AM) */}
+            {/* 4-Language Selector (EN / AR / AM / OM) */}
             <div className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5">
               <Globe className="w-3 h-3 text-red-500" />
               <select
@@ -101,6 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <option value="EN" className="bg-slate-900 text-white">English (EN)</option>
                 <option value="AR" className="bg-slate-900 text-white">العربية (AR)</option>
                 <option value="AM" className="bg-slate-900 text-white">አማርኛ (AM)</option>
+                <option value="OM" className="bg-slate-900 text-white">Afaan Oromoo (OM)</option>
               </select>
             </div>
 
@@ -133,20 +136,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Brand Logo */}
           <button 
             onClick={() => setActivePage('home')} 
-            className="flex items-center gap-2.5 text-left rtl:text-right group"
+            className="flex items-center gap-2.5 text-left rtl:text-right group cursor-pointer"
           >
-            {/* Red Swirl Delta Logo Icon */}
-            <div className="w-9 h-9 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-lg shadow-md group-hover:bg-red-700 transition-colors">
-              <span className="font-serif italic font-extrabold text-xl">Δ</span>
-            </div>
-            <div className="flex flex-col leading-none">
-              <div className="font-black text-xl sm:text-2xl tracking-tighter text-slate-900 font-sans flex items-center gap-1">
-                <span>{t.brandName || "DELTA"}</span>
-              </div>
-              <span className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
-                {t.brandSubtitle || "Travel & Tour"}
-              </span>
-            </div>
+            <Logo brandName={t.brandName || "DELTA"} brandSubtitle={t.brandSubtitle || "Travel & Tour"} variant="light" />
           </button>
 
           {/* Desktop Links */}

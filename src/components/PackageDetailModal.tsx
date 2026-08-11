@@ -50,7 +50,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
               {pkg.category} Package
             </span>
             <h2 className="text-xl sm:text-2xl font-black font-sans text-white">
-              {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.title}
+              {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : (lang === 'OM' && pkg.titleOm) ? pkg.titleOm : pkg.title}
             </h2>
             <p className="text-xs text-slate-300 flex items-center gap-2">
               <span>{pkg.durationDays} Days</span> • <span>From {pkg.departureCity}</span>

@@ -177,7 +177,7 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             onClick={() => setActivePage('packages')}
             className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-8 py-3 rounded-lg shadow transition-all inline-flex items-center gap-2"
           >
-            <span>Explore Umrah & Hajj Packages</span>
+            <span>Explore Umrah Packages</span>
             <ArrowRight className="w-4 h-4 rtl:rotate-180" />
           </button>
         </div>

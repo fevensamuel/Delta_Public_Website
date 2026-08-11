@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
-import { Language } from '../types';
+import React, { useState, useEffect } from 'react';
+import { Language, PackageItem, Currency } from '../types';
 import { translations } from '../translations';
-import { submitInquiry } from '../api/client';
+import { submitInquiry, fetchPackages } from '../api/client';
+import { formatPrice } from '../utils/formatPrice';
+import { useExchangeRate } from '../api/exchangeRate';
 import { 
   Phone, 
   Mail, 
@@ -17,18 +19,44 @@ import {
 interface ContactProps {
   onTriggerSmsToast: (phone: string, msg: string) => void;
   lang: Language;
+  currency: Currency;
 }
 
-export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => {
+export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang, currency }) => {
   const t = translations[lang] || translations.EN;
+  const { rate } = useExchangeRate();
+
+  const [packages, setPackages] = useState<PackageItem[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
 
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [subject, setSubject] = useState('Economy Umrah Package');
+  const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+    loadPackages();
+  }, []);
+
+  const loadPackages = async () => {
+    setLoadingPackages(true);
+    try {
+      const data = await fetchPackages();
+      setPackages(data);
+      if (data.length > 0) {
+        const firstPkg = data[0];
+        const priceDisplay = formatPrice(firstPkg.priceUsd, currency, lang, rate);
+        setSubject(`${firstPkg.titleEn} (${priceDisplay})`);
+      }
+    } catch (e) {
+      console.error('Failed to load packages for dropdown:', e);
+    } finally {
+      setLoadingPackages(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,7 +66,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
       await submitInquiry({
         fullName,
         phone,
-        email,
+        email: email || undefined,
         subject,
         message,
         source: 'contact_form'
@@ -109,7 +137,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
               <div>
                 <h4 className="font-bold text-slate-900 text-sm">Headquarters Location</h4>
                 <p className="text-slate-600 mt-0.5">{t.addressText}</p>
-                <span className="text-[10px] text-slate-500 font-semibold block mt-1">Landmark: Opposite Olympia Traffic Light, Bole Road</span>
+              {/* <span className="text-[10px] text-slate-500 font-semibold block mt-1">Landmark: Opposite Olympia Traffic Light, Bole Road</span>*/} 
               </div>
             </div>
 
@@ -141,7 +169,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-sm">Office Hours</h4>
-                <p className="text-slate-600 mt-0.5">Monday – Saturday: 8:30 AM – 6:30 PM</p>
+                <p className="text-slate-600 mt-0.5">Monday – Saturday: 8:30 AM – 3:00 PM</p>
                 <p className="text-slate-600">Sunday & Holidays: On-call WhatsApp Assistance</p>
               </div>
             </div>
@@ -191,7 +219,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Full Name (fullName)*</label>
+                  <label className="block font-bold text-slate-700 mb-1">Full Name *</label>
                   <input
                     type="text"
                     required
@@ -203,7 +231,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Phone Number (phone)*</label>
+                  <label className="block font-bold text-slate-700 mb-1">Phone Number *</label>
                   <input
                     type="tel"
                     required
@@ -217,7 +245,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Email Address (email)</label>
+                  <label className="block font-bold text-slate-700 mb-1">Email Address (optional)</label>
                   <input
                     type="email"
                     placeholder="ahmed@example.com"
@@ -228,23 +256,34 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Inquiry Subject (subject)</label>
+                  <label className="block font-bold text-slate-700 mb-1">Inquiry Subject</label>
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
+                    disabled={loadingPackages}
                   >
-                    <option value="Economy Umrah Package">Economy Umrah Package ($890)</option>
-                    <option value="Standard Umrah Package">Standard Umrah Package ($1,250)</option>
-                    <option value="Premium VIP Umrah Package">Premium VIP Umrah Package ($1,650)</option>
-                    <option value="Custom Group Umrah Departure">Custom Group Umrah Departure</option>
-                    <option value="Airline Seats Inquiry">Ethiopian Airlines / Saudia Flights</option>
+                    {loadingPackages ? (
+                      <option>Loading packages...</option>
+                    ) : packages.length === 0 ? (
+                      <option>No packages available</option>
+                    ) : (
+                      packages.map((pkg) => {
+                        const title = pkg.titleEn || pkg.title;
+                        const priceDisplay = formatPrice(pkg.priceUsd, currency, lang, rate);
+                        return (
+                          <option key={pkg.id} value={`${title} (${priceDisplay})`}>
+                            {title} ({priceDisplay})
+                          </option>
+                        );
+                      })
+                    )}
                   </select>
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Message Details (message)*</label>
+                <label className="block font-bold text-slate-700 mb-1">Message Details *</label>
                 <textarea
                   required
                   rows={4}
@@ -274,34 +313,36 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang }) => 
               </button>
             </form>
           )}
+
         </div>
 
       </section>
 
       {/* GOOGLE MAP EMBED */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-3">
-          <div className="flex items-center justify-between text-xs px-2">
-            <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#C8102E]" /> Delta Travel Head Office Map
-            </span>
-            <span className="text-slate-500">Bole Road, Olympia, Addis Ababa</span>
-          </div>
+  <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-3">
+    <div className="flex items-center justify-between text-xs px-2">
+      <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
+        <MapPin className="w-4 h-4 text-[#C8102E]" /> Delta Travel Head Office Map
+      </span>
+      <span className="text-slate-500">Bole Road, Olympia, Addis Ababa</span>
+    </div>
 
-          <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">
-            <iframe
-              title="Delta Travel & Tour Office Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.5401918237!2d38.76101151478546!3d9.013511893531818!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85cef0a81177%3A0x6b2b73318210e303!2sBole%20Rd%2C%20Addis%20Ababa%2C%20Ethiopia!5e0!3m2!1sen!2sus!4v1680000000000!5m2!1sen!2sus"
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen={false}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>
-      </section>
+    <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">
+      <iframe
+        title="Delta Travel & Tour Office Location Map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.808868547685!2d38.78616529999999!3d8.989728099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b84fb99570403%3A0x8a21e3ebfc8b4fc5!2sFriendship%20Business%20Center!5e0!3m2!1sen!2set!4v1706467331048"
+        width="100%"
+        height="100%"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        referrerPolicy="no-referrer-when-downgrade"
+        sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
+      />
+    </div>
+  </div>
+</section>
 
     </div>
   );
