@@ -200,8 +200,8 @@ export const Home: React.FC<HomeProps> = ({
               <Building className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="font-bold text-xs text-slate-900">Luxury Hotels</h4>
-              <p className="text-[10px] text-slate-500">Near to Haram</p>
+              <h4 className="font-bold text-xs text-slate-900">Lodging</h4>
+              <p className="text-[10px] text-slate-500">Comfortable and Convenient</p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-2 pt-3 lg:pt-2">
