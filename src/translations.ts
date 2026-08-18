@@ -9,6 +9,7 @@ export const translations = {
     hotelsFlights: "Airline Partners",
     gallery: "Media Gallery",
     contact: "Contact Us",
+    faqs: "FAQs",
     bookNow: "Inquire Now",
     callUs: "Call 24/7",
     licensedBadge: "Ministry Licensed #4812",
@@ -35,8 +36,6 @@ export const translations = {
     // Core Services
     coreServicesTitle: "Our Core Services",
     coreServicesSub: "Complete spiritual travel solutions tailored for your peace of mind",
-    visaServiceTitle: "E-Visa Processing Included",
-    visaServiceDesc: "Swift e-Visa issuance for Umrah with official Saudi ministry clearance.",
     hotelsFlightsTitle: "Official Airline Partners",
     hotelsFlightsDesc: "Partnered directly with Ethiopian Airlines & Saudia for seamless flights.",
     supportTitle: "24/7 Ground Support & Mutawwif",
@@ -253,90 +252,5 @@ export const translations = {
     contactInfo: "ቀጥታ አድራሻ",
     addressText: "ኦሎምፒያ ህንፃ 4ኛ ፎቅ፣ ቦሌ መንገድ፣ አዲስ አበባ፣ ኢትዮጵያ",
     allRightsReserved: "መብቱ በህግ የተጠበቀ ነው። ዴልታ ትራቭል እና ቱር © 2026።"
-  },
-  OM: {
-    // Nav & Header
-    brandName: "Delta Travel & Tour",
-    brandSubtitle: "Eejensii Tajaajila Umraa Hayyama Qabu",
-    home: "Fuula Duraa",
-    about: "Sina Nuu",
-    packages: "Pakeejota Umraa",
-    hotelsFlights: "Sharikoota Xiyyaaraa",
-    gallery: "Galaarii Miidiyaa",
-    contact: "Nu Quunnamaa",
-    bookNow: "Amma Gaafadhaa",
-    callUs: "Bilbilaa 24/7",
-    licensedBadge: "Hayyama Ministeeraa #4812",
-
-    // Hero Section
-    heroTitle: "Imala Umraa Qulqulluu Nageenyaa fi Tasgabbii Guutuun Imalaa",
-    heroSubTitle: "Delta Travel & Tour tajaajila imala Umraa amansiisaa, nagayaa fi mijataa sharikoota xiyyaaraa Ethiopian Airlines fi Saudia waliin dhiyeessa.",
-    explorePackages: "Pakeejota Sakatta'aa",
-    chatWhatsapp: "WhatsApp irratti Nu Hassawaa",
-    statPilgrims: "Muslimoota Gamachuu Pakan",
-    statYears: "Muuxannoo Waggootaa",
-    statDepartures: "Imalawwan Garee",
-    statSupport: "Deeggarsa Qophaa'aa",
-
-    // Homepage Packages Preview
-    bestPackagesTitle: "Pakeejota Umraa Filatamoos",
-    bestPackagesSubtitle: "Filannoowwan Rakasaa fi Pirimiyamii Imaltoota Hundaf",
-    viewDetails: "Tarree fi Sagantaa Imalaa Reebaa",
-    economyPackage: "Umraa Ikonomii",
-    standardPackage: "Umraa Istandaardii",
-    premiumPackage: "Umraa Pirimiyamii VIP",
-    perPerson: "nama tokkoof",
-
-    // Core Services
-    coreServicesTitle: "Tajaajiloota Nuu Immoo",
-    coreServicesSub: "Furmaata imala afuuraa guutuu nageenya sammuu keessaniif qophaa'e",
-    visaServiceTitle: "Adeemsa E-Visa Umraa Keessatti Hammatame",
-    visaServiceDesc: "Tajaajila E-Visa Umraa ariitiin Ministeera Sa'udii irraa dhiyeessuu.",
-    hotelsFlightsTitle: "Sharikoota Xiyyaaraa Seeraa",
-    hotelsFlightsDesc: "Ethiopian Airlines fi Saudia waliin kallattiin kallattitti hojjechuun imala mijataa.",
-    supportTitle: "Deeggarsa Naannoo 24/7 fi Mutaawwif",
-    supportDesc: "Qajeelchitoota Mutaawwif muuxannoo qabaniin Makka fi Madiinaa keessatti hordoffii guutuu.",
-
-    // SMS Seasonal Banner
-    smsBannerTitle: "Oduu Haaraa – Beeksisa Umraa Haaraa SMS'n Argadhaa",
-    smsBannerSub: "Oduu imala garee fi odeeffannoo gatii ariitiin argachuuf galmaa'aa.",
-    enterPhonePlaceholder: "Lakkoofsa bilbila keessan galchaa (fkn +251 91 123 4567)",
-    subscribeBtn: "SMS'n Galmaa'aa",
-    smsSubscribedToast: "Galmaa'ingtaniirta! SMS mirkaneessaa bilbila keessanitti ergameera.",
-
-    // Why Choose Us
-    whyChooseTitle: "Maaliif Delta Travel Filattu?",
-    whyChooseSub: "Muuxannoo waggaa 10+ amanamummaa, tajaajila afuuraa fi keessummeessummaa mijataan ijaarame",
-    feature1Title: "Muuxannoo Waggaa 10+",
-    feature1Desc: "Imaltoota kumaatamaan lakkaa'aman amanamummaatiin tajaajiluu.",
-    feature2Title: "Wabiin Gatii Gaarii",
-    feature2Desc: "Gatii ifa ta'e USD, ETB fi SAR keessatti kaffaltii dhokataa malee.",
-    feature3Title: "Hayyama Qabaa fi Mirkanaa'aa",
-    feature3Desc: "Eejensii Umraa seeraan beekamtii qabu.",
-    feature4Title: "Garee Mutaawwif Saayinsawaa",
-    feature4Desc: "Beektota amantaa Akka Sunnaatti ritualis qajeelchan.",
-    feature5Title: "Tajaajila Qulqullina Qabu",
-    feature5Desc: "Mawashaa qabbaneessaa fi xiyyaara fooyya'aan.",
-    feature6Title: "Mijattummaafi Kunuunsa",
-    feature6Desc: "Imaltoota jaarsolii fi maatiiwwaniif kunuunsa addaa.",
-    feature7Title: "Maamila Dursa Soduu",
-    feature7Desc: "Sagantaa kaffaltii fi imala garee mijataa.",
-    feature8Title: "Gammachuu Mirkanaa'e",
-    feature8Desc: "Sadarkaa 4.9/5 imaltoota 25,000+ oliin kenname.",
-    feature9Title: "Nageenya fi Wabii Guutuu",
-    feature9Desc: "Inshuraansii imala guutuu pakeejota hunda keessatti haammattamu.",
-    feature10Title: "Deeggarsa Lafaa 24/7",
-    feature10Desc: "Hojjettoota naannoo Makka fi Madiinaa yeroo hundumaa qophii ta'an.",
-
-    // Reviews
-    reviewsTitle: "Imaltoonni Nuu Maal Jedhu?",
-    reviewsSub: "Ragaa dhugaa imala qulqulluu irraa",
-
-    // Footer
-    downloadBrochure: "Brochure Package 2026 Buufadhaa (PDF)",
-    quickLinks: "Geessituu Ariifachiisaa",
-    contactInfo: "Teessoo Kallattii",
-    addressText: "Gamoo Olympia, Ciraa 4ffaa, Daandii Boolee, Finfinnee, Itoophiyaa",
-    allRightsReserved: "Mirgi Hunduu Seeraan Eegamaa Dha. Delta Travel & Tour © 2026."
   }
 };

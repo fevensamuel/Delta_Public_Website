@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Globe, 
   Menu, 
@@ -7,13 +7,15 @@ import {
   Instagram, 
   Youtube, 
   Twitter, 
-  Megaphone,
   Send,
-  DollarSign
+  DollarSign,
+  Linkedin,
+  Send as SendIcon
 } from 'lucide-react';
-import { Currency, Language, PageId } from '../types';
+import { Currency, Language, PageId, SocialLink } from '../types';
 import { translations } from '../translations';
 import { Logo } from './Logo';
+import { getPublicSocialLinksApi } from '../api/socialLinks';
 
 interface HeaderProps {
   activePage: PageId;
@@ -24,6 +26,37 @@ interface HeaderProps {
   setCurrency: (currency: Currency) => void;
 }
 
+// TikTok SVG Icon Component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg 
+    className={className} 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M19.589 6.686a4.9 4.9 0 0 1-2.845-2.847.5.5 0 0 0-.477-.339h-2.3a.5.5 0 0 0-.5.5v11.8a3.2 3.2 0 1 1-3.2-3.2.5.5 0 0 0 .5-.5v-2.3a.5.5 0 0 0-.5-.5 6.5 6.5 0 1 0 6.5 6.5V9.44a4.9 4.9 0 0 0 2.845 2.847.5.5 0 0 0 .477-.339v-2.3a.5.5 0 0 0-.5-.5z"/>
+  </svg>
+);
+
+// Map platform names to icons
+const getSocialIcon = (platform: string, className: string = "w-3.5 h-3.5") => {
+  const iconProps = { className };
+  switch (platform.toLowerCase()) {
+    case 'facebook': return <Facebook {...iconProps} />;
+    case 'instagram': return <Instagram {...iconProps} />;
+    case 'youtube': return <Youtube {...iconProps} />;
+    case 'twitter': return <Twitter {...iconProps} />;
+    case 'linkedin': return <Linkedin {...iconProps} />;
+    case 'tiktok': return <TikTokIcon className={className} />;
+    case 'telegram': 
+    case 'telegram2': 
+    case 'telegram-support': 
+    case 'telegram-channel': 
+      return <SendIcon {...iconProps} />;
+    default: return null;
+  }
+};
+
 export const Header: React.FC<HeaderProps> = ({
   activePage,
   setActivePage,
@@ -33,6 +66,8 @@ export const Header: React.FC<HeaderProps> = ({
   setCurrency
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+  const [loadingSocial, setLoadingSocial] = useState(true);
   const t = translations[lang] || translations.EN;
 
   const navItems: { id: PageId; label: string }[] = [
@@ -41,8 +76,25 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'packages', label: t.packages },
     { id: 'hotels-flights', label: t.hotelsFlights },
     { id: 'gallery', label: t.gallery },
+    { id: 'faqs', label: t.faqs || 'FAQs' },
     { id: 'contact', label: t.contact }
   ];
+
+  useEffect(() => {
+    loadSocialLinks();
+  }, []);
+
+  const loadSocialLinks = async () => {
+    setLoadingSocial(true);
+    try {
+      const data = await getPublicSocialLinksApi();
+      setSocialLinks(data);
+    } catch (error) {
+      console.error('Failed to load social links:', error);
+    } finally {
+      setLoadingSocial(false);
+    }
+  };
 
   const handleLanguageChange = (newLang: Language) => {
     setLang(newLang);
@@ -55,14 +107,6 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="bg-[#0b0f19] text-white text-xs py-2 px-4 border-b border-slate-800">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           
-          {/* Left Announcement */}
-          <div className="flex items-center gap-2 text-slate-200">
-            <Megaphone className="w-4 h-4 text-red-500 animate-pulse flex-shrink-0" />
-            <span className="font-medium text-[11px] sm:text-xs tracking-tight">
-              Special Offer! Early Bird Umrah Packages 2026 - Book Now & Save More!
-            </span>
-          </div>
-
           {/* Right Utilities */}
           <div className="flex items-center space-x-3 rtl:space-x-reverse text-slate-300 text-[11px] sm:text-xs">
             <button 
@@ -91,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <span className="text-slate-700">|</span>
 
-            {/* 4-Language Selector (EN / AR / AM / OM) */}
+            {/* Language Selector (EN / AR / AM) */}
             <div className="flex items-center gap-1 bg-slate-900 border border-slate-700 rounded px-2 py-0.5">
               <Globe className="w-3 h-3 text-red-500" />
               <select
@@ -103,26 +147,34 @@ export const Header: React.FC<HeaderProps> = ({
                 <option value="EN" className="bg-slate-900 text-white">English (EN)</option>
                 <option value="AR" className="bg-slate-900 text-white">العربية (AR)</option>
                 <option value="AM" className="bg-slate-900 text-white">አማርኛ (AM)</option>
-                <option value="OM" className="bg-slate-900 text-white">Afaan Oromoo (OM)</option>
               </select>
             </div>
 
             <span className="text-slate-700 hidden sm:inline">|</span>
 
-            {/* Social Icons */}
+            {/* Social Icons - Fetched from Backend */}
             <div className="hidden sm:flex items-center space-x-2.5 rtl:space-x-reverse text-slate-400">
-              <a href="#facebook" title="Facebook" className="hover:text-red-500 transition-colors">
-                <Facebook className="w-3.5 h-3.5" />
-              </a>
-              <a href="#instagram" title="Instagram" className="hover:text-red-500 transition-colors">
-                <Instagram className="w-3.5 h-3.5" />
-              </a>
-              <a href="#youtube" title="YouTube" className="hover:text-red-500 transition-colors">
-                <Youtube className="w-3.5 h-3.5" />
-              </a>
-              <a href="#twitter" title="Twitter" className="hover:text-red-500 transition-colors">
-                <Twitter className="w-3.5 h-3.5" />
-              </a>
+              {loadingSocial ? (
+                <span className="text-[10px] text-slate-500">Loading...</span>
+              ) : socialLinks.length === 0 ? (
+                <span className="text-[10px] text-slate-500">No social links</span>
+              ) : (
+                socialLinks.map((link) => {
+                  const icon = getSocialIcon(link.platform);
+                  return icon ? (
+                    <a
+                      key={link.id}
+                      href={link.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-red-500 transition-colors"
+                      title={link.platform}
+                    >
+                      {icon}
+                    </a>
+                  ) : null;
+                })
+              )}
             </div>
           </div>
 
@@ -133,12 +185,18 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="bg-white text-slate-900 py-3 px-4 sm:px-8 border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           
-          {/* Brand Logo */}
+          {/* Brand Logo - Using the Logo component with header variant */}
           <button 
             onClick={() => setActivePage('home')} 
             className="flex items-center gap-2.5 text-left rtl:text-right group cursor-pointer"
           >
-            <Logo brandName={t.brandName || "DELTA"} brandSubtitle={t.brandSubtitle || "Travel & Tour"} variant="light" />
+            <Logo 
+              brandName={t.brandName || "DELTA"} 
+              brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
+              variant="light"
+              logoVariant="header"
+              size="md"
+            />
           </button>
 
           {/* Desktop Links */}

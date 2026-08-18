@@ -50,9 +50,6 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
               <span>Ethiopian Airlines & Saudia</span>
             </h2>
           </div>
-          <p className="text-xs text-slate-500 max-w-md">
-            Guaranteed group allocations and priority baggage handling on all Delta Travel group departures.
-          </p>
         </div>
 
         {/* 2 Airline Cards */}
@@ -126,19 +123,10 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
                     <p className="text-[11px] text-slate-300 leading-snug">{airline.catering}</p>
                   </div>
                 </div>
-
-                {/* Info Footer Strip - NO BOOKING BUTTON, ONLY DISPLAY */}
-                <div className="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-                  <span className="text-slate-300 font-semibold flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-emerald-400" /> Guaranteed Group Seats & Direct Routes
-                  </span>
-                  <span className="text-[11px] text-slate-400 italic">Information View</span>
-                </div>
-
               </div>
-
             </div>
           ))}
+
         </div>
       </section>
 
@@ -150,7 +138,6 @@ export const HotelsFlights: React.FC<HotelsFlightsProps> = ({ lang }) => {
               <Sparkles className="w-4 h-4 text-red-400" /> Dedicated Flight Support
             </span>
             <h3 className="text-xl font-extrabold text-white">Need Custom Flight Bookings or Group Seats?</h3>
-            <p className="text-xs text-slate-300">Contact our senior flight ticketing experts in Addis Ababa for direct flight assistance.</p>
           </div>
 
           <div className="flex items-center gap-3 flex-wrap justify-center">

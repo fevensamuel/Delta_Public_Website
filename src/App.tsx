@@ -21,6 +21,7 @@ import { Packages } from './pages/Packages';
 import { HotelsFlights } from './pages/HotelsFlights';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
+import { FAQs } from './pages/FAQs'; // Add this import
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageId>('home');
@@ -155,11 +156,12 @@ export default function App() {
         )}
 
         {activePage === 'contact' && (
-          <Contact 
-              onTriggerSmsToast={triggerSmsToast} 
-              lang={lang} 
-              currency={currency} 
-            />
+          <Contact onTriggerSmsToast={triggerSmsToast} lang={lang} />
+        )}
+
+        {/* Add FAQs route */}
+        {activePage === 'faqs' && (
+          <FAQs lang={lang} />
         )}
       </main>
 
@@ -175,7 +177,7 @@ export default function App() {
         onClose={() => setSmsToast(null)}
       />
 
-      {/* Package Detail Modal (Informational - non-bookable) */}
+      {/* Package Detail Modal */}
       <PackageDetailModal
         pkg={selectedPkgModal}
         onClose={() => setSelectedPkgModal(null)}

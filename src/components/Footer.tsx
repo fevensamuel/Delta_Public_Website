@@ -1,213 +1,250 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getPublicSocialLinksApi } from '../api/socialLinks';
+import { SocialLink, Language } from '../types';
 import { 
-  FileDown, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  CheckCircle,
-  Clock,
-  Send,
-  Plane,
   Facebook, 
   Instagram, 
+  Send, 
+  Linkedin, 
   Youtube, 
   Twitter,
-  ShieldCheck,
-  ChevronRight
+  MapPin, 
+  Phone, 
+  Mail, 
+  Clock,
+  Heart,
+  Globe
 } from 'lucide-react';
-import { Language, PageId } from '../types';
 import { translations } from '../translations';
 import { Logo } from './Logo';
 
 interface FooterProps {
-  setActivePage: (page: PageId) => void;
+  setActivePage: (page: string) => void;
   lang: Language;
 }
 
+// TikTok SVG Icon Component
+const TikTokIcon = ({ className }: { className?: string }) => (
+  <svg 
+    className={className} 
+    viewBox="0 0 24 24" 
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M19.589 6.686a4.9 4.9 0 0 1-2.845-2.847.5.5 0 0 0-.477-.339h-2.3a.5.5 0 0 0-.5.5v11.8a3.2 3.2 0 1 1-3.2-3.2.5.5 0 0 0 .5-.5v-2.3a.5.5 0 0 0-.5-.5 6.5 6.5 0 1 0 6.5 6.5V9.44a4.9 4.9 0 0 0 2.845 2.847.5.5 0 0 0 .477-.339v-2.3a.5.5 0 0 0-.5-.5z"/>
+  </svg>
+);
+
+// Map platform names to icons
+const getSocialIcon = (platform: string, className: string = "w-5 h-5") => {
+  const iconProps = { className };
+  switch (platform.toLowerCase()) {
+    case 'facebook': return <Facebook {...iconProps} />;
+    case 'instagram': return <Instagram {...iconProps} />;
+    case 'telegram': 
+    case 'telegram2': 
+    case 'telegram-support': 
+    case 'telegram-channel': 
+      return <Send {...iconProps} />;
+    case 'tiktok': return <TikTokIcon className={className} />;
+    case 'linkedin': return <Linkedin {...iconProps} />;
+    case 'youtube': return <Youtube {...iconProps} />;
+    case 'twitter': return <Twitter {...iconProps} />;
+    default: return <Globe {...iconProps} />;
+  }
+};
+
 export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
-  const [downloadSuccess, setDownloadSuccess] = useState(false);
   const t = translations[lang] || translations.EN;
+  const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleBrochureDownload = () => {
-    setDownloadSuccess(true);
-    const link = document.createElement('a');
-    link.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent('Delta Travel & Tour - 2026 Umrah Package Brochure\nPhone: +251 91 123 4567 / +251 91 122 3344\nEmail: info@deltatravel.com\nLocation: Friendship Business Centre, 4th Floor, Bole Road, Addis Ababa, Ethiopia\nOfficial Flight Partners: Ethiopian Airlines & Saudia\nPackages: Economy ($890), Standard ($1,250), Premium ($1,650), VIP ($2,100)');
-    link.download = 'Delta_Travel_Brochure_2026.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  useEffect(() => {
+    loadSocialLinks();
+  }, []);
 
-    setTimeout(() => setDownloadSuccess(false), 4000);
+  const loadSocialLinks = async () => {
+    setLoading(true);
+    try {
+      const data = await getPublicSocialLinksApi();
+      setSocialLinks(data);
+    } catch (error) {
+      console.error('Failed to load social links:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <footer className="bg-[#080d1a] text-slate-300 text-xs border-t border-slate-800/80 pt-12 pb-6">
-      
-      {/* Main Multi-Column Footer Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-10 border-b border-slate-800/80">
+    <footer className="bg-[#0b0f19] text-white pt-16 pb-6 border-t border-slate-800">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8">
         
-        {/* Column 1: Brand & Overview */}
-        <div className="space-y-4">
-          <button onClick={() => setActivePage('home')} className="flex items-center gap-2.5 group text-left rtl:text-right cursor-pointer">
-            <Logo brandName={t.brandName} brandSubtitle={t.brandSubtitle} variant="dark" />
-          </button>
-
-          <p className="text-slate-400 text-xs leading-relaxed">
-            Your premier Ethiopian travel agency for spiritual Umrah & Hajj journeys. Providing exceptional flight options, luxury hotel bookings in Makkah & Madinah, and personalized guidance.
-          </p>
-
-          <div className="pt-1">
-            <button
-              onClick={handleBrochureDownload}
-              className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition-all flex items-center gap-2 uppercase tracking-wide"
-            >
-              {downloadSuccess ? (
-                <>
-                  <CheckCircle className="w-4 h-4 text-white" />
-                  <span>Downloaded!</span>
-                </>
-              ) : (
-                <>
-                  <FileDown className="w-4 h-4" />
-                  <span>{t.downloadBrochure}</span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Column 2: Quick Navigation */}
-        <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm tracking-wide uppercase flex items-center gap-2">
-            <ChevronRight className="w-4 h-4 text-[#C8102E]" />
-            <span>Quick Links</span>
-          </h4>
-          <ul className="space-y-2 text-slate-300 text-xs">
-            <li>
-              <button onClick={() => setActivePage('home')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> Home
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('packages')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> Umrah Packages
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('hotels-flights')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> Hotels & Flights
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('gallery')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> Photo & Video Gallery
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('about')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> About Delta Travel
-              </button>
-            </li>
-            <li>
-              <button onClick={() => setActivePage('contact')} className="hover:text-white transition-colors flex items-center gap-1.5">
-                <span className="text-slate-600">›</span> Contact & Support
-              </button>
-            </li>
-          </ul>
-        </div>
-
-        {/* Column 3: Services & Partnerships */}
-        <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm tracking-wide uppercase flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#C8102E]" />
-            <span>Spiritual Services</span>
-          </h4>
-          <ul className="space-y-2 text-slate-300 text-xs">
-            <li className="flex items-center gap-2 text-slate-300">
-              <Plane className="w-3.5 h-3.5 text-red-400" />
-              <span>Ethiopian Airlines Direct Flights</span>
-            </li>
-            <li className="flex items-center gap-2 text-slate-300">
-              <Plane className="w-3.5 h-3.5 text-red-400" />
-              <span>Saudia Flight Connections</span>
-            </li>
-            <li className="flex items-center gap-2 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-              <span>Madinah Proximity Stays</span>
-            </li>
-            <li className="flex items-center gap-2 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-              <span>Umrah Visa Processing</span>
-            </li>
-            <li className="flex items-center gap-2 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-              <span>Guided Spiritual Ziyarah</span>
-            </li>
-          </ul>
-        </div>
-
-        {/* Column 4: Direct Contacts */}
-        <div className="space-y-3">
-          <h4 className="text-white font-bold text-sm tracking-wide uppercase flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-[#C8102E]" />
-            <span>Addis Ababa Office</span>
-          </h4>
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-slate-800/60">
           
-          <div className="space-y-2.5 text-slate-300 text-xs">
-            <div className="flex items-start gap-2">
-              <MapPin className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-              <span>{t.addressText}</span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Phone className="w-4 h-4 text-red-500 flex-shrink-0" />
-              <a href="tel:+251911234567" className="hover:text-white transition-colors">+251 91 123 4567 / +251 91 122 3344</a>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <Mail className="w-4 h-4 text-red-500 flex-shrink-0" />
-              <a href="mailto:info@deltatravel.com" className="hover:text-white transition-colors">info@deltatravel.com</a>
-            </div>
-
-            <div className="flex items-center gap-2 text-slate-400">
-              <Clock className="w-4 h-4 text-red-500 flex-shrink-0" />
-              <span>Mon – Sat: 8:30 AM – 3:00 PM EAT</span>
-            </div>
+          {/* Column 1: Brand & About - Using Logo component */}
+          <div className="space-y-4">
+            <Logo 
+              brandName={t.brandName || "DELTA"} 
+              brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
+              variant="dark"
+              logoVariant="footer"
+              size="md"
+              className="!flex-col !items-start !gap-1" // Override to stack vertically
+            />
+            <p className="text-xs text-slate-300 leading-relaxed max-w-xs">
+              {t.footerDescription || 'Providing reliable, comfortable, and high-quality Umrah travel services with professionalism, care, and respect.'}
+            </p>
           </div>
-          <div className="hidden sm:flex items-center space-x-2.5 rtl:space-x-reverse text-slate-400">
-                        <a href="#facebook" title="Facebook" className="hover:text-red-500 transition-colors">
-                          <Facebook className="w-3.5 h-3.5" />
-                        </a>
-                        <a href="#instagram" title="Instagram" className="hover:text-red-500 transition-colors">
-                          <Instagram className="w-3.5 h-3.5" />
-                        </a>
-                        <a href="#youtube" title="YouTube" className="hover:text-red-500 transition-colors">
-                          <Youtube className="w-3.5 h-3.5" />
-                        </a>
-                        <a href="#twitter" title="Twitter" className="hover:text-red-500 transition-colors">
-                          <Twitter className="w-3.5 h-3.5" />
-                        </a>
-                      </div>
+
+          {/* Column 2: Quick Links */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+              {t.quickLinks || 'Quick Links'}
+            </h4>
+            <ul className="space-y-2.5 text-xs">
+              <li>
+                <button
+                  onClick={() => setActivePage('home')}
+                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                >
+                  {t.home || 'Home'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActivePage('packages')}
+                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                >
+                  {t.packages || 'Packages'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActivePage('gallery')}
+                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                >
+                  {t.gallery || 'Gallery'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActivePage('about')}
+                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                >
+                  {t.about || 'About Us'}
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => setActivePage('contact')}
+                  className="text-slate-300 hover:text-[#C8102E] transition-colors"
+                >
+                  {t.contact || 'Contact'}
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 3: Contact Info */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+              {t.contactInfo || 'Contact Info'}
+            </h4>
+            <ul className="space-y-3 text-xs">
+              <li className="flex items-start gap-2.5 text-slate-300">
+                <MapPin className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
+                <span>Bole Friendship Building 4th Floor, Office 408, Addis Ababa, Ethiopia</span>
+              </li>
+              <li className="flex items-center gap-2.5 text-slate-300">
+                <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+                <div>
+                  <a href="tel:+251910136747" className="hover:text-[#C8102E] transition-colors">+251 910 136 747</a>
+                  <span className="text-slate-500 mx-1">|</span>
+                  <a href="tel:+251956585555" className="hover:text-[#C8102E] transition-colors">+251 956 585 555</a>
+                </div>
+              </li>
+              <li className="flex items-center gap-2.5 text-slate-300">
+                <Mail className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+                <a href="mailto:info@deltatravel.com" className="hover:text-[#C8102E] transition-colors">
+                  info@deltatravel.com
+                </a>
+              </li>
+              <li className="flex items-start gap-2.5 text-slate-300">
+                <Clock className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
+                <div>
+                  <span>Mon–Sat: 2:30 AM – 11:30 PM</span>
+                  <span className="block text-[10px] text-slate-500">Sunday: Closed</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+          {/* Column 4: Social Media & Newsletter */}
+          <div className="space-y-4">
+            <h4 className="text-sm font-bold text-white uppercase tracking-wider">
+              {t.followUs || 'Follow Us'}
+            </h4>
+
+            {/* Social Links from Backend */}
+            <div className="flex flex-wrap gap-2">
+              {loading ? (
+                <div className="flex items-center gap-2 text-xs text-slate-400">
+                  <span>Loading...</span>
+                </div>
+              ) : socialLinks.length === 0 ? (
+                <p className="text-xs text-slate-400">No social links configured</p>
+              ) : (
+                socialLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-slate-800/60 hover:bg-[#C8102E] flex items-center justify-center transition-colors duration-300 border border-slate-700/50 hover:border-[#C8102E] group"
+                    aria-label={link.platform}
+                  >
+                    <span className="text-slate-300 group-hover:text-white transition-colors">
+                      {getSocialIcon(link.platform, "w-4 h-4")}
+                    </span>
+                  </a>
+                ))
+              )}
+            </div>
+
+            <div className="pt-2">
+              <p className="text-[11px] text-slate-400 leading-relaxed">
+                {t.followUsText || 'Follow us on social media for latest Umrah updates, promotions, and travel tips.'}
+              </p>
+            </div>
+
+            {/* WhatsApp Button */}
+            <a
+              href="https://wa.me/251910136747?text=Assalamu%20Alaikum%20Delta%20Travel!"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg transition-colors shadow-lg shadow-emerald-600/20"
+            >
+              <Send className="w-4 h-4" />
+              <span>{t.chatWhatsapp || 'Chat on WhatsApp'}</span>
+            </a>
+          </div>
+
+        </div>
+
+        {/* Bottom Footer */}
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
+          <p>
+            © {new Date().getFullYear()} Delta Travel & Tour. {t.allRightsReserved || 'All rights reserved.'}
+          </p>
+          <div className="flex items-center gap-4">
+            <span className="text-[10px] text-slate-600">Licensed & Verified Travel Agency</span>
+            <span className="w-px h-4 bg-slate-700"></span>
+            <span className="text-[10px] text-slate-600">Ministry License #4812</span>
+          </div>
         </div>
 
       </div>
-
-      {/* Bottom Copyright & Legal Strip */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left text-slate-400">
-        <div>
-          {t.allRightsReserved}
-        </div>
-
-        <div className="flex flex-wrap items-center justify-center gap-4 text-slate-400">
-          <button onClick={() => setActivePage('about')} className="hover:text-white transition-colors">Privacy Policy</button>
-          <span>•</span>
-          <button onClick={() => setActivePage('about')} className="hover:text-white transition-colors">Terms of Service</button>
-          <span>•</span>
-          <button onClick={() => setActivePage('hotels-flights')} className="hover:text-white transition-colors">Airline Partners</button>
-        </div>
-      </div>
-
     </footer>
   );
 };
-

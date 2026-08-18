@@ -10,6 +10,20 @@ interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
+// Helper to get full image URL
+const getFullImageUrl = (path: string): string => {
+  if (!path) return '';
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+  const baseWithoutApi = API_BASE_URL.replace(/\/api$/, '');
+  if (path.startsWith('/uploads')) {
+    return `${baseWithoutApi}${path}`;
+  }
+  return `${baseWithoutApi}${path}`;
+};
+
 export const Logo: React.FC<LogoProps> = ({
   brandName = "DELTA",
   brandSubtitle = "Travel & Tour",
@@ -21,17 +35,22 @@ export const Logo: React.FC<LogoProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   
+  // Get the env logo
+  const envLogo = (import.meta as any).env?.VITE_APP_LOGO;
+  
   // Map logo variants to specific files
   const logoMap = {
-    header: '/images/logos/header-logo.jpg',
-    hero: '/images/logos/hero-logo.jpg',
-    footer: '/images/logos/footer-logo.jpg',
-    default: '/logo.png'
+    header: '/uploads/logo/logo.png',
+    hero: '/uploads/logo/logo.png',
+    footer: '/uploads/logo/logo.png',
+    default: '/uploads/logo/logo.png'
   };
 
-  // Try environment variable first, then use the specified variant
-  const envLogo = (import.meta as any).env?.VITE_APP_LOGO;
+  // Use envLogo if available, otherwise use the mapped variant
   const logoSrc = envLogo || logoMap[logoVariant];
+  
+  // Get the full URL
+  const fullLogoUrl = getFullImageUrl(logoSrc);
 
   // Size mapping
   const sizeClasses = {
@@ -42,14 +61,19 @@ export const Logo: React.FC<LogoProps> = ({
 
   const isDarkBg = variant === 'dark';
 
+  console.log('🔍 Logo source:', fullLogoUrl); // Debug log
+
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       {!imageError ? (
         <img
-          src={logoSrc}
+          src={fullLogoUrl}
           alt={brandName}
           className={`${sizeClasses[size]} object-contain`}
-          onError={() => setImageError(true)}
+          onError={() => {
+            console.error('❌ Logo failed to load:', fullLogoUrl);
+            setImageError(true);
+          }}
         />
       ) : (
         <div className="w-9 h-9 rounded-full bg-[#C8102E] flex items-center justify-center text-white font-bold text-lg shadow-md flex-shrink-0">
