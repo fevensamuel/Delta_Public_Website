@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 interface LogoProps {
   brandName?: string;
   brandSubtitle?: string;
-  variant?: 'light' | 'dark'; // 'dark' for dark backgrounds (white text), 'light' for light backgrounds (dark text)
+  variant?: 'light' | 'dark';
   className?: string;
   showText?: boolean;
+  logoVariant?: 'header' | 'hero' | 'footer' | 'default';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const Logo: React.FC<LogoProps> = ({
@@ -13,20 +15,40 @@ export const Logo: React.FC<LogoProps> = ({
   brandSubtitle = "Travel & Tour",
   variant = 'light',
   className = "",
-  showText = true
+  showText = true,
+  logoVariant = 'default',
+  size = 'md'
 }) => {
-  const envLogo = (import.meta as any).env?.VITE_APP_LOGO;
   const [imageError, setImageError] = useState(false);
+  
+  // Map logo variants to specific files
+  const logoMap = {
+    header: '/images/logos/header-logo.jpg',
+    hero: '/images/logos/hero-logo.jpg',
+    footer: '/images/logos/footer-logo.jpg',
+    default: '/logo.png'
+  };
+
+  // Try environment variable first, then use the specified variant
+  const envLogo = (import.meta as any).env?.VITE_APP_LOGO;
+  const logoSrc = envLogo || logoMap[logoVariant];
+
+  // Size mapping
+  const sizeClasses = {
+    sm: 'h-8 w-auto max-w-[120px]',
+    md: 'h-10 w-auto max-w-[180px]',
+    lg: 'h-16 w-auto max-w-[240px]'
+  };
 
   const isDarkBg = variant === 'dark';
 
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
-      {envLogo && !imageError ? (
+      {!imageError ? (
         <img
-          src={envLogo}
+          src={logoSrc}
           alt={brandName}
-          className="h-9 w-auto object-contain max-w-[160px]"
+          className={`${sizeClasses[size]} object-contain`}
           onError={() => setImageError(true)}
         />
       ) : (
