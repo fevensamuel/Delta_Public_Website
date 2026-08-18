@@ -1,6 +1,6 @@
 // src/api/client.ts
 const env = (import.meta as any).env || {};
-const API_BASE_URL = env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 const WHATSAPP_PHONE = env.VITE_WHATSAPP_PHONE || '251911223344';
 
 export const api = {
@@ -38,10 +38,15 @@ export function getFullImageUrl(path: string): string {
     return path;
   }
   const baseWithoutApi = API_BASE_URL.replace(/\/api$/, '');
+  // Handle all upload paths
   if (path.startsWith('/uploads')) {
     return `${baseWithoutApi}${path}`;
   }
-  return `${baseWithoutApi}/uploads/${path}`;
+  // If it's just a filename, assume it's in uploads
+  if (!path.startsWith('/')) {
+    return `${baseWithoutApi}/uploads/${path}`;
+  }
+  return `${baseWithoutApi}${path}`;
 }
 
 // Exchange rate state
@@ -108,7 +113,8 @@ export async function fetchPackages(category?: string): Promise<any[]> {
   try {
     const params = category && category !== 'All' ? `?category=${encodeURIComponent(category)}` : '';
     const res = await api.get<any>(`/packages${params}`);
-    let data = res?.data || res || [];
+    // Extract data from response - backend returns { data: [...] }
+    let data = res?.data || [];
     if (!Array.isArray(data)) data = [];
     const rate = await getExchangeRateFromAPI();
     return data.map((pkg: any) => mapPackageToFrontend(pkg, rate));
@@ -177,12 +183,14 @@ export async function fetchGalleryItems(typeFilter: 'all' | 'photo' | 'video' = 
   try {
     const params = typeFilter !== 'all' ? `?type=${typeFilter}` : '';
     const res = await api.get<any>(`/gallery${params}`);
-    const data = res?.data || res || [];
-    // Map thumbnailUrl from backend
+    const data = res?.data || [];
     const items = Array.isArray(data) ? data : [];
     return items.map((item: any) => ({
       ...item,
+      // Use thumbnailUrl if available, fallback to imageUrl
       thumbnailUrl: item.thumbnailUrl || item.imageUrl,
+      // For videos, imageUrl should be the thumbnail
+      imageUrl: item.type === 'video' ? (item.thumbnailUrl || item.imageUrl) : item.imageUrl,
     }));
   } catch (e) {
     console.warn('Gallery API error:', e);
@@ -209,4 +217,50 @@ export async function trackAndOpenWhatsApp(packageId?: string, packageTitle?: st
   );
   
   window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${message}`, '_blank');
+}
+
+// ============================================================
+// PUBLIC API FUNCTIONS - FIXED to extract data properly
+// ============================================================
+
+/**
+ * Get all active FAQs from the backend
+ */
+export async function getFaqsApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/faqs');
+    // Backend returns { status, success, count, data: [...] }
+    return res?.data || [];
+  } catch (error) {
+    console.error('❌ Error fetching FAQs:', error);
+    return [];
+  }
+}
+
+/**
+ * Get all active social links from the backend
+ */
+export async function getPublicSocialLinksApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/social-links');
+    // Backend returns { status, success, data: [...] }
+    return res?.data || [];
+  } catch (error) {
+    console.error('❌ Error fetching social links:', error);
+    return [];
+  }
+}
+
+/**
+ * Get all active team members from the backend
+ */
+export async function getPublicTeamMembersApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/team-members');
+    // Backend returns { status, success, count, data: [...] }
+    return res?.data || [];
+  } catch (error) {
+    console.error('❌ Error fetching team members:', error);
+    return [];
+  }
 }

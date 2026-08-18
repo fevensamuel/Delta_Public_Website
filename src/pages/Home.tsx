@@ -176,63 +176,54 @@ export const Home: React.FC<HomeProps> = ({
 
       {/* QUICK BENEFITS BAR */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 -mt-10 sm:-mt-14 relative z-20">
-        <div className="bg-white rounded-xl shadow-xl border border-slate-200/80 p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 divide-y sm:divide-y-0 lg:divide-x rtl:lg:divide-x-reverse divide-slate-100">
-          <div className="flex items-center gap-3 p-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <Box className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">{t.bestPackagesTitle}</h4>
-              <p className="text-[10px] text-slate-500">{t.bestPackagesSubtitle}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <FileText className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">{t.visaServiceTitle}</h4>
-              <p className="text-[10px] text-slate-500">Official E-Visa Clearance</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <Building className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">Luxury Hotels</h4>
-              <p className="text-[10px] text-slate-500">Near to Haram</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-2 pt-3 lg:pt-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <Plane className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">Direct Flights</h4>
-              <p className="text-[10px] text-slate-500">Ethiopian Airlines & Saudia</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-2 pt-3 lg:pt-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">{t.supportTitle}</h4>
-              <p className="text-[10px] text-slate-500">Dedicated Mutawwif</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 p-2 pt-3 lg:pt-2">
-            <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="font-bold text-xs text-slate-900">{t.feature3Title}</h4>
-              <p className="text-[10px] text-slate-500">100% Licensed Agency</p>
-            </div>
-          </div>
-        </div>
+  <div className="bg-white rounded-xl shadow-xl border border-slate-200/80 p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-slate-100">
+    
+    {/* 1. Best Packages */}
+    <div className="flex items-center gap-3 p-2">
+      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+        <Box className="w-5 h-5" />
       </div>
+      <div>
+        <h4 className="font-bold text-xs text-slate-900">{t.bestPackagesTitle || 'Best Packages'}</h4>
+        <p className="text-[10px] text-slate-500">{t.bestPackagesSubtitle || 'Affordable & Premium'}</p>
+      </div>
+    </div>
+
+    {/* 2. Flights */}
+    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
+      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+        <Plane className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="font-bold text-xs text-slate-900">Flights</h4>
+        <p className="text-[10px] text-slate-500">Ethiopian & Saudia</p>
+      </div>
+    </div>
+
+    {/* 3. Support */}
+    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
+      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+        <Clock className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="font-bold text-xs text-slate-900">{t.supportTitle || '24/7 Support'}</h4>
+        <p className="text-[10px] text-slate-500">Dedicated Mutawwif</p>
+      </div>
+    </div>
+
+    {/* 4. Licensed */}
+    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
+      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+        <ShieldCheck className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="font-bold text-xs text-slate-900">{t.feature3Title || 'Licensed'}</h4>
+        <p className="text-[10px] text-slate-500">100% Verified Agency</p>
+      </div>
+    </div>
+
+  </div>
+</div>
 
       {/* BEST UMRAH PACKAGES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-4">

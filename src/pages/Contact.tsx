@@ -325,7 +325,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang, curre
       <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
         <MapPin className="w-4 h-4 text-[#C8102E]" /> Delta Travel Head Office Map
       </span>
-      <span className="text-slate-500">Bole Road, Olympia, Addis Ababa</span>
+      <span className="text-slate-500">Bole Road, Freindship Business Centre</span>
     </div>
 
     <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">

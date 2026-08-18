@@ -1,5 +1,5 @@
-import React from 'react';
-import { Language, PageId } from '../types';
+import React, { useEffect, useState } from 'react';
+import { Language, PageId, TeamMember } from '../types';
 import { translations } from '../translations';
 import { 
   ShieldCheck, 
@@ -7,11 +7,12 @@ import {
   Users, 
   Compass, 
   HeartHandshake, 
-  CheckCircle, 
   Building2, 
-  MapPin, 
-  ArrowRight 
+  ArrowRight,
+  Loader2,
+  User
 } from 'lucide-react';
+import { getPublicTeamMembersApi, getFullImageUrl } from '../api/client';
 
 interface AboutProps {
   setActivePage: (page: PageId) => void;
@@ -19,7 +20,29 @@ interface AboutProps {
 }
 
 export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
-  const t = translations[lang];
+  const t = translations[lang] || translations.EN;
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadTeamMembers();
+  }, []);
+
+  const loadTeamMembers = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await getPublicTeamMembersApi();
+      console.log('📥 Team members loaded:', data);
+      setTeamMembers(data);
+    } catch (err) {
+      setError('Failed to load team members. Please refresh the page.');
+      console.error('Error loading team members:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-16 pb-16">
@@ -34,7 +57,7 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             Decade of Spiritual Dedication & Service
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Established in 2016, Delta Travel & Tour is a premier licensed travel agency dedicated to facilitating comfortable, spiritually enriching, and seamless Umrah and Hajj journeys.
+            Established in 2021, Delta Travel & Tour is a premier licensed travel agency dedicated to facilitating comfortable, spiritually enriching, and seamless Umrah and Hajj journeys.
           </p>
         </div>
       </section>
@@ -46,19 +69,22 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             OUR JOURNEY
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            10+ Years of Excellence in Holy Land Hospitality
+           5+ Years of Excellence in Holy Land Hospitality
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
             Delta Travel & Tour was founded with a singular vision: to remove all logistical anxiety from the sacred pilgrimage process, allowing worshippers to immerse themselves entirely in worship and contemplation.
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Over the past decade, we have served over 25,000 pilgrims across Ethiopia, East Africa, the Middle East, and worldwide. Our direct partnerships with 5-star hotel chains in Makkah and Madinah ensure front-row access to Masjid al-Haram and Al-Masjid an-Nabawi.
+            With over 5 years of experience, Delta Travel stands out by offering well-organized umrah packages, personalized customer service, reliable travel arrangements, and dedicated support throughout the entire journey. We focus on making every pilgrim feel valued and ensuring a comfortable, peaceful, and memorable umrah experience.
+          </p>
+          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Delta travel operates with the required licenses and certifications from the relevant authorities and maintains the necessary approvals to provide travel and umrah services. we are committed to operating legally, professionally, and transparently while ensuring the safety and satisfaction of our customers.
           </p>
 
           <div className="grid grid-cols-2 gap-4 pt-2 text-xs">
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
               <h4 className="font-bold text-[#C8102E] text-sm">Our Mission</h4>
-              <p className="text-[11px] text-slate-600 mt-1 leading-normal">To deliver transparent, accessible, and comfortable Umrah & Hajj journeys guided by authentic values.</p>
+              <p className="text-[11px] text-slate-600 mt-1 leading-normal">To provide reliable, comfortable, and high quality umrah travel services, supporting pilgrims throughout their journey from travel arrangements to the their safe return. While serving them with professionalism, cares, and respect.</p>
             </div>
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
               <h4 className="font-bold text-[#C8102E] text-sm">Our Vision</h4>
@@ -73,6 +99,9 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
               src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&q=80&w=1000" 
               alt="Madinah Prophet Mosque" 
               className="w-full h-80 object-cover"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1000x320/0b0f19/ffffff?text=Madinah+Mosque';
+              }}
             />
           </div>
           <div className="absolute -bottom-5 -left-5 bg-white p-4 rounded-xl shadow-xl border border-slate-200 flex items-center gap-3 hidden sm:flex">
@@ -87,7 +116,7 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
         </div>
       </section>
 
-      {/* Certified Mutawwif Team */}
+      {/* Certified Mutawwif Team - Fully Dynamic */}
       <section className="bg-white py-14 px-4 sm:px-8 border-y border-slate-200">
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="text-center space-y-2">
@@ -102,48 +131,58 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            
-            <div className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3">
-              <img 
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400" 
-                alt="Sheikh Omar Al-Hassan" 
-                className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
-              />
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Sheikh Omar Al-Hassan</h3>
-                <p className="text-xs text-[#C8102E] font-bold">Head Mutawwif & Islamic Scholar</p>
-              </div>
-              <p className="text-xs text-slate-600">12+ years leading Tawaf and Sa’i rituals; graduate of Islamic University of Madinah.</p>
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-3">
+              <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
+              <p className="text-xs text-slate-500">Loading team members...</p>
             </div>
-
-            <div className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3">
-              <img 
-                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400" 
-                alt="Ustadh Bilal Ibrahim" 
-                className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
-              />
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Ustadh Bilal Ibrahim</h3>
-                <p className="text-xs text-[#C8102E] font-bold">Senior Ground Coordinator (Makkah)</p>
-              </div>
-              <p className="text-xs text-slate-600">Manages hotel check-ins, VIP coach transport, and elderly pilgrim care in Makkah.</p>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-600 text-sm">{error}</p>
+              <button 
+                onClick={loadTeamMembers} 
+                className="mt-3 text-[#C8102E] text-xs font-bold underline hover:no-underline"
+              >
+                Retry
+              </button>
             </div>
-
-            <div className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3">
-              <img 
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400" 
-                alt="Mariam Suleiman" 
-                className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
-              />
-              <div>
-                <h3 className="font-bold text-slate-900 text-sm">Sister Mariam Suleiman</h3>
-                <p className="text-xs text-[#C8102E] font-bold">Female Pilgrim Welfare Lead</p>
-              </div>
-              <p className="text-xs text-slate-600">Specialized guidance for female pilgrims and Rawdah Sharifah permit scheduling.</p>
+          ) : teamMembers.length === 0 ? (
+            <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
+              <User className="w-12 h-12 mx-auto text-slate-300" />
+              <p className="text-slate-500 text-sm mt-3">No team members available yet.</p>
+              <p className="text-xs text-slate-400">Check back soon for updates.</p>
             </div>
-
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {teamMembers.map((member) => {
+                // Use getFullImageUrl to correctly map the image path
+                const imageUrl = getFullImageUrl(member.imageUrl);
+                console.log(`🖼️ Team member image URL: ${imageUrl}`);
+                
+                return (
+                  <div 
+                    key={member.id} 
+                    className="bg-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 text-center space-y-3 transition-all hover:shadow-md hover:border-[#C8102E]/30"
+                  >
+                    <img 
+                      src={imageUrl} 
+                      alt={member.name} 
+                      className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-red-600 shadow-sm"
+                      onError={(e) => {
+                        console.error(`❌ Failed to load image: ${imageUrl}`);
+                        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/80x80/cccccc/666666?text=?';
+                      }}
+                    />
+                    <div>
+                      <h3 className="font-bold text-slate-900 text-sm">{member.name}</h3>
+                      <p className="text-xs text-[#C8102E] font-bold">{member.role}</p>
+                    </div>
+                    <p className="text-xs text-slate-600">{member.bio}</p>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

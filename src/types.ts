@@ -1,5 +1,5 @@
 // src/types.ts
-export type Language = 'EN' | 'AR' | 'AM' | 'OM';
+export type Language = 'EN' | 'AR' | 'AM';
 
 export type Currency = 'USD' | 'ETB' | 'SAR';
 
@@ -9,16 +9,24 @@ export type PageId =
   | 'packages' 
   | 'hotels-flights' 
   | 'gallery' 
+  | 'faqs'  
   | 'contact';
 
 export type PackageCategory = 'Economy' | 'Standard' | 'Premium' | 'VIP';
+
+export interface ItineraryDay {
+  dayNumber: number;
+  title: string;
+  description: string;
+  titleEn?: string;
+  descriptionEn?: string;
+}
 
 export interface PackageItem {
   id: string;
   titleEn: string;
   titleAr: string;
   titleAm?: string;
-  titleOm?: string;
   category: PackageCategory;
   price: number;
   priceUsd?: number;
@@ -35,18 +43,45 @@ export interface PackageItem {
   image: string;
   imageUrl?: string;
   availableDates: string[];
-  itinerary: { 
-    day: number; 
-    title: string; 
-    description: string; 
-    titleEn?: string; 
-    descriptionEn?: string;
-    dayNumber?: number;
-  }[];
+  itinerary: ItineraryDay[];
   whatsappClicks?: number;
   isActive?: boolean;
   createdAt?: string;
   updatedAt?: string;
+}
+
+// FAQ Item
+export interface FAQItem {
+  id: string;
+  question: string;  
+  answer: string;    
+}
+
+// Package FAQ 
+export interface PackageFAQ {
+  id: string;
+  packageId: string;
+  questions: FAQItem[];
+}
+
+export interface SocialLink {
+  id: string;
+  platform: string;
+  url: string;
+  isActive: boolean;
+  icon: string;
+}
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  bio: string;
+  imageUrl: string;
+  order: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface SmsSubscriber {
@@ -73,7 +108,7 @@ export interface GalleryItem {
   titleAr: string;
   type: 'photo' | 'video';
   imageUrl: string;
-  thumbnailUrl?: string; // ADDED: For video thumbnails
+  thumbnailUrl?: string;
   videoUrl?: string;
   duration?: string;
   location: string;
