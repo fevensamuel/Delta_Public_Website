@@ -28,7 +28,6 @@ export const api = {
   }
 };
 
-// Helper to get full image URL
 export function getFullImageUrl(path: string): string {
   if (!path) return '';
   if (path.startsWith('http://') || path.startsWith('https://')) {
@@ -38,21 +37,18 @@ export function getFullImageUrl(path: string): string {
     return path;
   }
   const baseWithoutApi = API_BASE_URL.replace(/\/api$/, '');
-  // Handle all upload paths
   if (path.startsWith('/uploads')) {
     return `${baseWithoutApi}${path}`;
   }
-  // If it's just a filename, assume it's in uploads
   if (!path.startsWith('/')) {
     return `${baseWithoutApi}/uploads/${path}`;
   }
   return `${baseWithoutApi}${path}`;
 }
 
-// Exchange rate state
 let cachedRate: number | null = null;
 let rateLastUpdated: number | null = null;
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 5 * 60 * 1000;
 
 export async function getExchangeRateFromAPI(): Promise<number> {
   if (cachedRate && rateLastUpdated && (Date.now() - rateLastUpdated < CACHE_DURATION)) {
@@ -71,41 +67,89 @@ export async function getExchangeRateFromAPI(): Promise<number> {
   }
 }
 
-// Convert backend package to frontend PackageItem with correct prices
+function safeParseItinerary(itinerary: any): any[] {
+  if (!itinerary) return [];
+  if (Array.isArray(itinerary)) return itinerary;
+  if (typeof itinerary === 'string') {
+    try {
+      const parsed = JSON.parse(itinerary);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function safeParseArray(data: any): any[] {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (typeof data === 'string') {
+    try {
+      const parsed = JSON.parse(data);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  return [];
+}
+
+function safeString(value: any, fallback: string = ''): string {
+  if (!value) return fallback;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number') return String(value);
+  if (typeof value === 'boolean') return String(value);
+  return fallback;
+}
+
 export function mapPackageToFrontend(backendPkg: any, rate: number): any {
   const priceUsd = backendPkg.priceUsd || backendPkg.price || 0;
-  const priceEtb = backendPkg.priceEtb || Math.round(priceUsd * rate);
-  const priceSar = backendPkg.priceSar || Math.round(priceUsd * 3.75);
+  const priceEtb = backendPkg.priceEtb || 0;
+  const priceSar = backendPkg.priceSar || 0;
+
+  const itineraryData = safeParseItinerary(backendPkg.itinerary);
+  const inclusionsData = safeParseArray(backendPkg.inclusions);
+  const availableDatesData = safeParseArray(backendPkg.availableDates);
+  const discountsData = safeParseArray(backendPkg.discounts);
 
   return {
-    id: backendPkg.id,
-    titleEn: backendPkg.titleEn || backendPkg.title || '',
-    titleAr: backendPkg.titleAr || '',
-    titleAm: backendPkg.titleAm || '',
-    category: backendPkg.category || 'Standard',
+    id: safeString(backendPkg.id, `pkg-${Date.now()}`),
+    titleEn: safeString(backendPkg.titleEn, backendPkg.title || ''),
+    titleAr: safeString(backendPkg.titleAr, ''),
+    titleAm: safeString(backendPkg.titleAm, ''),
+    category: safeString(backendPkg.category, 'Standard'),
     price: priceUsd,
     priceUsd: priceUsd,
     priceEtb: priceEtb,
     priceSar: priceSar,
+    priceType: backendPkg.priceType || 'single',
+    priceUsdMin: backendPkg.priceUsdMin || null,
+    priceUsdMax: backendPkg.priceUsdMax || null,
+    priceEtbMin: backendPkg.priceEtbMin || null,
+    priceEtbMax: backendPkg.priceEtbMax || null,
+    priceSarMin: backendPkg.priceSarMin || null,
+    priceSarMax: backendPkg.priceSarMax || null,
+    discounts: discountsData,
     durationDays: backendPkg.durationDays || 7,
-    departureCity: backendPkg.departureCity || 'Addis Ababa',
-    inclusions: backendPkg.inclusions || [],
+    departureCity: safeString(backendPkg.departureCity, 'Addis Ababa'),
+    inclusions: inclusionsData,
     rating: backendPkg.rating || 4.8,
     reviewsCount: backendPkg.reviewsCount || 0,
-    image: backendPkg.imageUrl || backendPkg.image || '',
-    imageUrl: backendPkg.imageUrl || backendPkg.image || '',
-    availableDates: backendPkg.availableDates || [],
-    itinerary: (backendPkg.itinerary || []).map((item: any) => ({
-      day: item.day || item.dayNumber || 0,
-      title: item.title || item.titleEn || '',
-      description: item.description || item.descriptionEn || '',
-      titleEn: item.titleEn || item.title || '',
-      descriptionEn: item.descriptionEn || item.description || '',
+    image: safeString(backendPkg.imageUrl, backendPkg.image || ''),
+    imageUrl: safeString(backendPkg.imageUrl, backendPkg.image || ''),
+    availableDates: availableDatesData,
+    itinerary: itineraryData.map((item: any) => ({
+      dayNumber: item.dayNumber || item.day || 0,
+      title: safeString(item.title, item.titleEn || ''),
+      description: safeString(item.description, item.descriptionEn || ''),
+      titleEn: safeString(item.titleEn, item.title || ''),
+      descriptionEn: safeString(item.descriptionEn, item.description || ''),
     })),
     whatsappClicks: backendPkg.whatsappClicks || 0,
     isActive: backendPkg.isActive !== undefined ? backendPkg.isActive : true,
-    createdAt: backendPkg.createdAt || '',
-    updatedAt: backendPkg.updatedAt || '',
+    createdAt: safeString(backendPkg.createdAt, new Date().toISOString()),
+    updatedAt: safeString(backendPkg.updatedAt, new Date().toISOString()),
   };
 }
 
@@ -113,7 +157,6 @@ export async function fetchPackages(category?: string): Promise<any[]> {
   try {
     const params = category && category !== 'All' ? `?category=${encodeURIComponent(category)}` : '';
     const res = await api.get<any>(`/packages${params}`);
-    // Extract data from response - backend returns { data: [...] }
     let data = res?.data || [];
     if (!Array.isArray(data)) data = [];
     const rate = await getExchangeRateFromAPI();
@@ -187,9 +230,7 @@ export async function fetchGalleryItems(typeFilter: 'all' | 'photo' | 'video' = 
     const items = Array.isArray(data) ? data : [];
     return items.map((item: any) => ({
       ...item,
-      // Use thumbnailUrl if available, fallback to imageUrl
       thumbnailUrl: item.thumbnailUrl || item.imageUrl,
-      // For videos, imageUrl should be the thumbnail
       imageUrl: item.type === 'video' ? (item.thumbnailUrl || item.imageUrl) : item.imageUrl,
     }));
   } catch (e) {
@@ -219,17 +260,9 @@ export async function trackAndOpenWhatsApp(packageId?: string, packageTitle?: st
   window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${message}`, '_blank');
 }
 
-// ============================================================
-// PUBLIC API FUNCTIONS - FIXED to extract data properly
-// ============================================================
-
-/**
- * Get all active FAQs from the backend
- */
 export async function getFaqsApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/faqs');
-    // Backend returns { status, success, count, data: [...] }
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching FAQs:', error);
@@ -237,13 +270,9 @@ export async function getFaqsApi(): Promise<any[]> {
   }
 }
 
-/**
- * Get all active social links from the backend
- */
 export async function getPublicSocialLinksApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/social-links');
-    // Backend returns { status, success, data: [...] }
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching social links:', error);
@@ -251,13 +280,9 @@ export async function getPublicSocialLinksApi(): Promise<any[]> {
   }
 }
 
-/**
- * Get all active team members from the backend
- */
 export async function getPublicTeamMembersApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/team-members');
-    // Backend returns { status, success, count, data: [...] }
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching team members:', error);

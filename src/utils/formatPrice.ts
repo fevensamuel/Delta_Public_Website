@@ -1,71 +1,131 @@
 // src/utils/formatPrice.ts
 import { Currency, Language } from '../types';
 
-// Default fallback rate if API fails
-const DEFAULT_ETB_RATE = 159.98;
-
 /**
  * Format price based on currency and language
- * @param usdAmount - The price in USD
- * @param currency - The currency to display (USD, ETB, SAR)
- * @param lang - The language for formatting (EN, AR, AM)
- * @param exchangeRate - The current USD to ETB exchange rate (optional, will use default if not provided)
- * @returns Formatted price string
+ * Uses the price from the backend directly - no calculation
  */
 export function formatPrice(
-  usdAmount: number,
+  priceUsd: number,
+  priceEtb: number | undefined,
+  priceSar: number | undefined,
   currency: Currency,
   lang: Language,
-  exchangeRate: number = 159.98
+  fallbackRate: number = 159.98
 ): string {
-  if (currency === 'USD') {
-    return `$${usdAmount.toFixed(2)}`;
+  const currencySymbols = {
+    USD: '$',
+    ETB: 'Br',
+    SAR: '﷼'
+  };
+
+  let price = 0;
+  let symbol = currencySymbols[currency] || '$';
+
+  switch (currency) {
+    case 'USD':
+      price = priceUsd;
+      symbol = '$';
+      break;
+    case 'ETB':
+      price = priceEtb !== undefined && priceEtb > 0 ? priceEtb : Math.round(priceUsd * fallbackRate);
+      symbol = 'Br';
+      break;
+    case 'SAR':
+      price = priceSar !== undefined && priceSar > 0 ? priceSar : Math.round(priceUsd * 3.75);
+      symbol = '﷼';
+      break;
   }
 
-  if (currency === 'SAR') {
-    const sarValue = Math.round(usdAmount * 3.75);
-    if (lang === 'AR') {
-      return `${sarValue.toLocaleString()} ريال`;
-    }
-    if (lang === 'AM') {
-      return `${sarValue.toLocaleString()} ሳዑዲ ሪያል`;
-    }
-    return `${sarValue.toLocaleString()} SAR`;
+  const formattedPrice = Math.round(price).toLocaleString();
+
+  if (lang === 'AR') {
+    return `${formattedPrice} ${symbol}`;
+  }
+  if (lang === 'AM') {
+    return `${formattedPrice} ${symbol}`;
+  }
+
+  return `${symbol}${formattedPrice}`;
+}
+
+/**
+ * Format price range
+ */
+export function formatPriceRange(
+  priceUsdMin: number,
+  priceUsdMax: number,
+  priceEtbMin: number | undefined,
+  priceEtbMax: number | undefined,
+  priceSarMin: number | undefined,
+  priceSarMax: number | undefined,
+  currency: Currency,
+  lang: Language,
+  fallbackRate: number = 159.98
+): string {
+  // If min and max are the same, just show single price
+  if (priceUsdMin === priceUsdMax) {
+    return formatPrice(priceUsdMin, priceEtbMin, priceSarMin, currency, lang, fallbackRate);
   }
   
-  // ETB
-  const etbValue = Math.round(usdAmount * exchangeRate);
-  if (lang === 'AM') {
-    return `${etbValue.toLocaleString()} ብር`;
-  }
+  const minFormatted = formatPrice(priceUsdMin, priceEtbMin, priceSarMin, currency, lang, fallbackRate);
+  const maxFormatted = formatPrice(priceUsdMax, priceEtbMax, priceSarMax, currency, lang, fallbackRate);
+  
   if (lang === 'AR') {
-    return `${etbValue.toLocaleString()} بر إثيوبي`;
+    return `${maxFormatted} - ${minFormatted}`;
   }
-  return `${etbValue.toLocaleString()} ETB`;
+  return `${minFormatted} - ${maxFormatted}`;
 }
 
 /**
- * Get the ETB price as a number
- * @param usdAmount - The price in USD
- * @param exchangeRate - The current USD to ETB exchange rate
- * @returns The ETB price as a rounded number
+ * Get price for a specific person category
  */
-export function getEtbPrice(usdAmount: number, exchangeRate: number = DEFAULT_ETB_RATE): number {
-  return Math.round(usdAmount * exchangeRate);
+export function formatPersonPrice(
+  person: any,
+  currency: Currency,
+  lang: Language,
+  fallbackRate: number = 159.98
+): string {
+  const priceUsd = person.priceUsd || 0;
+  const priceEtb = person.priceEtb || 0;
+  const priceSar = person.priceSar || 0;
+  
+  return formatPrice(priceUsd, priceEtb, priceSar, currency, lang, fallbackRate);
 }
 
 /**
- * Format ETB price only
- * @param etbAmount - The price in ETB
- * @param lang - The language for formatting
- * @returns Formatted ETB price string
+ * Format discounted price
  */
-export function formatEtbPrice(etbAmount: number, lang: Language): string {
-  if (lang === 'AM') {
-    return `${etbAmount.toLocaleString()} ብር`;
+export function formatDiscountedPrice(
+  originalPriceUsd: number,
+  discount: any,
+  currency: Currency,
+  lang: Language,
+  fallbackRate: number = 159.98
+): string {
+  let discountedUsd = originalPriceUsd;
+  
+  if (discount.type === 'percentage') {
+    discountedUsd = originalPriceUsd - (originalPriceUsd * discount.value / 100);
+  } else {
+    discountedUsd = originalPriceUsd - discount.value;
   }
-  if (lang === 'AR') {
-    return `${etbAmount.toLocaleString()} بر إثيوبي`;
+  
+  const discountedEtb = Math.round(discountedUsd * fallbackRate);
+  const discountedSar = Math.round(discountedUsd * 3.75);
+  
+  return formatPrice(discountedUsd, discountedEtb, discountedSar, currency, lang, fallbackRate);
+}
+
+/**
+ * Get discount display text
+ */
+export function getDiscountDisplay(discount: any, lang: Language): string {
+  const label = lang === 'AR' ? (discount.labelAr || discount.label) : discount.label;
+  
+  if (discount.type === 'percentage') {
+    return `${discount.value}% ${lang === 'AR' ? 'خصم' : 'off'} - ${label}`;
+  } else {
+    return `$${discount.value} ${lang === 'AR' ? 'خصم' : 'off'} - ${label}`;
   }
-  return `${etbAmount.toLocaleString()} ETB`;
 }

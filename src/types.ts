@@ -9,10 +9,13 @@ export type PageId =
   | 'packages' 
   | 'hotels-flights' 
   | 'gallery' 
-  | 'faqs'  
+  | 'faqs'
+  | 'office' 
   | 'contact';
 
 export type PackageCategory = 'Economy' | 'Standard' | 'Premium' | 'VIP';
+export type PriceType = 'single' | 'range';
+export type DiscountType = 'percentage' | 'fixed';
 
 export interface ItineraryDay {
   dayNumber: number;
@@ -20,6 +23,23 @@ export interface ItineraryDay {
   description: string;
   titleEn?: string;
   descriptionEn?: string;
+}
+
+// Discount structure
+export interface Discount {
+  id: string;
+  type: DiscountType;
+  value: number;
+  discountedPriceUsd?: number;
+  discountedPriceEtb?: number;
+  discountedPriceSar?: number;
+  label: string;
+  labelAr?: string;
+  description?: string;
+  minPersons?: number;
+  maxPersons?: number;
+  ageGroup?: string;
+  isActive: boolean;
 }
 
 export interface PackageItem {
@@ -32,6 +52,21 @@ export interface PackageItem {
   priceUsd?: number;
   priceEtb?: number;
   priceSar?: number;
+  
+  // Price type
+  priceType?: PriceType;
+  
+  // Price range
+  priceUsdMin?: number;
+  priceUsdMax?: number;
+  priceEtbMin?: number;
+  priceEtbMax?: number;
+  priceSarMin?: number;
+  priceSarMax?: number;
+  
+  // Discounts
+  discounts?: Discount[];
+  
   durationDays: number;
   departureCity: string;
   inclusions: string[];
@@ -55,13 +90,6 @@ export interface FAQItem {
   id: string;
   question: string;  
   answer: string;    
-}
-
-// Package FAQ 
-export interface PackageFAQ {
-  id: string;
-  packageId: string;
-  questions: FAQItem[];
 }
 
 export interface SocialLink {
@@ -120,14 +148,26 @@ export interface GalleryItem {
   updatedAt?: string;
 }
 
+export interface OfficeImage {
+  id: string;
+  title?: string;
+  imageUrl: string;
+  description?: string;
+  order?: number;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Testimonial {
   id: string;
   name: string;
   location: string;
   rating: number;
   text: string;
-  textAr: string;
-  packageTaken: string;
+  textAr?: string;
   date: string;
-  avatar: string;
+  isActive?: boolean;
+  createdAt: string;
+  updatedAt: string;
 }

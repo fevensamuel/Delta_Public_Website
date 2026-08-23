@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { 
   PackageItem, 
   Language, 
@@ -8,10 +8,11 @@ import {
   GalleryItem
 } from '../types';
 import { translations } from '../translations';
-import { formatPrice } from '../utils/formatPrice';
+import { formatPrice, formatPriceRange } from '../utils/formatPrice';
 import { subscribePhoneSms, trackAndOpenWhatsApp, fetchPackages, fetchGalleryItems, getFullImageUrl } from '../api/client';
 import { useExchangeRate } from '../api/exchangeRate';
 import { AIRLINE_PARTNERS } from '../data/airlines';
+import { getPublicTestimonialsApi } from '../api/testimonials';
 import { 
   CheckCircle, 
   Star, 
@@ -47,6 +48,46 @@ interface HomeProps {
   currency: Currency;
 }
 
+// Fallback testimonials in case API fails
+const FALLBACK_TESTIMONIALS: Testimonial[] = [
+  {
+    id: 'fallback-1',
+    name: 'Ahmed Mohammed',
+    location: 'Addis Ababa, Ethiopia',
+    rating: 5,
+    text: 'An unforgettable spiritual journey! Delta Travel made our Umrah experience seamless and stress-free.',
+    textAr: 'رحلة روحية لا تنسى! جعلت دلتا ترافيل تجربة العمرة لدينا سلسة وخالية من الإجهاد.',
+    date: '2026-01-15',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'fallback-2',
+    name: 'Fatima Zewde',
+    location: 'Addis Ababa, Ethiopia',
+    rating: 5,
+    text: 'The best travel agency for Umrah! Everything was perfectly organized from flights to accommodations.',
+    textAr: 'أفضل وكالة سفر للعمرة! كل شيء كان منظمًا بشكل مثالي من الرحلات إلى الإقامة.',
+    date: '2026-01-20',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  },
+  {
+    id: 'fallback-3',
+    name: 'Bilal Ibrahim',
+    location: 'Addis Ababa, Ethiopia',
+    rating: 5,
+    text: 'I highly recommend Delta Travel for anyone planning Umrah. The team was professional and responsive.',
+    textAr: 'أنصح بشدة دلتا ترافيل لأي شخص يخطط للعمرة. كان الفريق محترفًا ومستجيبًا.',
+    date: '2026-02-01',
+    isActive: true,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  }
+];
+
 export const Home: React.FC<HomeProps> = ({
   setActivePage,
   onSelectPackage,
@@ -64,31 +105,77 @@ export const Home: React.FC<HomeProps> = ({
   // Data states
   const [packages, setPackages] = useState<PackageItem[]>([]);
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>(FALLBACK_TESTIMONIALS);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadHomeData();
-  }, []);
-
-  const loadHomeData = async () => {
+  // Use useCallback to memoize the load function
+  const loadHomeData = useCallback(async () => {
     setLoading(true);
     try {
-      const [pkgData, galData] = await Promise.all([
+      console.log('🔄 Loading home data...');
+      
+      const [pkgData, galData, testimonialData] = await Promise.all([
         fetchPackages(),
-        fetchGalleryItems('all')
+        fetchGalleryItems('all'),
+        getPublicTestimonialsApi().catch((err) => {
+          console.error('❌ Testimonials API error:', err);
+          return [];
+        })
       ]);
+      
+      console.log('📦 Packages loaded:', pkgData.length);
+      console.log('🖼️ Gallery loaded:', galData.length);
+      console.log('💬 Testimonials loaded:', testimonialData.length);
+      
       setPackages(pkgData.slice(0, 4));
       setGallery(galData.slice(0, 6));
-      // Testimonials – static for now
-      const { INITIAL_TESTIMONIALS } = await import('../data/initialData');
-      setTestimonials(INITIAL_TESTIMONIALS);
+      
+      if (testimonialData && testimonialData.length > 0) {
+        const validTestimonials = testimonialData.filter((t: any) => t.name && t.text);
+        if (validTestimonials.length > 0) {
+          setTestimonials(validTestimonials);
+          setActiveTestimonialIdx(0);
+        } else {
+          setTestimonials(FALLBACK_TESTIMONIALS);
+        }
+      } else {
+        setTestimonials(FALLBACK_TESTIMONIALS);
+      }
     } catch (e) {
-      console.error('Home data loading error:', e);
+      console.error('❌ Home data loading error:', e);
+      setTestimonials(FALLBACK_TESTIMONIALS);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  // Load data on mount
+  useEffect(() => {
+    loadHomeData();
+  }, [loadHomeData]);
+
+  // Listen for focus events to refresh when user returns to tab
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('🔄 Tab became visible - refreshing home data');
+        loadHomeData();
+      }
+    };
+
+    const handleFocus = () => {
+      console.log('🔄 Window focused - refreshing home data');
+      loadHomeData();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+    };
+  }, [loadHomeData]);
 
   const handleSmsFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,18 +197,45 @@ export const Home: React.FC<HomeProps> = ({
   };
 
   const nextTestimonial = () => {
+    if (testimonials.length === 0) return;
     setActiveTestimonialIdx((prev) => (prev + 1) % testimonials.length);
   };
 
   const prevTestimonial = () => {
+    if (testimonials.length === 0) return;
     setActiveTestimonialIdx((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  const currentReview = testimonials[activeTestimonialIdx] || testimonials[0];
+  const currentReview = testimonials.length > 0 ? testimonials[activeTestimonialIdx] : FALLBACK_TESTIMONIALS[0];
 
-  // Helper to check if item is a video
   const isVideo = (item: any): boolean => {
     return item.type === 'Video' || item.type === 'video';
+  };
+
+  // Helper to get display price (handles both single and range)
+  const getDisplayPrice = (pkg: PackageItem) => {
+    const priceUsd = pkg.priceUsd ?? pkg.price;
+    const priceEtb = pkg.priceEtb;
+    const priceSar = pkg.priceSar;
+    
+    // Check if it's a range
+    const hasRange = pkg.priceType === 'range' || (pkg.priceUsdMax && pkg.priceUsdMax > priceUsd);
+    
+    if (hasRange) {
+      return formatPriceRange(
+        pkg.priceUsdMin ?? priceUsd,
+        pkg.priceUsdMax ?? priceUsd,
+        pkg.priceEtbMin ?? priceEtb,
+        pkg.priceEtbMax ?? priceEtb,
+        pkg.priceSarMin ?? priceSar,
+        pkg.priceSarMax ?? priceSar,
+        currency,
+        lang,
+        rate
+      );
+    }
+    
+    return formatPrice(priceUsd, priceEtb, priceSar, currency, lang, rate);
   };
 
   if (loading) {
@@ -178,7 +292,6 @@ export const Home: React.FC<HomeProps> = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-8 -mt-10 sm:-mt-14 relative z-20">
         <div className="bg-white rounded-xl shadow-xl border border-slate-200/80 p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-slate-100">
           
-          {/* 1. Best Packages */}
           <div className="flex items-center gap-3 p-2">
             <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
               <Box className="w-5 h-5" />
@@ -189,7 +302,6 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          {/* 2. Flights */}
           <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
             <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
               <Plane className="w-5 h-5" />
@@ -200,7 +312,6 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          {/* 3. Support */}
           <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
             <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
               <Clock className="w-5 h-5" />
@@ -211,7 +322,6 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          {/* 4. Licensed */}
           <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
             <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
               <ShieldCheck className="w-5 h-5" />
@@ -248,6 +358,9 @@ export const Home: React.FC<HomeProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {packages.map((pkg) => {
             const imageUrl = pkg.imageUrl ? getFullImageUrl(pkg.imageUrl) : '';
+            const hasDiscounts = pkg.discounts && pkg.discounts.length > 0;
+            const displayPrice = getDisplayPrice(pkg);
+
             return (
               <div 
                 key={pkg.id}
@@ -285,9 +398,20 @@ export const Home: React.FC<HomeProps> = ({
                       <div className="flex items-baseline justify-between">
                         <span className="text-[11px] text-slate-400">{t.perPerson}</span>
                         <span className="text-base font-extrabold text-[#C8102E]">
-                          {formatPrice(pkg.priceUsd, currency, lang, rate)}
+                          {displayPrice}
                         </span>
                       </div>
+                      {hasDiscounts && (
+                        <div className="mt-1.5 space-y-0.5">
+                          {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
+                            <div key={idx} className="text-[9px] text-emerald-600 font-medium">
+                              {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+                              {discount.minPersons && ` (${discount.minPersons}+ persons)`}
+                              {discount.ageGroup && ` (${discount.ageGroup})`}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -362,7 +486,6 @@ export const Home: React.FC<HomeProps> = ({
       <section className="max-w-7xl mx-auto px-4 sm:px-8 pt-4">
         <div className="bg-white rounded-2xl border border-slate-200/80 shadow-md p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 divide-y md:divide-y-0 lg:divide-x rtl:lg:divide-x-reverse divide-slate-200">
           
-          {/* Col 1: Seasonal Update */}
           <div className="space-y-4 pr-0 lg:pr-4">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-[#C8102E]">
@@ -404,7 +527,6 @@ export const Home: React.FC<HomeProps> = ({
             )}
           </div>
 
-          {/* Col 2: Why Choose */}
           <div className="space-y-4 pt-6 md:pt-0 pl-0 lg:pl-4 pr-0 lg:pr-4">
             <h3 className="font-bold text-sm text-slate-900">{t.whyChooseTitle}</h3>
             <div className="grid grid-cols-2 gap-3 text-xs">
@@ -453,22 +575,25 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          {/* Col 3: Testimonials */}
           <div className="space-y-3 pt-6 lg:pt-0 pl-0 lg:pl-4 pr-0 lg:pr-4">
             <div className="flex items-center justify-between">
               <h3 className="font-bold text-sm text-slate-900">{t.reviewsTitle}</h3>
               <Quote className="w-5 h-5 text-red-500 fill-red-100" />
             </div>
-            <p className="text-xs text-slate-600 italic leading-relaxed">
-              "{lang === 'AR' ? currentReview.textAr : currentReview.text}"
-            </p>
-            <div className="flex items-center gap-0.5 text-red-500 pt-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-3.5 h-3.5 fill-red-500 text-red-500" />
-              ))}
-            </div>
-            <p className="text-[11px] font-bold text-slate-900">- {currentReview.name}</p>
-            <p className="text-[10px] text-slate-500">{currentReview.location}</p>
+            {currentReview && (
+              <>
+                <p className="text-xs text-slate-600 italic leading-relaxed">
+                  "{lang === 'AR' ? (currentReview.textAr || currentReview.text) : currentReview.text}"
+                </p>
+                <div className="flex items-center gap-0.5 text-red-500 pt-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`w-3.5 h-3.5 ${i < (currentReview.rating || 5) ? 'fill-red-500 text-red-500' : 'fill-slate-200 text-slate-200'}`} />
+                  ))}
+                </div>
+                <p className="text-[11px] font-bold text-slate-900">- {currentReview.name}</p>
+                <p className="text-[10px] text-slate-500">{currentReview.location || 'Delta Travel'}</p>
+              </>
+            )}
             <div className="flex items-center justify-between pt-2">
               <button onClick={prevTestimonial} className="p-1 rounded-full border border-slate-200 hover:bg-slate-100 text-slate-600">
                 <ChevronLeft className="w-3.5 h-3.5" />
@@ -484,7 +609,6 @@ export const Home: React.FC<HomeProps> = ({
             </div>
           </div>
 
-          {/* Col 4: Achievements */}
           <div className="space-y-4 pt-6 lg:pt-0 pl-0 lg:pl-4">
             <h3 className="font-bold text-sm text-slate-900">Our Achievements</h3>
             <div className="grid grid-cols-2 gap-3">
@@ -541,7 +665,6 @@ export const Home: React.FC<HomeProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {gallery.slice(0, 6).map((item) => {
               const isVideoItem = isVideo(item);
-              // Use thumbnailUrl for videos, otherwise use imageUrl
               const displayImage = isVideoItem ? (item.thumbnailUrl || item.imageUrl) : item.imageUrl;
               const fullImageUrl = displayImage ? getFullImageUrl(displayImage) : '';
               

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PackageItem, Language, Currency } from '../types';
 import { translations } from '../translations';
-import { formatPrice } from '../utils/formatPrice';
+import { formatPrice, formatPriceRange } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
 import { getFullImageUrl, trackAndOpenWhatsApp } from '../api/client';
 import { 
@@ -13,7 +13,8 @@ import {
   Clock,
   Sparkles,
   Plane,
-  Loader2
+  Loader2,
+  Tag
 } from 'lucide-react';
 
 interface PackagesProps {
@@ -55,10 +56,31 @@ export const Packages: React.FC<PackagesProps> = ({
     );
   }
 
+  const getDisplayPrice = (pkg: PackageItem) => {
+    const priceUsd = pkg.priceUsd ?? pkg.price;
+    const priceEtb = pkg.priceEtb;
+    const priceSar = pkg.priceSar;
+    
+    if (pkg.priceType === 'range') {
+      return formatPriceRange(
+        pkg.priceUsdMin ?? priceUsd,
+        pkg.priceUsdMax ?? priceUsd,
+        pkg.priceEtbMin ?? priceEtb,
+        pkg.priceEtbMax ?? priceEtb,
+        pkg.priceSarMin ?? priceSar,
+        pkg.priceSarMax ?? priceSar,
+        currency,
+        lang,
+        rate
+      );
+    }
+    
+    return formatPrice(priceUsd, priceEtb, priceSar, currency, lang, rate);
+  };
+
   return (
     <div className="space-y-12 pb-16 bg-[#F9F9F9]">
       
-      {/* Header Banner */}
       <section className="bg-[#0b0f19] text-white py-12 px-4 text-center relative overflow-hidden border-b border-slate-800">
         <div className="max-w-4xl mx-auto space-y-3 relative z-10">
           <span className="inline-block px-3 py-1 rounded-full bg-red-900/50 text-red-400 font-bold text-xs uppercase tracking-wider border border-red-800/60">
@@ -73,7 +95,6 @@ export const Packages: React.FC<PackagesProps> = ({
         </div>
       </section>
 
-      {/* Filter & Sort Toolbar */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-1.5 flex-wrap w-full md:w-auto">
@@ -107,7 +128,6 @@ export const Packages: React.FC<PackagesProps> = ({
         </div>
       </section>
 
-      {/* Package Cards Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         {filteredPackages.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
@@ -118,6 +138,8 @@ export const Packages: React.FC<PackagesProps> = ({
             {filteredPackages.map((pkg) => {
               const imageUrl = pkg.imageUrl || pkg.image;
               const fullImageUrl = imageUrl ? getFullImageUrl(imageUrl) : '';
+              const hasDiscounts = pkg.discounts && pkg.discounts.length > 0;
+              const priceDisplay = getDisplayPrice(pkg);
 
               return (
                 <div
@@ -139,14 +161,32 @@ export const Packages: React.FC<PackagesProps> = ({
                       {pkg.category}
                     </div>
 
+                    {hasDiscounts && (
+                      <div className="absolute top-3 right-3 bg-emerald-600 text-white font-extrabold text-[10px] px-2.5 py-1 rounded uppercase tracking-wider shadow">
+                        {lang === 'AR' ? 'خصم' : 'Discount'}
+                      </div>
+                    )}
+
                     <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs font-semibold">
                       <span className="bg-slate-900/80 backdrop-blur-md px-2.5 py-1 rounded-lg border border-slate-700/50 text-[11px] flex items-center gap-1">
                         <Clock className="w-3 h-3 text-red-400" /> {pkg.durationDays} Days
                       </span>
-                      <div className="bg-white text-[#C8102E] font-black text-xs px-3 py-1.5 rounded-lg shadow text-right">
-                        <span>
-                          {formatPrice(pkg.priceUsd ?? pkg.price, currency, lang, rate)}
-                        </span>
+                      <div className="flex flex-col items-end">
+                        {hasDiscounts && pkg.discounts && pkg.discounts.length > 0 && (
+                          <span className="text-[10px] text-slate-300 line-through bg-slate-900/60 px-2 py-0.5 rounded">
+                            {formatPrice(
+                              pkg.priceUsd ?? pkg.price,
+                              pkg.priceEtb,
+                              pkg.priceSar,
+                              currency,
+                              lang,
+                              rate
+                            )}
+                          </span>
+                        )}
+                        <div className="bg-white text-[#C8102E] font-black text-xs px-3 py-1.5 rounded-lg shadow">
+                          <span>{priceDisplay}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -164,6 +204,14 @@ export const Packages: React.FC<PackagesProps> = ({
                         {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
                       </h3>
 
+                      {hasDiscounts && (
+                        <div className="flex flex-wrap gap-1 mb-2">
+                          <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded bg-amber-100 text-amber-700 text-[9px] font-bold">
+                            <Tag className="w-3 h-3" /> {pkg.discounts?.length} Offers
+                          </span>
+                        </div>
+                      )}
+
                       <div className="space-y-1.5 text-xs text-slate-700">
                         <p className="font-bold text-[10px] uppercase text-slate-800 tracking-wider mb-1">Inclusions & Perks:</p>
                         {(pkg.inclusions || []).slice(0, 4).map((inc, i) => (
@@ -176,6 +224,19 @@ export const Packages: React.FC<PackagesProps> = ({
                           <p className="text-[10px] text-slate-400">+{pkg.inclusions.length - 4} more</p>
                         )}
                       </div>
+
+                      {/* Discounts display */}
+                      {hasDiscounts && pkg.discounts && (
+                        <div className="mt-2 space-y-0.5">
+                          {pkg.discounts.filter(d => d.isActive !== false).map((discount, idx) => (
+                            <div key={idx} className="text-[9px] text-emerald-600 font-medium">
+                              {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+                              {discount.minPersons && ` (${discount.minPersons}+ persons)`}
+                              {discount.ageGroup && ` (${discount.ageGroup})`}
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">

@@ -4,19 +4,20 @@ import {
   Language,
   Currency 
 } from '../types';
-import { formatPrice } from '../utils/formatPrice';
+import { formatPrice, formatPriceRange, getDiscountDisplay } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
-import { trackAndOpenWhatsApp } from '../api/client';
+import { trackAndOpenWhatsApp, getFullImageUrl } from '../api/client';
 import { 
   X, 
   CheckCircle, 
-  Hotel, 
   Clock,
   Sparkles,
   Phone,
   MessageSquare,
   Calendar,
-  Plane
+  Plane,
+  Tag,
+  Star
 } from 'lucide-react';
 import { translations } from '../translations';
 
@@ -37,20 +38,42 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
 
   const t = translations[lang] || translations.EN;
   const { rate } = useExchangeRate();
-  const etbPrice = (pkg.priceUsd * rate).toLocaleString('en-US', { maximumFractionDigits: 0 });
+
+  const getDisplayPrice = () => {
+    const priceUsd = pkg.priceUsd ?? pkg.price;
+    const priceEtb = pkg.priceEtb;
+    const priceSar = pkg.priceSar;
+    
+    if (pkg.priceType === 'range') {
+      return formatPriceRange(
+        pkg.priceUsdMin ?? priceUsd,
+        pkg.priceUsdMax ?? priceUsd,
+        pkg.priceEtbMin ?? priceEtb,
+        pkg.priceEtbMax ?? priceEtb,
+        pkg.priceSarMin ?? priceSar,
+        pkg.priceSarMax ?? priceSar,
+        currency,
+        lang,
+        rate
+      );
+    }
+    
+    return formatPrice(priceUsd, priceEtb, priceSar, currency, lang, rate);
+  };
+
+  const hasDiscounts = pkg.discounts && pkg.discounts.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
       <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 my-8">
         
-        {/* Top Header Banner */}
         <div className="bg-[#0b0f19] text-white p-5 sm:p-6 flex items-start justify-between relative border-b border-slate-800">
           <div className="space-y-1 max-w-xl">
             <span className="inline-block px-2.5 py-0.5 rounded-full bg-red-900/50 text-red-400 text-[11px] font-bold tracking-wider uppercase border border-red-800/60">
               {pkg.category} Package
             </span>
             <h2 className="text-xl sm:text-2xl font-black font-sans text-white">
-              {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : (lang === 'OM' && pkg.titleOm) ? pkg.titleOm : pkg.title}
+              {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
             </h2>
             <p className="text-xs text-slate-300 flex items-center gap-2">
               <span>{pkg.durationDays} Days</span> • <span>From {pkg.departureCity}</span>
@@ -66,10 +89,8 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
           </button>
         </div>
 
-        {/* Content Body */}
         <div className="p-5 sm:p-6 max-h-[75vh] overflow-y-auto space-y-6 text-xs sm:text-sm">
           
-          {/* Flight Carrier & Pricing Highlight Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center gap-3">
               <div className="w-10 h-10 rounded-lg bg-red-50 text-[#C8102E] flex items-center justify-center font-bold flex-shrink-0">
@@ -82,17 +103,53 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
               </div>
             </div>
 
-            <div className="bg-red-50 p-4 rounded-xl border border-red-200 flex items-center justify-between">
-              <div>
-                <span className="text-[10px] text-red-900 font-semibold block uppercase">Package Price</span>
-                <p className="text-2xl font-black text-[#C8102E]">{formatPrice(pkg.priceUsd ?? pkg.price, currency, lang)}</p>
-                <span className="text-[11px] text-slate-600 font-bold block">{t.perPerson}</span>
+            <div className="bg-red-50 p-4 rounded-xl border border-red-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-red-900 font-semibold block uppercase">Package Price</span>
+                  <p className="text-2xl font-black text-[#C8102E]">
+                    {getDisplayPrice()}
+                    {hasDiscounts && (
+                      <span className="text-sm font-bold text-red-600 ml-2">
+                        {lang === 'AR' ? 'خصم متاح' : 'Discount Available'}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <Sparkles className="w-6 h-6 text-[#C8102E]" />
               </div>
-              <Sparkles className="w-6 h-6 text-[#C8102E]" />
             </div>
           </div>
 
-          {/* Inclusions & Dates */}
+          {hasDiscounts && pkg.discounts && (
+            <div className="bg-emerald-50 p-4 rounded-xl border border-emerald-200">
+              <h4 className="font-bold text-emerald-800 text-xs uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                <Tag className="w-4 h-4 text-emerald-600" /> Available Discounts
+              </h4>
+              <div className="space-y-2">
+                {pkg.discounts.filter(d => d.isActive !== false).map((discount, idx) => (
+                  <div key={idx} className="flex items-center justify-between bg-white p-2 rounded-lg border border-emerald-100">
+                    <div>
+                      <span className="text-xs font-bold text-emerald-800">{discount.label}</span>
+                      {discount.description && (
+                        <span className="text-[10px] text-emerald-600 ml-2">({discount.description})</span>
+                      )}
+                      {discount.minPersons && (
+                        <span className="text-[10px] text-emerald-600 ml-2">{discount.minPersons}+ persons</span>
+                      )}
+                      {discount.ageGroup && (
+                        <span className="text-[10px] text-emerald-600 ml-2">Age: {discount.ageGroup}</span>
+                      )}
+                    </div>
+                    <span className="text-xs font-bold text-emerald-800">
+                      {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
               <h4 className="font-bold text-slate-900 text-xs uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
@@ -126,7 +183,6 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Day by Day Itinerary */}
           <div>
             <h4 className="font-bold text-slate-900 text-sm mb-3 flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#C8102E]"></span>
@@ -134,9 +190,9 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
             </h4>
             <div className="space-y-2 border-l-2 border-red-500 rtl:border-r-2 rtl:border-l-0 pl-4 rtl:pr-4 rtl:pl-0">
               {pkg.itinerary.map((item) => (
-                <div key={item.day} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
+                <div key={item.dayNumber || item.day} className="bg-slate-50 p-3 rounded-lg border border-slate-100">
                   <div className="flex items-center justify-between font-bold text-slate-800 text-xs">
-                    <span className="text-[#C8102E] font-semibold">Day {item.day}: {item.title}</span>
+                    <span className="text-[#C8102E] font-semibold">Day {item.dayNumber || item.day}: {item.title}</span>
                   </div>
                   <p className="text-xs text-slate-600 mt-1">{item.description}</p>
                 </div>
@@ -144,7 +200,6 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
             </div>
           </div>
 
-          {/* Contact Inquiry Section */}
           <div className="bg-slate-900 text-white p-5 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left rtl:sm:text-right">
               <h5 className="font-bold text-sm text-white">Have Questions About This Package?</h5>
@@ -153,7 +208,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <button
-                onClick={() => trackAndOpenWhatsApp(pkg.id, `Inquiry about ${pkg.title}`)}
+                onClick={() => trackAndOpenWhatsApp(pkg.id, `Inquiry about ${pkg.titleEn}`)}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition-colors flex items-center gap-1.5"
               >
                 <MessageSquare className="w-4 h-4" />

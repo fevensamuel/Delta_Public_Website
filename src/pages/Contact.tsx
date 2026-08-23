@@ -169,7 +169,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang, curre
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-sm">Office Hours</h4>
-                <p className="text-slate-600 mt-0.5">Monday – Saturday: 8:30 AM – 3:00 PM</p>
+                <p className="text-slate-600 mt-0.5">Monday – Saturday: 2:30 AM – 11:30 PM LT</p>
                 <p className="text-slate-600">Sunday & Holidays: On-call WhatsApp Assistance</p>
               </div>
             </div>

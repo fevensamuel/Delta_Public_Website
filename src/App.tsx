@@ -6,7 +6,6 @@ import {
   PackageItem, 
   SmsSubscriber 
 } from './types';
-import { INITIAL_TESTIMONIALS } from './data/initialData';
 import { fetchPackages } from './api/client';
 
 import { Header } from './components/Header';
@@ -21,7 +20,8 @@ import { Packages } from './pages/Packages';
 import { HotelsFlights } from './pages/HotelsFlights';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
-import { FAQs } from './pages/FAQs'; // Add this import
+import { FAQs } from './pages/FAQs';
+import { Office } from './pages/Office';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageId>('home');
@@ -124,8 +124,6 @@ export default function App() {
       <main className="flex-1">
         {activePage === 'home' && (
           <Home
-            packages={packages}
-            testimonials={INITIAL_TESTIMONIALS}
             setActivePage={setActivePage}
             onSelectPackage={(pkg) => setSelectedPkgModal(pkg)}
             onSubscribeSms={handleSubscribeSms}
@@ -159,9 +157,12 @@ export default function App() {
           <Contact onTriggerSmsToast={triggerSmsToast} lang={lang} />
         )}
 
-        {/* Add FAQs route */}
         {activePage === 'faqs' && (
           <FAQs lang={lang} />
+        )}
+
+        {activePage === 'office' && (
+          <Office setActivePage={setActivePage} lang={lang} />
         )}
       </main>
 

@@ -143,6 +143,14 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                   {t.contact || 'Contact'}
                 </button>
               </li>
+              <li>
+  <button
+    onClick={() => setActivePage('office')}
+    className="text-slate-300 hover:text-[#C8102E] transition-colors"
+  >
+    Our Office
+  </button>
+</li>
             </ul>
           </div>
 
@@ -173,7 +181,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
               <li className="flex items-start gap-2.5 text-slate-300">
                 <Clock className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
                 <div>
-                  <span>Mon–Sat: 2:30 AM – 11:30 PM</span>
+                  <span>Mon–Sat: 2:30 AM – 11:30 PM LT</span>
                   <span className="block text-[10px] text-slate-500">Sunday: Closed</span>
                 </div>
               </li>
