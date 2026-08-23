@@ -37,9 +37,14 @@ export function getFullImageUrl(path: string): string {
     return path;
   }
   const baseWithoutApi = API_BASE_URL.replace(/\/api$/, '');
+  // Handle all upload paths
   if (path.startsWith('/uploads')) {
     return `${baseWithoutApi}${path}`;
   }
+<<<<<<< HEAD
+=======
+  // If it's just a filename, assume it's in uploads
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
   if (!path.startsWith('/')) {
     return `${baseWithoutApi}/uploads/${path}`;
   }
@@ -157,6 +162,10 @@ export async function fetchPackages(category?: string): Promise<any[]> {
   try {
     const params = category && category !== 'All' ? `?category=${encodeURIComponent(category)}` : '';
     const res = await api.get<any>(`/packages${params}`);
+<<<<<<< HEAD
+=======
+    // Extract data from response - backend returns { data: [...] }
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
     let data = res?.data || [];
     if (!Array.isArray(data)) data = [];
     const rate = await getExchangeRateFromAPI();
@@ -230,7 +239,12 @@ export async function fetchGalleryItems(typeFilter: 'all' | 'photo' | 'video' = 
     const items = Array.isArray(data) ? data : [];
     return items.map((item: any) => ({
       ...item,
+      // Use thumbnailUrl if available, fallback to imageUrl
       thumbnailUrl: item.thumbnailUrl || item.imageUrl,
+<<<<<<< HEAD
+=======
+      // For videos, imageUrl should be the thumbnail
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
       imageUrl: item.type === 'video' ? (item.thumbnailUrl || item.imageUrl) : item.imageUrl,
     }));
   } catch (e) {
@@ -260,9 +274,23 @@ export async function trackAndOpenWhatsApp(packageId?: string, packageTitle?: st
   window.open(`https://wa.me/${WHATSAPP_PHONE}?text=${message}`, '_blank');
 }
 
+<<<<<<< HEAD
 export async function getFaqsApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/faqs');
+=======
+// ============================================================
+// PUBLIC API FUNCTIONS - FIXED to extract data properly
+// ============================================================
+
+/**
+ * Get all active FAQs from the backend
+ */
+export async function getFaqsApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/faqs');
+    // Backend returns { status, success, count, data: [...] }
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching FAQs:', error);
@@ -270,9 +298,19 @@ export async function getFaqsApi(): Promise<any[]> {
   }
 }
 
+<<<<<<< HEAD
 export async function getPublicSocialLinksApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/social-links');
+=======
+/**
+ * Get all active social links from the backend
+ */
+export async function getPublicSocialLinksApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/social-links');
+    // Backend returns { status, success, data: [...] }
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching social links:', error);
@@ -280,12 +318,26 @@ export async function getPublicSocialLinksApi(): Promise<any[]> {
   }
 }
 
+<<<<<<< HEAD
 export async function getPublicTeamMembersApi(): Promise<any[]> {
   try {
     const res = await api.get<any>('/team-members');
+=======
+/**
+ * Get all active team members from the backend
+ */
+export async function getPublicTeamMembersApi(): Promise<any[]> {
+  try {
+    const res = await api.get<any>('/team-members');
+    // Backend returns { status, success, count, data: [...] }
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
     return res?.data || [];
   } catch (error) {
     console.error('❌ Error fetching team members:', error);
     return [];
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d

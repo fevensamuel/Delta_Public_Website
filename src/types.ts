@@ -9,8 +9,12 @@ export type PageId =
   | 'packages' 
   | 'hotels-flights' 
   | 'gallery' 
+<<<<<<< HEAD
   | 'faqs'
   | 'office' 
+=======
+  | 'faqs'  
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
   | 'contact';
 
 export type PackageCategory = 'Economy' | 'Standard' | 'Premium' | 'VIP';
@@ -40,6 +44,14 @@ export interface Discount {
   maxPersons?: number;
   ageGroup?: string;
   isActive: boolean;
+}
+
+export interface ItineraryDay {
+  dayNumber: number;
+  title: string;
+  description: string;
+  titleEn?: string;
+  descriptionEn?: string;
 }
 
 export interface PackageItem {
@@ -92,6 +104,16 @@ export interface FAQItem {
   answer: string;    
 }
 
+<<<<<<< HEAD
+=======
+// Package FAQ 
+export interface PackageFAQ {
+  id: string;
+  packageId: string;
+  questions: FAQItem[];
+}
+
+>>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
 export interface SocialLink {
   id: string;
   platform: string;
