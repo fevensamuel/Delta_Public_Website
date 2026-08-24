@@ -19,6 +19,38 @@ interface GalleryProps {
   lang: Language;
 }
 
+// Helper to check if URL is YouTube
+const isYouTubeUrl = (url: string): boolean => {
+  if (!url) return false;
+  return url.includes('youtube.com') || url.includes('youtu.be');
+};
+
+// Helper to get YouTube embed URL
+const getYouTubeEmbedUrl = (url: string): string => {
+  if (!url) return '';
+  // Handle youtu.be format
+  if (url.includes('youtu.be/')) {
+    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  // Handle youtube.com/watch?v= format
+  if (url.includes('watch?v=')) {
+    const videoId = url.split('watch?v=')[1]?.split('&')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  // Handle youtube.com/embed/ format (already an embed URL)
+  if (url.includes('youtube.com/embed/')) {
+    return url;
+  }
+  // Handle youtu.be with playlist
+  if (url.includes('youtu.be/') && url.includes('&list=')) {
+    const videoId = url.split('youtu.be/')[1]?.split('?')[0];
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+  // Not a YouTube URL, return as-is (for direct video files)
+  return url;
+};
+
 export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   const t = translations[lang] || translations.EN;
 
@@ -40,6 +72,18 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
     try {
       const data = await fetchGalleryItems(typeFilter);
       setItems(data);
+      console.log('📸 Gallery items loaded:', data);
+      // Log each item's thumbnail info for debugging
+      data.forEach(item => {
+        console.log(`🖼️ Item ${item.id}:`, {
+          type: item.type,
+          imageUrl: item.imageUrl,
+          thumbnailUrl: item.thumbnailUrl,
+          videoUrl: item.videoUrl,
+          fullImageUrl: item.imageUrl ? getFullImageUrl(item.imageUrl) : 'none',
+          fullThumbnailUrl: item.thumbnailUrl ? getFullImageUrl(item.thumbnailUrl) : 'none'
+        });
+      });
     } catch (e) {
       setError('Failed to load gallery. Please refresh.');
       console.error(e);
@@ -56,8 +100,12 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
   const handleOpenLightbox = (item: GalleryItem) => {
     setSelectedItem(item);
+    // Reset video when opening
     if (videoRef.current) {
       videoRef.current.load();
+      setTimeout(() => {
+        videoRef.current?.play().catch(() => {});
+      }, 100);
     }
   };
 
@@ -146,12 +194,31 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item) => {
-              // Use thumbnailUrl for videos, otherwise use imageUrl
-              const displayImage = item.type === 'video' 
-                ? (item.thumbnailUrl || item.imageUrl) 
-                : item.imageUrl;
-              const imageUrl = displayImage ? getFullImageUrl(displayImage) : '';
+              // Determine which image to display
+              // For videos: use thumbnailUrl first, then fallback to imageUrl
+              // For photos: use imageUrl
+              let displayImage = '';
               
+              if (item.type === 'video') {
+                // For videos, use thumbnailUrl, fallback to imageUrl
+                displayImage = item.thumbnailUrl || item.imageUrl || '';
+              } else {
+                // For photos, use imageUrl
+                displayImage = item.imageUrl || '';
+              }
+              
+              const imageUrl = displayImage ? getFullImageUrl(displayImage) : '';
+              const videoUrl = item.videoUrl ? getFullImageUrl(item.videoUrl) : '';
+              
+              // Debug logging
+              console.log(`🖼️ Rendering item ${item.id}:`, { 
+                type: item.type, 
+                displayImage, 
+                imageUrl,
+                thumbnailUrl: item.thumbnailUrl,
+                originalImageUrl: item.imageUrl
+              });
+
               return (
                 <div
                   key={item.id}
@@ -164,25 +231,39 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                         src={imageUrl}
                         alt={lang === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
                         loading="lazy"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onError={(e) => {
+                          console.error('Image failed to load:', imageUrl);
+                          (e.target as HTMLImageElement).style.display = 'none';
+                          // Show fallback
+                          const parent = (e.target as HTMLImageElement).parentElement;
+                          if (parent) {
+                            const fallback = document.createElement('div');
+                            fallback.className = 'w-full h-full bg-slate-700 flex items-center justify-center text-slate-400 text-xs';
+                            fallback.textContent = item.type === 'video' ? '🎬 Video' : '📷 No Image';
+                            parent.appendChild(fallback);
+                          }
+                        }}
                       />
                     ) : (
-                      <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">No Image</div>
-                    )}
-
-                    {item.type === 'video' && (
-                      <div className="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-slate-700/80 z-10 shadow">
-                        <span>▶</span>
-                        {item.duration && <span className="text-[10px] bg-slate-800/80 px-1.5 py-0.5 rounded">{item.duration}</span>}
+                      <div className="w-full h-full bg-slate-700 flex items-center justify-center text-slate-400 text-xs">
+                        {item.type === 'video' ? '🎬 Video' : '📷 No Image'}
                       </div>
                     )}
 
                     {item.type === 'video' && (
-                      <div className="absolute inset-0 bg-slate-950/30 flex items-center justify-center transition-all group-hover:bg-slate-950/20 z-10">
-                        <div className="w-14 h-14 rounded-full bg-white/95 text-[#1A5B4B] flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110">
-                          <Play className="w-7 h-7 fill-[#1A5B4B] ml-1" />
+                      <>
+                        <div className="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md text-white text-[11px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1.5 border border-slate-700/80 z-10 shadow">
+                          <span>▶</span>
+                          {item.duration && <span className="text-[10px] bg-slate-800/80 px-1.5 py-0.5 rounded">{item.duration}</span>}
                         </div>
-                      </div>
+
+                        <div className="absolute inset-0 bg-slate-950/30 flex items-center justify-center transition-all group-hover:bg-slate-950/20 z-10">
+                          <div className="w-14 h-14 rounded-full bg-white/95 text-[#1A5B4B] flex items-center justify-center shadow-xl transition-transform duration-300 group-hover:scale-110">
+                            <Play className="w-7 h-7 fill-[#1A5B4B] ml-1" />
+                          </div>
+                        </div>
+                      </>
                     )}
 
                     <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-slate-950/90 via-slate-950/60 to-transparent text-white transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
@@ -237,21 +318,47 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
 
             <div className="md:w-3/5 bg-black flex items-center justify-center relative min-h-[280px] md:min-h-[460px]">
               {selectedItem.type === 'video' ? (
-                <video
-                  ref={videoRef}
-                  src={selectedItem.videoUrl ? getFullImageUrl(selectedItem.videoUrl) : ''}
-                  controls
-                  autoPlay
-                  playsInline
-                  className="w-full h-full max-h-[70vh] object-contain"
-                  controlsList="nodownload"
-                  poster={selectedItem.thumbnailUrl ? getFullImageUrl(selectedItem.thumbnailUrl) : undefined}
-                />
+                // Check if it's a YouTube URL
+                isYouTubeUrl(selectedItem.videoUrl || '') ? (
+                  // YouTube embed
+                  <iframe
+                    src={getYouTubeEmbedUrl(selectedItem.videoUrl || '')}
+                    className="w-full h-full max-h-[70vh] aspect-video"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    title={selectedItem.titleEn}
+                    frameBorder="0"
+                  />
+                ) : (
+                  // Direct video file
+                  <video
+                    ref={videoRef}
+                    src={selectedItem.videoUrl ? getFullImageUrl(selectedItem.videoUrl) : ''}
+                    controls
+                    autoPlay
+                    playsInline
+                    className="w-full h-full max-h-[70vh] object-contain"
+                    controlsList="nodownload"
+                    poster={
+                      // Use thumbnailUrl as poster, fallback to imageUrl
+                      selectedItem.thumbnailUrl 
+                        ? getFullImageUrl(selectedItem.thumbnailUrl) 
+                        : (selectedItem.imageUrl ? getFullImageUrl(selectedItem.imageUrl) : undefined)
+                    }
+                    onError={(e) => {
+                      console.error('Video playback error:', e);
+                      console.log('Video URL:', selectedItem.videoUrl);
+                    }}
+                  />
+                )
               ) : (
                 <img
                   src={selectedItem.imageUrl ? getFullImageUrl(selectedItem.imageUrl) : ''}
                   alt={selectedItem.titleEn}
                   className="w-full h-full max-h-[70vh] object-contain"
+                  onError={(e) => {
+                    console.error('Image load error:', e);
+                  }}
                 />
               )}
             </div>

@@ -143,7 +143,6 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                   {t.contact || 'Contact'}
                 </button>
               </li>
-<<<<<<< HEAD
               <li>
   <button
     onClick={() => setActivePage('office')}
@@ -152,8 +151,6 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
     Our Office
   </button>
 </li>
-=======
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
             </ul>
           </div>
 
@@ -184,11 +181,8 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
               <li className="flex items-start gap-2.5 text-slate-300">
                 <Clock className="w-4 h-4 text-[#C8102E] flex-shrink-0 mt-0.5" />
                 <div>
-<<<<<<< HEAD
                   <span>Mon–Sat: 2:30 AM – 11:30 PM LT</span>
-=======
                   <span>Mon–Sat: 2:30 AM – 11:30 PM</span>
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
                   <span className="block text-[10px] text-slate-500">Sunday: Closed</span>
                 </div>
               </li>

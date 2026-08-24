@@ -331,7 +331,7 @@ export const Contact: React.FC<ContactProps> = ({ onTriggerSmsToast, lang, curre
     <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">
       <iframe
         title="Delta Travel & Tour Office Location Map"
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.808868547685!2d38.78616529999999!3d8.989728099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b84fb99570403%3A0x8a21e3ebfc8b4fc5!2sFriendship%20Business%20Center!5e0!3m2!1sen!2set!4v1706467331048"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.8077163502057!2d38.78333007314347!3d8.989833989604644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85372f9878d1%3A0x1385d361c5cfcdd9!2sDelta%20Travel!5e0!3m2!1sen!2set!4v1787603287094!5m2!1sen!2set"
         width="100%"
         height="100%"
         style={{ border: 0 }}

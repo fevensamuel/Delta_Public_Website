@@ -202,10 +202,6 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             <span>Saudi Tourism Authority Partner</span>
           </div>
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
-            <Building2 className="w-7 h-7 text-red-600" />
-            <span>IATA Accredited Travel Agency</span>
-          </div>
-          <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <HeartHandshake className="w-7 h-7 text-red-600" />
             <span>Nusuk Official Service Provider</span>
           </div>

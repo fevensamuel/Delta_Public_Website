@@ -20,12 +20,8 @@ import { Packages } from './pages/Packages';
 import { HotelsFlights } from './pages/HotelsFlights';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
-<<<<<<< HEAD
 import { FAQs } from './pages/FAQs';
 import { Office } from './pages/Office';
-=======
-import { FAQs } from './pages/FAQs'; // Add this import
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageId>('home');
@@ -161,18 +157,12 @@ export default function App() {
           <Contact onTriggerSmsToast={triggerSmsToast} lang={lang} />
         )}
 
-<<<<<<< HEAD
         {activePage === 'faqs' && (
           <FAQs lang={lang} />
         )}
 
         {activePage === 'office' && (
           <Office setActivePage={setActivePage} lang={lang} />
-=======
-        {/* Add FAQs route */}
-        {activePage === 'faqs' && (
-          <FAQs lang={lang} />
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
         )}
       </main>
 

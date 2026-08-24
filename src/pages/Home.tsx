@@ -37,7 +37,8 @@ import {
   Loader2,
   Video,
   Image as ImageIcon,
-  Play
+  Play,
+  Trophy
 } from 'lucide-react';
 
 interface HomeProps {
@@ -290,7 +291,6 @@ export const Home: React.FC<HomeProps> = ({
 
       {/* QUICK BENEFITS BAR - 4 Columns */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 -mt-10 sm:-mt-14 relative z-20">
-<<<<<<< HEAD
         <div className="bg-white rounded-xl shadow-xl border border-slate-200/80 p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-slate-100">
           
           <div className="flex items-center gap-3 p-2">
@@ -334,55 +334,6 @@ export const Home: React.FC<HomeProps> = ({
           </div>
 
         </div>
-=======
-  <div className="bg-white rounded-xl shadow-xl border border-slate-200/80 p-4 sm:p-6 grid grid-cols-2 sm:grid-cols-4 gap-4 divide-y sm:divide-y-0 sm:divide-x rtl:sm:divide-x-reverse divide-slate-100">
-    
-    {/* 1. Best Packages */}
-    <div className="flex items-center gap-3 p-2">
-      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-        <Box className="w-5 h-5" />
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
-      </div>
-      <div>
-        <h4 className="font-bold text-xs text-slate-900">{t.bestPackagesTitle || 'Best Packages'}</h4>
-        <p className="text-[10px] text-slate-500">{t.bestPackagesSubtitle || 'Affordable & Premium'}</p>
-      </div>
-    </div>
-
-    {/* 2. Flights */}
-    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
-      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-        <Plane className="w-5 h-5" />
-      </div>
-      <div>
-        <h4 className="font-bold text-xs text-slate-900">Flights</h4>
-        <p className="text-[10px] text-slate-500">Ethiopian & Saudia</p>
-      </div>
-    </div>
-
-    {/* 3. Support */}
-    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
-      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-        <Clock className="w-5 h-5" />
-      </div>
-      <div>
-        <h4 className="font-bold text-xs text-slate-900">{t.supportTitle || '24/7 Support'}</h4>
-        <p className="text-[10px] text-slate-500">Dedicated Mutawwif</p>
-      </div>
-    </div>
-
-    {/* 4. Licensed */}
-    <div className="flex items-center gap-3 p-2 pt-3 sm:pt-2">
-      <div className="w-9 h-9 rounded-lg bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
-        <ShieldCheck className="w-5 h-5" />
-      </div>
-      <div>
-        <h4 className="font-bold text-xs text-slate-900">{t.feature3Title || 'Licensed'}</h4>
-        <p className="text-[10px] text-slate-500">100% Verified Agency</p>
-      </div>
-    </div>
-
-  </div>
 </div>
 
       {/* BEST UMRAH PACKAGES */}
@@ -690,7 +641,26 @@ export const Home: React.FC<HomeProps> = ({
                   <p className="text-[10px] text-slate-500">{t.statSupport}</p>
                 </div>
               </div>
+              <div className="flex items-center gap-2">
+      <Trophy className="w-5 h-5 text-red-600 flex-shrink-0" />
+      <div>
+        <p className="font-extrabold text-xs text-slate-900">27</p>
+        <p className="text-[10px] text-slate-500">Successful Rounds</p>
+      </div>
+    </div>
             </div>
+
+
+<a
+  href="https://www.google.com/maps/place/Delta+Travel/@8.9898287,38.785905,17z/data=!4m8!3m7!1s0x164b85372f9878d1:0x1385d361c5cfcdd9!8m2!3d8.9898287!4d38.785905!9m1!1b1!16s%2Fg%2F11zbgfkl8j?entry=ttu&g_ep=EgoyMDI2MDgxOS4wIKXMDSoASAFQAw%3D%3D"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="w-full bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-5 py-3.5 rounded-lg shadow transition-all flex items-center gap-2"
+>
+  <Star className="w-4 h-4 fill-current" />
+  <span>Review Us on Google</span>
+</a>
+
           </div>
 
         </div>

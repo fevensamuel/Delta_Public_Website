@@ -34,8 +34,6 @@ export const Office: React.FC<OfficeProps> = ({ setActivePage, lang }) => {
     }
   };
 
-  const googleMapsUrl = "https://www.google.com/maps/place/Friendship+Business+Center/@8.9897281,38.7861653,17z/data=!3m1!4b1!4m6!3m5!1s0x164b84fb99570403:0x8a21e3ebfc8b4fc5!8m2!3d8.9897281!4d38.7887402!16s%2Fg%2F11s7dmdkfr?entry=ttu";
-
   return (
     <div className="space-y-12 pb-16 bg-[#F9F9F9] text-slate-800">
       
@@ -137,14 +135,6 @@ export const Office: React.FC<OfficeProps> = ({ setActivePage, lang }) => {
               <br />
               Addis Ababa, Ethiopia
             </p>
-            <a 
-              href={googleMapsUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs font-bold text-[#C8102E] hover:underline"
-            >
-              Open in Google Maps <ExternalLink className="w-3 h-3" />
-            </a>
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 space-y-3 hover:shadow-md transition-shadow">
@@ -185,20 +175,12 @@ export const Office: React.FC<OfficeProps> = ({ setActivePage, lang }) => {
             <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
               <MapPin className="w-4 h-4 text-[#C8102E]" /> Delta Travel Head Office Location
             </span>
-            <a 
-              href={googleMapsUrl} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-slate-500 hover:text-[#C8102E] text-xs font-bold flex items-center gap-1"
-            >
-              Open in Maps <ExternalLink className="w-3 h-3" />
-            </a>
           </div>
 
           <div className="w-full h-80 rounded-xl overflow-hidden border border-slate-200">
             <iframe
               title="Delta Travel & Tour Office Location Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.808868547685!2d38.78616529999999!3d8.989728099999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b84fb99570403%3A0x8a21e3ebfc8b4fc5!2sFriendship%20Business%20Center!5e0!3m2!1sen!2set!4v1706467331048"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.8077163502057!2d38.78333007314347!3d8.989833989604644!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85372f9878d1%3A0x1385d361c5cfcdd9!2sDelta%20Travel!5e0!3m2!1sen!2set!4v1787603287094!5m2!1sen!2set"
               width="100%"
               height="100%"
               style={{ border: 0 }}
