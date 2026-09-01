@@ -17,7 +17,6 @@ import { PackageDetailModal } from './components/PackageDetailModal';
 import { Home } from './pages/Home';
 import { About } from './pages/About';
 import { Packages } from './pages/Packages';
-import { HotelsFlights } from './pages/HotelsFlights';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
 import { FAQs } from './pages/FAQs';
@@ -145,9 +144,6 @@ export default function App() {
           />
         )}
 
-        {activePage === 'hotels-flights' && (
-          <HotelsFlights lang={lang} />
-        )}
 
         {activePage === 'gallery' && (
           <Gallery lang={lang} />
@@ -157,13 +153,6 @@ export default function App() {
           <Contact onTriggerSmsToast={triggerSmsToast} lang={lang} />
         )}
 
-        {activePage === 'faqs' && (
-          <FAQs lang={lang} />
-        )}
-
-        {activePage === 'office' && (
-          <Office setActivePage={setActivePage} lang={lang} />
-        )}
       </main>
 
       {/* Global Footer */}

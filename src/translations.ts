@@ -8,7 +8,7 @@ export const translations = {
     packages: "Umrah Packages",
     hotelsFlights: "Airline Partners",
     gallery: "Media Gallery",
-    contact: "Contact Us",
+    contact: "Contact Us and FAQs",
     faqs: "FAQs",
     bookNow: "Inquire Now",
     callUs: "Call 24/7",
@@ -50,8 +50,8 @@ export const translations = {
 
     // Why Choose Us
     whyChooseTitle: "Why Choose Delta Travel",
-    whyChooseSub: "Built on 10+ years of trust, spiritual dedication, and seamless hospitality",
-    feature1Title: "10+ Years Experience",
+    whyChooseSub: "Built on 5+ years of trust, spiritual dedication, and seamless hospitality",
+    feature1Title: "5+ Years Experience",
     feature1Desc: "Decade of expertise serving thousands of satisfied pilgrims.",
     feature2Title: "Best Price Guarantee",
     feature2Desc: "Transparent pricing in USD & ETB without hidden costs.",
@@ -220,8 +220,8 @@ export const translations = {
 
     // Why Choose Us
     whyChooseTitle: "ዴልታ ትራቭልን ለምን ይመርጣሉ?",
-    whyChooseSub: "በ10+ ዓመታት እምነት፣ መንፈሳዊ አገልግሎት እና ምቹ አስተናጋጅነት የተገነባ",
-    feature1Title: "10+ ዓመታት ልምድ",
+    whyChooseSub: "በ5+ ዓመታት እምነት፣ መንፈሳዊ አገልግሎት እና ምቹ አስተናጋጅነት የተገነባ",
+    feature1Title: "5+ ዓመታት ልምድ",
     feature1Desc: "በሺዎች የሚቆጠሩ ተጓዦችን በስኬት ያገለገለ የላቀ ልምድ።",
     feature2Title: "ምርጥ ዋጋ ዋስትና",
     feature2Desc: "በዶላር እና በኢትዮጵያ ብር ግልጽ እና ተመጣጣኝ ዋጋ።",

@@ -74,10 +74,7 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'home', label: t.home },
     { id: 'about', label: t.about },
     { id: 'packages', label: t.packages },
-    { id: 'hotels-flights', label: t.hotelsFlights },
     { id: 'gallery', label: t.gallery },
-    { id: 'faqs', label: t.faqs || 'FAQs' },
-    { id: 'office', label: 'Our Office' },
     { id: 'contact', label: t.contact }
   ];
 
@@ -110,12 +107,6 @@ export const Header: React.FC<HeaderProps> = ({
           
           {/* Right Utilities */}
           <div className="flex items-center space-x-3 rtl:space-x-reverse text-slate-300 text-[11px] sm:text-xs">
-            <button 
-              onClick={() => setActivePage('packages')} 
-              className="hover:text-red-400 transition-colors flex items-center gap-1 font-medium"
-            >
-              <span>Explore Packages</span>
-            </button>
 
             <span className="text-slate-700">|</span>
 
@@ -219,17 +210,7 @@ export const Header: React.FC<HeaderProps> = ({
               );
             })}
           </nav>
-
-          {/* Right Action CTA Button */}
-          <div className="hidden sm:flex items-center gap-3">
-            <button
-              onClick={() => setActivePage('contact')}
-              className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center gap-2 uppercase tracking-wide"
-            >
-              <span>{t.contact}</span>
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          
 
           {/* Mobile Menu Button */}
           <button

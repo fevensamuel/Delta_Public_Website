@@ -198,6 +198,10 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             <span>Ministry of Hajj & Umrah (#4812)</span>
           </div>
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
+            <Building2 className="w-7 h-7 text-red-600" />
+            <span>IATA Accredited Travel Agency</span>
+          </div>
+          <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <Award className="w-7 h-7 text-red-600" />
             <span>Saudi Tourism Authority Partner</span>
           </div>
