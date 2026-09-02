@@ -78,11 +78,11 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
           <div className="grid grid-cols-2 gap-4 pt-2 text-xs">
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
               <h4 className="font-bold text-[#C8102E] text-sm">Our Mission</h4>
-              <p className="text-[11px] text-slate-600 mt-1 leading-normal">To provide reliable, comfortable, and high quality umrah travel services, supporting pilgrims throughout their journey from travel arrangements to the their safe return. While serving them with professionalism, cares, and respect.</p>
+              <p className="text-sm text-slate-600 mt-1 leading-normal italic">To provide reliable, comfortable, and high quality umrah travel services, supporting pilgrims throughout their journey from travel arrangements to the their safe return. While serving them with professionalism, cares, and respect.</p>
             </div>
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
               <h4 className="font-bold text-[#C8102E] text-sm">Our Vision</h4>
-              <p className="text-[11px] text-slate-600 mt-1 leading-normal">To remain the most trusted and tech-forward spiritual travel partner in the region.</p>
+              <p className="text-sm text-slate-600 mt-1 leading-normal italic">To remain the most trusted and tech-forward spiritual travel partner in the region.</p>
             </div>
           </div>
         </div>
@@ -149,7 +149,6 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {teamMembers.map((member) => {
-                // Use getFullImageUrl to correctly map the image path
                 const imageUrl = getFullImageUrl(member.imageUrl);
                 console.log(`🖼️ Team member image URL: ${imageUrl}`);
                 
@@ -203,16 +202,6 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
             <HeartHandshake className="w-7 h-7 text-red-600" />
             <span>Nusuk Official Service Provider</span>
           </div>
-        </div>
-
-        <div className="pt-2">
-          <button
-            onClick={() => setActivePage('packages')}
-            className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-8 py-3 rounded-lg shadow transition-all inline-flex items-center gap-2"
-          >
-            <span>Explore Umrah Packages</span>
-            <ArrowRight className="w-4 h-4 rtl:rotate-180" />
-          </button>
         </div>
       </section>
 

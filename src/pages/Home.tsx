@@ -448,32 +448,32 @@ export const Home: React.FC<HomeProps> = ({
                       {lang === 'AR' ? pkg.titleAr : (lang === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
                     </h3>
 
-                    <div className="flex items-center gap-4 text-xs text-slate-500 font-medium">
+                    <div className="flex items-center gap-4 text-xs text-slate-900 font-medium">
                       <span className="flex items-center gap-1">
                         <Clock className="w-3.5 h-3.5 text-slate-400" />
                         <span>{pkg.durationDays} Days</span>
                       </span>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-100">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-[11px] text-slate-400">{t.perPerson}</span>
-                        <span className="text-base font-extrabold text-[#C8102E]">
-                          {displayPrice}
-                        </span>
-                      </div>
-                      {hasDiscounts && (
-                        <div className="mt-1.5 space-y-0.5">
-                          {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
-                            <div key={idx} className="text-[9px] text-emerald-600 font-medium">
-                              {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
-                              {discount.minPersons && ` (${discount.minPersons}+ persons)`}
-                              {discount.ageGroup && ` (${discount.ageGroup})`}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+                   <div className="pt-2 border-t border-slate-100">
+  <div className="flex items-baseline justify-between">
+    <span className="text-sm font-bold text-slate-900">{t.perPerson}</span>
+    <span className="text-xl font-extrabold text-[#C8102E]">
+      {displayPrice}
+    </span>
+  </div>
+  {hasDiscounts && (
+    <div className="mt-2 space-y-1">
+      {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
+        <div key={idx} className="text-sm font-semibold text-emerald-600">
+          {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+          {discount.minPersons && ` (${discount.minPersons}+ persons)`}
+          {discount.ageGroup && ` (${discount.ageGroup})`}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
                   </div>
                 </div>
 

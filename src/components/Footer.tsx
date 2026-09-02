@@ -241,16 +241,13 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-slate-400">
-          <p>
-            © {new Date().getFullYear()} Delta Travel & Tour. {t.allRightsReserved || 'All rights reserved.'}
-          </p>
-          <div className="flex items-center gap-4">
-            <span className="text-[10px] text-slate-600">Licensed & Verified Travel Agency</span>
-            <span className="w-px h-4 bg-slate-700"></span>
-            <span className="text-[10px] text-slate-600">Ministry License #4812</span>
-          </div>
-        </div>
+        <div className="pt-6 flex flex-col items-center justify-center gap-3 text-sm text-slate-400 text-center">
+  <p>
+    © {new Date().getFullYear()} Delta Travel & Tour. {t.allRightsReserved || 'All rights reserved.'}
+  </p>
+</div>
+
+        
 
       </div>
     </footer>

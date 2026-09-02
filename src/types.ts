@@ -43,6 +43,9 @@ export interface Discount {
   minPersons?: number;
   maxPersons?: number;
   ageGroup?: string;
+  ageMin?: number;
+  ageMax?: number;
+  discountType: 'age' | 'group' | 'general';
   isActive: boolean;
 }
 
@@ -104,8 +107,6 @@ export interface FAQItem {
   answer: string;    
 }
 
-<<<<<<< HEAD
-=======
 // Package FAQ 
 export interface PackageFAQ {
   id: string;
@@ -113,7 +114,6 @@ export interface PackageFAQ {
   questions: FAQItem[];
 }
 
->>>>>>> 92dfad2bcb1bc4a01ca92195b7057a11bf89c73d
 export interface SocialLink {
   id: string;
   platform: string;

@@ -111,7 +111,25 @@ export function mapPackageToFrontend(backendPkg: any, rate: number): any {
   const itineraryData = safeParseItinerary(backendPkg.itinerary);
   const inclusionsData = safeParseArray(backendPkg.inclusions);
   const availableDatesData = safeParseArray(backendPkg.availableDates);
-  const discountsData = safeParseArray(backendPkg.discounts);
+
+  const discountsData = safeParseArray(backendPkg.discounts).map((d: any) => ({
+    id: d.id || `disc-${Date.now()}`,
+    type: d.type || 'percentage',
+    value: d.value || 0,
+    discountedPriceUsd: d.discountedPriceUsd || 0,
+    discountedPriceEtb: d.discountedPriceEtb || 0,
+    discountedPriceSar: d.discountedPriceSar || 0,
+    label: d.label || 'Discount',
+    labelAr: d.labelAr || '',
+    description: d.description || '',
+    minPersons: d.minPersons || undefined,
+    maxPersons: d.maxPersons || undefined,
+    ageGroup: d.ageGroup || undefined,
+    ageMin: d.ageMin || undefined,
+    ageMax: d.ageMax || undefined,
+    discountType: d.discountType || 'general',
+    isActive: d.isActive !== undefined ? d.isActive : true
+  }));
 
   return {
     id: safeString(backendPkg.id, `pkg-${Date.now()}`),

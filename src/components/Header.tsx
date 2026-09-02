@@ -183,12 +183,13 @@ export const Header: React.FC<HeaderProps> = ({
             className="flex items-center gap-2.5 text-left rtl:text-right group cursor-pointer"
           >
             <Logo 
-              brandName={t.brandName || "DELTA"} 
-              brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
-              variant="light"
-              logoVariant="header"
-              size="md"
-            />
+  brandName={t.brandName || "DELTA"} 
+  brandSubtitle={t.brandSubtitle || "Travel & Tour"} 
+  variant="light"
+  logoVariant="header"
+  size="md"
+  showText={true}  // ← Hide text
+/>
           </button>
 
           {/* Desktop Links */}
