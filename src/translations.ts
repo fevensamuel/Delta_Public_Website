@@ -44,7 +44,7 @@ export const translations = {
     // SMS Seasonal Banner
     smsBannerTitle: "Seasonal Updates – Get the Latest Umrah Offers via SMS",
     smsBannerSub: "Subscribe to receive instant group departure updates and price alerts.",
-    enterPhonePlaceholder: "Enter your phone number (e.g. +251 91 123 4567)",
+    enterPhonePlaceholder: "Phone number (+251 91 123 4567)",
     subscribeBtn: "Subscribe via SMS",
     smsSubscribedToast: "Subscribed! Confirmation SMS sent to your phone.",
 
@@ -54,7 +54,7 @@ export const translations = {
     feature1Title: "5+ Years Experience",
     feature1Desc: "Decade of expertise serving thousands of satisfied pilgrims.",
     feature2Title: "Best Price Guarantee",
-    feature2Desc: "Transparent pricing in USD & ETB without hidden costs.",
+    feature2Desc: "Transparent pricing without hidden costs.",
     feature3Title: "Licensed & Verified",
     feature3Desc: "Officially authorized Umrah agency.",
     feature4Title: "Expert Mutawwif Team",

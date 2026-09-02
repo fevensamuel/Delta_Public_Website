@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GalleryItem, Language } from '../types';
+import { PageBanner } from '../components/PageBanner';
 import { fetchGalleryItems, getFullImageUrl } from '../api/client';
 import { translations } from '../translations';
 import { 
@@ -128,22 +129,15 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   }
 
   return (
-    <div className="space-y-10 pb-16 bg-[#F9F9F9] text-slate-800">
+    <div>
       
       {/* Header Banner */}
-      <section className="bg-[#0b0f19] text-white py-12 px-4 text-center relative overflow-hidden border-b border-slate-800">
-        <div className="max-w-4xl mx-auto space-y-3 relative z-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-red-900/50 text-red-400 font-bold text-xs uppercase tracking-wider border border-red-800/60">
-            Media Library
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black font-sans text-white">
-            Photo & Video Gallery
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Explore holy sites and sacred moments from Makkah, Madinah, and Umrah journeys.
-          </p>
-        </div>
-      </section>
+       <PageBanner 
+        badge="Media Library"
+        title="Photo & Video Gallery"
+        subtitle="Explore holy sites and sacred moments from Makkah, Madinah, and Umrah journeys."
+        backgroundImage="/background/bg3.jpg"
+      />
 
       {/* TYPE FILTER */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">

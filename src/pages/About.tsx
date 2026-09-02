@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Language, PageId, TeamMember } from '../types';
+import { PageBanner } from '../components/PageBanner';
 import { translations } from '../translations';
 import { 
   ShieldCheck, 
@@ -45,22 +46,15 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
   };
 
   return (
-    <div className="space-y-16 pb-16">
+    <div >
       
       {/* Banner */}
-      <section className="bg-[#0b0f19] text-white py-14 px-4 text-center relative overflow-hidden border-b border-slate-800">
-        <div className="max-w-4xl mx-auto space-y-3 relative z-10">
-          <span className="inline-block px-3.5 py-1 rounded-full bg-red-900/50 text-red-400 font-bold text-xs uppercase tracking-wider border border-red-800/60">
-            About Delta Travel & Tour
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black font-sans text-white">
-            Decade of Spiritual Dedication & Service
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Established in 2021, Delta Travel & Tour is a premier licensed travel agency dedicated to facilitating comfortable, spiritually enriching, and seamless Umrah and Hajj journeys.
-          </p>
-        </div>
-      </section>
+      <PageBanner 
+        badge="About Delta Travel & Tour"
+        title="Decade of Spiritual Dedication & Service"
+        subtitle="Established in 2021, Delta Travel & Tour is a premier licensed travel agency dedicated to facilitating comfortable, spiritually enriching, and seamless Umrah and Hajj journeys."
+        backgroundImage="/background/bg3.jpg"
+      />
 
       {/* History & Mission */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
@@ -93,27 +87,27 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
           </div>
         </div>
 
-        <div className="relative">
-          <div className="rounded-2xl overflow-hidden shadow-lg border border-slate-200">
-            <img 
-              src="https://images.unsplash.com/photo-1564769625905-50e93615e769?auto=format&fit=crop&q=80&w=1000" 
-              alt="Madinah Prophet Mosque" 
-              className="w-full h-80 object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1000x320/0b0f19/ffffff?text=Madinah+Mosque';
-              }}
-            />
-          </div>
-          <div className="absolute -bottom-5 -left-5 bg-white p-4 rounded-xl shadow-xl border border-slate-200 flex items-center gap-3 hidden sm:flex">
-            <div className="w-10 h-10 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold">
-              <ShieldCheck className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="font-bold text-slate-900 text-xs">Ministry License #4812</p>
-              <p className="text-[11px] text-slate-500">Officially Approved Hajj & Umrah Agency</p>
-            </div>
-          </div>
-        </div>
+       <div className="relative">
+  <div className="rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+    <img 
+      src="/background/bg2.jpg" 
+      alt="Madinah Prophet Mosque" 
+      className="w-full h-80 object-cover"
+      onError={(e) => {
+        (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1000x320/0b0f19/ffffff?text=Madinah+Mosque';
+      }}
+    />
+  </div>
+  <div className="absolute -bottom-5 -left-5 bg-white p-4 rounded-xl shadow-xl border border-slate-200 flex items-center gap-3 hidden sm:flex">
+    <div className="w-10 h-10 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold">
+      <ShieldCheck className="w-6 h-6" />
+    </div>
+    <div>
+      <p className="font-bold text-slate-900 text-xs">Ministry License #4812</p>
+      <p className="text-[11px] text-slate-500">Officially Approved Hajj & Umrah Agency</p>
+    </div>
+  </div>
+</div>
       </section>
 
       {/* Certified Mutawwif Team - Fully Dynamic */}

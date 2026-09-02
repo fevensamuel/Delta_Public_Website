@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PackageItem, Language, Currency } from '../types';
+import { PageBanner } from '../components/PageBanner';
 import { translations } from '../translations';
 import { formatPrice, formatPriceRange } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
@@ -79,21 +80,15 @@ export const Packages: React.FC<PackagesProps> = ({
   };
 
   return (
-    <div className="space-y-12 pb-16 bg-[#F9F9F9]">
+    <div>
       
-      <section className="bg-[#0b0f19] text-white py-12 px-4 text-center relative overflow-hidden border-b border-slate-800">
-        <div className="max-w-4xl mx-auto space-y-3 relative z-10">
-          <span className="inline-block px-3 py-1 rounded-full bg-red-900/50 text-red-400 font-bold text-xs uppercase tracking-wider border border-red-800/60">
-            Season 2026 Umrah Packages
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black font-sans text-white">
-            {t.packages}
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto">
-            Choose from Economy, Standard, Premium, and VIP Luxury Umrah packages.
-          </p>
-        </div>
-      </section>
+      {/* Banner */ }
+     <PageBanner 
+        badge="Season 2026 Umrah Packages"
+        title="Umrah Packages"
+        subtitle="Choose from Economy, Standard, Premium, and VIP Luxury Umrah packages."
+        backgroundImage="/background/bg3.jpg"
+      />
 
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
         <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">

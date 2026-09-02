@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { OfficeImage, Language, PackageItem, PageId, Currency, FAQItem } from '../types';
+import { PageBanner } from '../components/PageBanner';
 import { translations } from '../translations';
 import { getPublicOfficeImagesApi } from '../api/officeImages';
 import { getFullImageUrl } from '../api/client';
@@ -162,24 +163,15 @@ export const Contact: React.FC<OfficeProps> = ({
   };
 
   return (
-    <div className="space-y-12 pb-16 bg-[#F9F9F9] text-slate-800">
+    <div>
       
       {/* Banner */}
-      <section className="bg-[#0b0f19] text-white py-14 px-4 text-center relative overflow-hidden border-b border-slate-800">
-        <div className="max-w-4xl mx-auto space-y-3 relative z-10">
-          <span className="inline-block px-3.5 py-1 rounded-full bg-red-900/50 text-red-400 font-bold text-xs uppercase tracking-wider border border-red-800/60">
-            24/7 Umrah Pilgrim Support Desk
-          </span>
-          <h1 className="text-3xl sm:text-4xl font-black font-sans text-white">
-            Delta Travel & Tour - Office & Contact
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 max-w-2xl mx-auto leading-relaxed">
-            Visit us at our headquarters in Addis Ababa for personalized consultation, document assistance, 
-            and expert guidance for your Umrah journey. Our travel consultants and religious scholars are 
-            ready to assist with package inquiries, group departures, and flight bookings.
-          </p>
-        </div>
-      </section>
+        <PageBanner 
+        badge="24/7 Umrah Pilgrim Support Desk"
+        title="Delta Travel & Tour - Office & Contact"
+        subtitle="Visit us at our headquarters in Addis Ababa for personalized consultation, document assistance, and expert guidance for your Umrah journey."
+        backgroundImage="/background/bg3.jpg"
+      />
 
       {/* Office Images Gallery */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8">
