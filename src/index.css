@@ -130,12 +130,32 @@ body {
   background-size: 24px 24px;
 }
 
-/* RTL Support */
+/* ===== AIRLINE CAROUSEL ANIMATION ===== */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  animation: scroll 30s linear infinite;
+  width: fit-content;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}
+
+/* ===== RTL Support ===== */
 [dir="rtl"] {
   text-align: right;
 }
 
-/* Custom Scrollbar */
+/* ===== Custom Scrollbar ===== */
 ::-webkit-scrollbar {
   width: 8px;
 }
