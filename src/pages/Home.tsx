@@ -570,7 +570,7 @@ export const Home: React.FC<HomeProps> = ({
       {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
         <div key={idx} className="text-sm font-semibold text-emerald-600">
           {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
-          {discount.description && ` (${discount.description})`}
+         {/* {discount.description && ` (${discount.description})`}  */}
           {discount.minPersons && ` (${discount.minPersons}+ Persons)`}
           {discount.ageGroup && ` (Age: ${discount.ageGroup})`}
           {/* Handle ageMin/ageMax for "Ages" display */}
@@ -710,7 +710,7 @@ export const Home: React.FC<HomeProps> = ({
                 <span>Inquiry</span>
               </button>
               <a
-                href="tel:+251911234567"
+                href="tel:+2519101367477"
                 className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-5 py-3 rounded-xl shadow transition-colors flex items-center gap-2"
               >
                 <Phone className="w-4 h-4" />
@@ -757,6 +757,10 @@ export const Home: React.FC<HomeProps> = ({
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[#C8102E]" />
                 <a href="tel:+251910136747" className="hover:text-[#C8102E]">+251 910 136 747</a>
+                <Phone className="w-4 h-4 text-[#C8102E]" />
+                <a href="tel:+251956585555 " className="hover:text-[#C8102E]">+251 956 585 555</a>
+                <Phone className="w-4 h-4 text-[#C8102E]" />
+                <a href="tel:+251956595555 " className="hover:text-[#C8102E]">+251 956 595 555</a>
               </p>
               <p className="flex items-center gap-2">
                 <Mail className="w-4 h-4 text-[#C8102E]" />

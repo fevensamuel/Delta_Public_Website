@@ -230,11 +230,11 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
   </button>
 
               <a
-                href="tel:+251911234567"
+                href="tel:+2519101367477"
                 className="bg-[#C8102E] hover:bg-[#a60d25] text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition-colors flex items-center gap-1.5"
               >
                 <Phone className="w-4 h-4" />
-                <span>Call +251 91 123 4567</span>
+                <span>Call +251 91 013 6747 </span>
               </a>
             </div>
           </div>

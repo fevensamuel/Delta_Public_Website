@@ -163,6 +163,8 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                   <a href="tel:+251910136747" className="hover:text-[#C8102E] transition-colors">+251 910 136 747</a>
                   <span className="text-slate-500 mx-1">|</span>
                   <a href="tel:+251956585555" className="hover:text-[#C8102E] transition-colors">+251 956 585 555</a>
+                  <span className="text-slate-500 mx-1">|</span>
+                  <a href="tel:+251956595555" className="hover:text-[#C8102E] transition-colors">+251 956 595 555</a>
                 </div>
               </li>
               <li className="flex items-center gap-2.5 text-slate-300">

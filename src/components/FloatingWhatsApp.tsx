@@ -120,7 +120,7 @@ export const FloatingWhatsApp: React.FC = () => {
 
   {/* Call Us Button */}
   <a
-    href="tel:+966501234567"
+    href="tel:++251910136747 "
     className="bg-[#C8102E] hover:bg-[#a60d25] text-white py-2.5 px-3 rounded-l-xl shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-red-700"
     title="Call Us"
   >
@@ -129,7 +129,7 @@ export const FloatingWhatsApp: React.FC = () => {
 
   {/* Send SMS Button */}
 <a
-    href="sms:+966501234567"
+    href="sms:+251910136747 "
     className="bg-[#C8102E] hover:bg-[#a60d25] text-white py-2.5 px-3 rounded-l-xl shadow-lg flex flex-col items-center justify-center min-w-[70px] h-[60px] transition-transform hover:-translate-x-1 border-y border-l border-red-700"
     title="Send SMS"
   >

@@ -1,7 +1,7 @@
 // src/api/client.ts
 const env = (import.meta as any).env || {};
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
-const WHATSAPP_PHONE = env.VITE_WHATSAPP_PHONE || '251911223344';
+const WHATSAPP_PHONE = env.VITE_WHATSAPP_PHONE || '+251910493349 ';
 
 export const api = {
   baseUrl: API_BASE_URL,

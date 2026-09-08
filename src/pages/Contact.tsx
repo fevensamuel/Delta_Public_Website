@@ -133,7 +133,7 @@ export const Contact: React.FC<OfficeProps> = ({
       
       if (onTriggerSmsToast) {
         onTriggerSmsToast(
-          phone || '+251911234567',
+          phone || '+2519101367477',
           `DELTA TRAVEL: Thank you ${fullName || 'Pilgrim'}! Your message (Ref ${refNo}) has been received. Our team will contact you shortly.`
         );
       }
@@ -271,9 +271,6 @@ export const Contact: React.FC<OfficeProps> = ({
                 <h4 className="font-bold text-slate-900 text-sm">Headquarters Location</h4>
                 <p className="text-slate-600 mt-0.5">Bole Road, Friendship Business Centre</p>
                 <p className="text-slate-600 mt-0.5">Addis Ababa, Ethiopia</p>
-                <span className="text-[10px] text-slate-500 font-semibold block mt-1">
-                  Landmark: Opposite Olympia Traffic Light
-                </span>
               </div>
             </div>
 
@@ -283,9 +280,8 @@ export const Contact: React.FC<OfficeProps> = ({
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-sm">Phone Lines (24/7 Emergency)</h4>
-                <p className="text-slate-600 mt-0.5">Main Hotline: +251 91 123 4567</p>
-                <p className="text-slate-600">Saudi Arabia Ground Desk: +966 50 123 4567</p>
-                <p className="text-slate-600">WhatsApp: +251 91 013 6747</p>
+                <p className="text-slate-600 mt-0.5">Main Hotline: +251 91 013 6747 / +251 95 658 5555 / +251 95 659 5555 </p>
+                <p className="text-slate-600">WhatsApp: +251 91 049 3349 / +251 91 013 6747</p>
               </div>
             </div>
 
@@ -358,7 +354,7 @@ export const Contact: React.FC<OfficeProps> = ({
                   <input
                     type="tel"
                     required
-                    placeholder="+251 91 123 4567"
+                    placeholder="+251 91 013 6747 "
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"

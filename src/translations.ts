@@ -44,7 +44,7 @@ export const translations = {
     // SMS Seasonal Banner
     smsBannerTitle: "Seasonal Updates – Get the Latest Umrah Offers via SMS",
     smsBannerSub: "Subscribe to receive instant group departure updates and price alerts.",
-    enterPhonePlaceholder: "Phone number (+251 91 123 4567)",
+    enterPhonePlaceholder: "Phone number (+251 91 013 6747 )",
     subscribeBtn: "Subscribe via SMS",
     smsSubscribedToast: "Subscribed! Confirmation SMS sent to your phone.",
 
@@ -214,7 +214,7 @@ export const translations = {
     // SMS Seasonal Banner
     smsBannerTitle: "የወቅቱ ማስታወቂያ – የቅርብ ጊዜ የኡምራ ቅናሾችን በኤስ.ኤም.ኤስ ያግኙ",
     smsBannerSub: "የቅናሾችን እና የቡድን ጉዞዎችን ፈጣን ማስታወቂያ ለማግኘት ይመዝገቡ።",
-    enterPhonePlaceholder: "ስልክ ቁጥርዎን ያስገቡ (ምሳሌ +251 91 123 4567)",
+    enterPhonePlaceholder: "ስልክ ቁጥርዎን ያስገቡ (ምሳሌ +251 91 013 6747 )",
     subscribeBtn: "በኤስ.ኤም.ኤስ ይመዝገቡ",
     smsSubscribedToast: "ተመዝግበዋል! የማረጋገጫ ኤስ.ኤም.ኤስ ወደ ስልክዎ ተላኳል።",
 
