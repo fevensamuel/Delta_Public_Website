@@ -111,13 +111,37 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-        <p className="text-xs font-semibold">Loading gallery...</p>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
+      <div className="flex flex-col items-center gap-6">
+        {/* Logo with spinning animation */}
+        <div className="relative">
+          {/* Spinning ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-[#C8102E] border-t-transparent animate-spin" />
+          
+          {/* Logo image */}
+          <img 
+            src="/logo/logo.jpg" 
+            alt="Delta Travel & Tour" 
+            className="w-20 h-20 rounded-full object-cover relative z-10 p-1 bg-white"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+            }}
+          />
+        </div>
+        
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm font-semibold text-slate-700">Loading Gallery...</p>
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (error) {
     return (

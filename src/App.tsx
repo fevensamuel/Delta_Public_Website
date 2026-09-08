@@ -19,8 +19,6 @@ import { About } from './pages/About';
 import { Packages } from './pages/Packages';
 import { Gallery } from './pages/Gallery';
 import { Contact } from './pages/Contact';
-import { FAQs } from './pages/FAQs';
-import { Office } from './pages/Office';
 
 export default function App() {
   const [activePage, setActivePage] = useState<PageId>('home');
@@ -96,15 +94,37 @@ export default function App() {
   const fontClass = lang === 'AR' ? 'font-arabic' : lang === 'AM' ? 'font-amharic' : 'font-sans';
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
-        <div className="flex flex-col items-center gap-3">
-          <div className="w-10 h-10 border-4 border-[#C8102E] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-sm text-slate-500">Loading packages...</p>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
+      <div className="flex flex-col items-center gap-6">
+        {/* Logo with spinning animation */}
+        <div className="relative">
+          {/* Spinning ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-[#C8102E] border-t-transparent animate-spin" />
+          
+          {/* Logo image */}
+          <img 
+            src="/logo/logo.jpg" 
+            alt="Delta Travel & Tour" 
+            className="w-20 h-20 rounded-full object-cover relative z-10 p-1 bg-white"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+            }}
+          />
+        </div>
+        
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm font-semibold text-slate-700">Loading...</p>
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className={`min-h-screen flex flex-col bg-[#F9F9F9] text-slate-800 ${fontClass}`} dir={lang === 'AR' ? 'rtl' : 'ltr'}>

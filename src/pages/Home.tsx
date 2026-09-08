@@ -122,6 +122,17 @@ const airlines = [
     inflight: 'Snacks and beverages (buy on board)',
     frequency: '7 weekly flights',
     badge: 'Budget Friendly'
+  },
+  {
+    name: 'Qatar Airways',
+    flag: '🇶🇦',
+    code: 'IATA: QR • Skytrax 5-Star',
+    image: '/airlines/qatar.jpg',
+    hub: 'Hamad Intl (DOH)',
+    baggage: '30kg + 7kg carry-on',
+    inflight: 'Gourmet meals, beverages, and special meals',
+    frequency: '7 weekly flights',
+    badge: '5-Star Airline'
   }
 ];
 
@@ -316,13 +327,37 @@ export const Home: React.FC<HomeProps> = ({
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-20 text-slate-500 space-y-3">
-        <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-        <p className="text-xs font-semibold">Loading homepage...</p>
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-[#F9F9F9]">
+      <div className="flex flex-col items-center gap-6">
+        {/* Logo with spinning animation */}
+        <div className="relative">
+          {/* Spinning ring */}
+          <div className="absolute inset-0 rounded-full border-4 border-[#C8102E] border-t-transparent animate-spin" />
+          
+          {/* Logo image */}
+          <img 
+            src="/logo/logo.jpg" 
+            alt="Delta Travel & Tour" 
+            className="w-20 h-20 rounded-full object-cover relative z-10 p-1 bg-white"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80"%3E%3Crect width="80" height="80" fill="%23C8102E" rx="40"/%3E%3Ctext x="40" y="48" text-anchor="middle" dy=".3em" fill="white" font-size="28" font-family="sans-serif" font-weight="bold"%3EΔ%3C/text%3E%3C/svg%3E';
+            }}
+          />
+        </div>
+        
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm font-semibold text-slate-700">Loading HomePage...</p>
+          <div className="flex items-center gap-1">
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+            <span className="w-2 h-2 bg-[#C8102E] rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          </div>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div className="space-y-12 pb-12 bg-[#F9F9F9] text-slate-800">
@@ -524,24 +559,34 @@ export const Home: React.FC<HomeProps> = ({
                     </div>
 
                     <div className="pt-2 border-t border-slate-100">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-sm font-bold text-slate-900">{t.perPerson}</span>
-                        <span className="text-xl font-extrabold text-[#C8102E]">
-                          {displayPrice}
-                        </span>
-                      </div>
-                      {hasDiscounts && (
-                        <div className="mt-2 space-y-1">
-                          {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
-                            <div key={idx} className="text-sm font-semibold text-emerald-600">
-                              {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
-                              {discount.minPersons && ` (${discount.minPersons}+ persons)`}
-                              {discount.ageGroup && ` (${discount.ageGroup})`}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
+  <div className="flex items-baseline justify-between">
+    <span className="text-sm font-bold text-slate-900">{t.perPerson}</span>
+    <span className="text-xl font-extrabold text-[#C8102E]">
+      {displayPrice}
+    </span>
+  </div>
+  {hasDiscounts && (
+    <div className="mt-2 space-y-1">
+      {pkg.discounts?.filter(d => d.isActive !== false).map((discount, idx) => (
+        <div key={idx} className="text-sm font-semibold text-emerald-600">
+          {discount.label}: {discount.type === 'percentage' ? `${discount.value}% off` : `$${discount.value} off`}
+          {discount.description && ` (${discount.description})`}
+          {discount.minPersons && ` (${discount.minPersons}+ Persons)`}
+          {discount.ageGroup && ` (Age: ${discount.ageGroup})`}
+          {/* Handle ageMin/ageMax for "Ages" display */}
+          {discount.ageMin !== undefined && discount.ageMin !== null && 
+           discount.ageMax !== undefined && discount.ageMax !== null && (
+            ` (Ages ${discount.ageMin}-${discount.ageMax})`
+          )}
+          {discount.ageMin !== undefined && discount.ageMin !== null && 
+           (discount.ageMax === undefined || discount.ageMax === null) && (
+            ` (Ages ${discount.ageMin}+)`
+          )}
+        </div>
+      ))}
+    </div>
+  )}
+</div>
                   </div>
                 </div>
 
