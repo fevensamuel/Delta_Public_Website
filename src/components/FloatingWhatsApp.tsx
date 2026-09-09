@@ -6,7 +6,7 @@ export const FloatingWhatsApp: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [userMsg, setUserMsg] = useState('');
 
-  const phone = '966501234567';
+  const phone = '251910136747';
 
   const handleSend = (text?: string) => {
     const finalMsg = encodeURIComponent(text || userMsg || 'Assalamu Alaikum, I would like to inquire about Delta Travel Umrah packages.');
@@ -62,7 +62,7 @@ export const FloatingWhatsApp: React.FC = () => {
               {/* Quick Inquiry Options */}
               <div className="space-y-1.5 pt-1">
                 <button
-                  onClick={() => handleSend("Inquiry: Standard Umrah Package Details ($1,250)")}
+                  onClick={() => handleSend("Inquiry: Umrah Package Details ")}
                   className="w-full text-left p-2 rounded-lg bg-white hover:bg-red-50 text-slate-800 border border-slate-200 transition-colors flex items-center justify-between"
                 >
                   <span>🕋 Umrah Package Quotes</span>

@@ -170,7 +170,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
               <li className="flex items-center gap-2.5 text-slate-300">
                 <Mail className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
                 <a href="mailto:info@deltatravel.com" className="hover:text-[#C8102E] transition-colors">
-                  info@deltatravel.com
+                  info@deltagrouptravelumrah.com
                 </a>
               </li>
               <li className="flex items-start gap-2.5 text-slate-300">
@@ -248,9 +248,6 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
     © {new Date().getFullYear()} Delta Travel & Tour. {t.allRightsReserved || 'All rights reserved.'}
   </p>
 </div>
-
-        
-
       </div>
     </footer>
   );

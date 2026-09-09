@@ -614,7 +614,7 @@ export const Home: React.FC<HomeProps> = ({
                 <Sparkles className="w-3.5 h-3.5" /> Official Flight Partners
               </span>
               <h2 className="text-2xl font-black text-slate-900 mt-0.5">
-                Fly Directly to Makkah & Madinah
+                Any Ticket Booking
               </h2>
             </div>
           </div>
@@ -696,7 +696,7 @@ export const Home: React.FC<HomeProps> = ({
               <span className="text-xs font-bold text-[#C8102E] uppercase tracking-wider flex items-center gap-1 justify-center md:justify-start">
                 <Sparkles className="w-3.5 h-3.5 text-[#C8102E]" /> Dedicated Flight Support
               </span>
-              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">Need Custom Flight Bookings or Group Seats?</h3>
+              <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">Customized Flight Bookings or Group Seats? Please Contact Us on WhatsApp</h3>
             </div>
 
             <div className="flex items-center gap-3 flex-wrap justify-center md:justify-end">
@@ -749,25 +749,31 @@ export const Home: React.FC<HomeProps> = ({
           </div>
 
           <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 space-y-3 hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-lg bg-[#C8102E]/10 flex items-center justify-center">
-              <Phone className="w-6 h-6 text-[#C8102E]" />
-            </div>
-            <h3 className="font-bold text-slate-900 text-sm">Contact Us</h3>
-            <div className="space-y-2 text-sm text-slate-600">
-              <p className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#C8102E]" />
-                <a href="tel:+251910136747" className="hover:text-[#C8102E]">+251 910 136 747</a>
-                <Phone className="w-4 h-4 text-[#C8102E]" />
-                <a href="tel:+251956585555 " className="hover:text-[#C8102E]">+251 956 585 555</a>
-                <Phone className="w-4 h-4 text-[#C8102E]" />
-                <a href="tel:+251956595555 " className="hover:text-[#C8102E]">+251 956 595 555</a>
-              </p>
-              <p className="flex items-center gap-2">
-                <Mail className="w-4 h-4 text-[#C8102E]" />
-                <a href="mailto:info@deltatravel.com" className="hover:text-[#C8102E]">info@deltatravel.com</a>
-              </p>
-            </div>
-          </div>
+  <div className="w-12 h-12 rounded-lg bg-[#C8102E]/10 flex items-center justify-center">
+    <Phone className="w-6 h-6 text-[#C8102E]" />
+  </div>
+  <h3 className="font-bold text-slate-900 text-sm">Contact Us</h3>
+  <div className="space-y-2 text-sm text-slate-600">
+    <div className="space-y-1.5">
+      <p className="flex items-center gap-2">
+        <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+        <a href="tel:+251910136747" className="hover:text-[#C8102E] transition-colors">+251 91 013 6747</a>
+      </p>
+      <p className="flex items-center gap-2">
+        <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+        <a href="tel:+251956585555" className="hover:text-[#C8102E] transition-colors">+251 95 658 5555</a>
+      </p>
+      <p className="flex items-center gap-2">
+        <Phone className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+        <a href="tel:+251956595555" className="hover:text-[#C8102E] transition-colors">+251 95 659 5555</a>
+      </p>
+    </div>
+    <p className="flex items-center gap-2 pt-1 border-t border-slate-100">
+      <Mail className="w-4 h-4 text-[#C8102E] flex-shrink-0" />
+      <a href="mailto:info@deltatravel.com" className="hover:text-[#C8102E] transition-colors">info@deltagrouptravelumrah.com</a>
+    </p>
+  </div>
+</div>
         </div>
       </section>
 
