@@ -167,9 +167,9 @@ export const Contact: React.FC<OfficeProps> = ({
       
       {/* Banner */}
         <PageBanner 
-        badge="24/7 Umrah Pilgrim Support Desk"
-        title="Delta Travel & Tour - Office & Contact"
-        subtitle="Visit us at our headquarters in Addis Ababa for personalized consultation, document assistance, and expert guidance for your Umrah journey."
+        badge={t.contactPageBadge}
+        title={t.contactPageTitle}
+        subtitle={t.contactPageSubtitle}
         backgroundImage="/background/bg3.jpg"
       />
 
@@ -178,33 +178,33 @@ export const Contact: React.FC<OfficeProps> = ({
         <div className="space-y-6">
           <div>
             <span className="text-xs font-bold text-[#C8102E] uppercase tracking-wider">
-              Office Gallery
+              {t.officeGallery}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-1">
-              See Our Office
+              {t.seeOurOffice}
             </h2>
             <p className="text-sm text-slate-600 max-w-2xl">
-              Take a virtual tour of our office where we plan and coordinate Umrah journeys for pilgrims.
+              {t.officeGalleryText}
             </p>
           </div>
 
           {loadingImages ? (
             <div className="flex flex-col items-center justify-center py-20 space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-              <p className="text-xs text-slate-500">Loading office images...</p>
+              <p className="text-xs text-slate-500">{t.officeImagesLoading}</p>
             </div>
           ) : error ? (
             <div className="text-center py-16">
               <p className="text-red-600 text-sm">{error}</p>
               <button onClick={loadOfficeImages} className="mt-4 text-[#C8102E] text-sm font-bold underline hover:no-underline">
-                Retry
+                {t.retry}
               </button>
             </div>
           ) : images.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-xl border border-slate-200">
               <Building2 className="w-12 h-12 mx-auto text-slate-300" />
-              <p className="text-slate-500 mt-3">No office images available yet.</p>
-              <p className="text-xs text-slate-400">Check back soon for updates.</p>
+              <p className="text-slate-500 mt-3">{t.noOfficeImages}</p>
+              <p className="text-xs text-slate-400">{t.checkBackSoon}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -250,14 +250,13 @@ export const Contact: React.FC<OfficeProps> = ({
         <div className="space-y-6">
           <div className="space-y-2">
             <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">
-              DIRECT CONTACT
+              {t.directContact}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Visit Our Head Office or Reach Us Anytime
+              {t.visitHeadOfficeTitle}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600">
-              We welcome pilgrims to visit our office in Addis Ababa for face-to-face consultation, 
-              document assistance, and guidance.
+              {t.visitHeadOfficeText}
             </p>
           </div>
 
@@ -268,7 +267,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 <MapPin className="w-5 h-5 text-[#C8102E]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Headquarters Location</h4>
+                <h4 className="font-bold text-slate-900 text-sm">{t.headquartersLocation}</h4>
                 <p className="text-slate-600 mt-0.5">Bole Road, Friendship Business Centre</p>
                 <p className="text-slate-600 mt-0.5">Addis Ababa, Ethiopia</p>
               </div>
@@ -279,7 +278,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 <Phone className="w-5 h-5 text-[#C8102E]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Phone Lines (24/7 Emergency)</h4>
+                <h4 className="font-bold text-slate-900 text-sm">{t.phoneLines}</h4>
                 <p className="text-slate-600 mt-0.5">Main Hotline: +251 91 013 6747 / +251 95 658 5555 / +251 95 659 5555 </p>
                 <p className="text-slate-600">WhatsApp: +251 91 049 3349 / +251 91 013 6747</p>
               </div>
@@ -290,7 +289,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 <Mail className="w-5 h-5 text-[#C8102E]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Email Address</h4>
+                <h4 className="font-bold text-slate-900 text-sm">{t.emailAddress}</h4>
                 <p className="text-slate-600 mt-0.5">General Inquiries: info@deltatravel.com</p>
                 <p className="text-slate-600">Umrah Desk: umrah@deltatravel.com</p>
                 <p className="text-slate-600">Support: support@deltatravel.com</p>
@@ -302,7 +301,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 <Clock className="w-5 h-5 text-[#C8102E]" />
               </div>
               <div>
-                <h4 className="font-bold text-slate-900 text-sm">Office Hours</h4>
+                <h4 className="font-bold text-slate-900 text-sm">{t.officeHoursContact}</h4>
                 <p className="text-slate-600 mt-0.5">Monday – Saturday: 2:30 AM – 11:30 PM LT</p>
                 <p className="text-slate-600">Sunday & Holidays: On-call WhatsApp Assistance</p>
                 <p className="text-[10px] text-slate-500 mt-1">*24/7 emergency support available via phone</p>
@@ -316,29 +315,29 @@ export const Contact: React.FC<OfficeProps> = ({
         <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6">
           <div className="border-b border-slate-100 pb-3">
             <h3 className="text-xl font-bold text-slate-900">
-              Send Us a Direct Inquiry Message
+              {t.directInquiryTitle}
             </h3>
             <p className="text-xs text-slate-600 mt-0.5">
-              Fill in your details below. You will receive an instant confirmation SMS alert.
+              {t.directInquirySub}
             </p>
           </div>
 
           {submitted ? (
             <div className="bg-emerald-50 border border-emerald-200 p-8 rounded-xl text-center space-y-3">
               <CheckCircle2 className="w-12 h-12 text-emerald-600 mx-auto" />
-              <h4 className="font-bold text-emerald-950 text-lg">Inquiry Message Received!</h4>
+              <h4 className="font-bold text-emerald-950 text-lg">{t.inquiryReceived}</h4>
               <p className="text-xs text-slate-700">
-                A confirmation SMS was sent to your phone. Our travel consultant will call you shortly.
+                {t.inquiryReceivedText}
               </p>
               <p className="text-[10px] text-slate-500 mt-2">
-                Reference: DLT-INQ-{Math.floor(1000 + Math.random() * 9000)}
+                {t.reference}: DLT-INQ-{Math.floor(1000 + Math.random() * 9000)}
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Full Name *</label>
+                  <label className="block font-bold text-slate-700 mb-1">{t.fullName}</label>
                   <input
                     type="text"
                     required
@@ -350,7 +349,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Phone Number *</label>
+                  <label className="block font-bold text-slate-700 mb-1">{t.phoneNumber}</label>
                   <input
                     type="tel"
                     required
@@ -364,7 +363,7 @@ export const Contact: React.FC<OfficeProps> = ({
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Email Address (optional)</label>
+                  <label className="block font-bold text-slate-700 mb-1">{t.emailOptional}</label>
                   <input
                     type="email"
                     placeholder="ahmed@example.com"
@@ -375,18 +374,18 @@ export const Contact: React.FC<OfficeProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Inquiry Subject</label>
+                  <label className="block font-bold text-slate-700 mb-1">{t.inquirySubject}</label>
                   <select
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
                     disabled={loadingPackages}
                   >
-                    <option value="">Select a package</option>
+                    <option value="">{t.selectPackage}</option>
                     {loadingPackages ? (
-                      <option disabled>Loading packages...</option>
+                      <option disabled>{t.loadingPackages}</option>
                     ) : packages.length === 0 ? (
-                      <option disabled>No packages available</option>
+                      <option disabled>{t.noPackagesAvailable}</option>
                     ) : (
                       packages.map((pkg) => {
                         const title = pkg.titleEn || pkg.title;
@@ -403,11 +402,11 @@ export const Contact: React.FC<OfficeProps> = ({
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Message Details *</label>
+                <label className="block font-bold text-slate-700 mb-1">{t.messageDetails}</label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Tell us about your preferred travel dates, number of family members, or special requirements..."
+                  placeholder={t.messagePlaceholder}
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-xs focus:ring-2 focus:ring-red-600 focus:outline-none"
@@ -422,12 +421,12 @@ export const Contact: React.FC<OfficeProps> = ({
                 {loading ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Submitting Inquiry...</span>
+                    <span>{t.submittingInquiry}</span>
                   </>
                 ) : (
                   <>
                     <Send className="w-4 h-4" />
-                    <span>Submit Inquiry & Receive Confirmation</span>
+                    <span>{t.submitInquiry}</span>
                   </>
                 )}
               </button>
@@ -443,7 +442,7 @@ export const Contact: React.FC<OfficeProps> = ({
         <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 overflow-hidden space-y-3">
           <div className="flex items-center justify-between text-xs px-2">
             <span className="font-bold text-slate-900 text-sm flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-[#C8102E]" /> Delta Travel Head Office Location
+              <MapPin className="w-4 h-4 text-[#C8102E]" /> {t.mapTitle}
             </span>
             <span className="text-slate-500">Bole Road, Friendship Business Centre</span>
           </div>
@@ -470,13 +469,13 @@ export const Contact: React.FC<OfficeProps> = ({
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
             <div>
               <span className="text-xs font-bold text-[#C8102E] uppercase tracking-wider flex items-center gap-1">
-                <HelpCircle className="w-3.5 h-3.5" /> FAQs
+                <HelpCircle className="w-3.5 h-3.5" /> {t.faqs}
               </span>
               <h2 className="text-2xl font-black text-slate-900 mt-0.5">
-                Frequently Asked Questions
+                {t.faqsTitle}
               </h2>
               <p className="text-sm text-slate-600">
-                Find answers to the most frequently asked questions about our Umrah packages, services, and travel requirements.
+                {t.faqsSub}
               </p>
             </div>
           </div>
@@ -484,20 +483,20 @@ export const Contact: React.FC<OfficeProps> = ({
           {loadingFaqs ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-              <p className="text-xs text-slate-500">Loading FAQs...</p>
+              <p className="text-xs text-slate-500">{t.loadingFaqs}</p>
             </div>
           ) : faqError ? (
             <div className="text-center py-12">
               <p className="text-red-600 text-sm">{faqError}</p>
               <button onClick={loadFaqs} className="mt-4 text-[#C8102E] text-sm font-bold underline hover:no-underline">
-                Retry
+                {t.retry}
               </button>
             </div>
           ) : faqs.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center space-y-3">
               <HelpCircle className="w-12 h-12 mx-auto text-[#E2E8F0]" />
-              <p className="text-slate-500 font-semibold">No FAQs available yet</p>
-              <p className="text-xs text-slate-400">Check back later for frequently asked questions about our Umrah services.</p>
+              <p className="text-slate-500 font-semibold">{t.noFaqsAvailable}</p>
+              <p className="text-xs text-slate-400">{t.noFaqsText}</p>
             </div>
           ) : (
             <div className="space-y-4">

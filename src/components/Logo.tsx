@@ -23,10 +23,10 @@ export const Logo: React.FC<LogoProps> = ({
   
   // Map logo variants to specific files in public/logo
   const logoMap = {
-    header: '/logo/logo3.png',
-    hero: '/logo/logo3.png',
-    footer: '/logo/logo3.png',
-    default: '/logo/logo3.png'
+    header: '/logo/logo1.png',
+    hero: '/logo/logo1.png',
+    footer: '/logo/logo1.png',
+    default: '/logo/logo1.png'
   };
 
   // Get the logo path based on variant

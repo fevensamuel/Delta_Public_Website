@@ -128,9 +128,9 @@ export const Packages: React.FC<PackagesProps> = ({
       
       {/* Banner */}
       <PageBanner 
-        badge="Season 2026 Umrah Packages"
-        title="Umrah Packages"
-        subtitle="Choose from Economy, Standard, Premium, and VIP Luxury Umrah packages."
+        badge={t.packagesPageBadge}
+        title={t.packagesPageTitle}
+        subtitle={t.packagesPageSubtitle}
         backgroundImage="/background/bg3.jpg"
       />
 
@@ -138,7 +138,7 @@ export const Packages: React.FC<PackagesProps> = ({
         <div className="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs font-bold text-slate-500 mr-2 rtl:ml-2 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5 text-slate-700" /> Category:
+              <Filter className="w-3.5 h-3.5 text-slate-700" /> {t.categoryLabel}
             </span>
             {(['All', 'Economy', 'Standard', 'Premium', 'VIP'] as const).map((cat) => (
               <button
@@ -157,7 +157,7 @@ export const Packages: React.FC<PackagesProps> = ({
 
           <div className="flex flex-wrap items-center gap-3">
             <span className="text-xs font-bold text-slate-500 flex items-center gap-1">
-              <Tag className="w-3.5 h-3.5 text-slate-700" /> Discount:
+              <Tag className="w-3.5 h-3.5 text-slate-700" /> {t.discountLabel}
             </span>
             <button
               onClick={() => setDiscountFilter('All')}
@@ -167,7 +167,7 @@ export const Packages: React.FC<PackagesProps> = ({
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
-              All
+              {t.all}
             </button>
             <button
               onClick={() => setDiscountFilter('HasDiscount')}
@@ -177,7 +177,7 @@ export const Packages: React.FC<PackagesProps> = ({
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
-              With Discount
+              {t.withDiscount}
             </button>
             <button
               onClick={() => setDiscountFilter('NoDiscount')}
@@ -187,7 +187,7 @@ export const Packages: React.FC<PackagesProps> = ({
                   : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
               }`}
             >
-              No Discount
+              {t.noDiscount}
             </button>
           </div>
 
@@ -196,9 +196,9 @@ export const Packages: React.FC<PackagesProps> = ({
             onChange={(e) => setSortBy(e.target.value as any)}
             className="bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-red-600 cursor-pointer"
           >
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-            <option value="rating">Highest Pilgrim Rating</option>
+            <option value="price-asc">{t.priceLowToHigh}</option>
+            <option value="price-desc">{t.priceHighToLow}</option>
+            <option value="rating">{t.highestRating}</option>
           </select>
         </div>
       </section>
@@ -206,7 +206,7 @@ export const Packages: React.FC<PackagesProps> = ({
       <section className="max-w-7xl mx-auto px-4 sm:px-8 pb-16">
         {filteredPackages.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3">
-            <p className="text-slate-500 text-sm font-semibold">No packages found matching your criteria.</p>
+            <p className="text-slate-500 text-sm font-semibold">{t.noPackageMatch}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

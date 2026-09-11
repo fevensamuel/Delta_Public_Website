@@ -50,9 +50,9 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
       
       {/* Banner */}
       <PageBanner 
-        badge="About Delta Travel & Tour"
-        title="Decade of Spiritual Dedication & Service"
-        subtitle="Established in 2021, Delta Travel & Tour is a premier licensed travel agency dedicated to facilitating comfortable, spiritually enriching, and seamless Umrah and Hajj journeys."
+        badge={t.aboutPageBadge}
+        title={t.aboutPageTitle}
+        subtitle={t.aboutPageSubtitle}
         backgroundImage="/background/bg3.jpg"
       />
 
@@ -60,29 +60,29 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
       <section className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         <div className="space-y-4">
           <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">
-            OUR JOURNEY
+            {t.ourJourney}
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-           5+ Years of Excellence in Holy Land Hospitality
+           {t.journeyHeading}
           </h2>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Delta Travel & Tour was founded with a singular vision: to remove all logistical anxiety from the sacred pilgrimage process, allowing worshippers to immerse themselves entirely in worship and contemplation.
+            {t.journeyP1}
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            With over 5 years of experience, Delta Travel stands out by offering well-organized umrah packages, personalized customer service, reliable travel arrangements, and dedicated support throughout the entire journey. We focus on making every pilgrim feel valued and ensuring a comfortable, peaceful, and memorable umrah experience.
+            {t.journeyP2}
           </p>
           <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-            Delta travel operates with the required licenses and certifications from the relevant authorities and maintains the necessary approvals to provide travel and umrah services. we are committed to operating legally, professionally, and transparently while ensuring the safety and satisfaction of our customers.
+            {t.journeyP3}
           </p>
 
           <div className="grid grid-cols-2 gap-4 pt-2 text-xs">
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
-              <h4 className="font-bold text-[#C8102E] text-sm">Our Mission</h4>
-              <p className="text-sm text-slate-600 mt-1 leading-normal italic">To provide reliable, comfortable, and high quality umrah travel services, supporting pilgrims throughout their journey from travel arrangements to the their safe return. While serving them with professionalism, cares, and respect.</p>
+              <h4 className="font-bold text-[#C8102E] text-sm">{t.ourMission}</h4>
+              <p className="text-sm text-slate-600 mt-1 leading-normal italic">{t.missionText}</p>
             </div>
             <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm">
-              <h4 className="font-bold text-[#C8102E] text-sm">Our Vision</h4>
-              <p className="text-sm text-slate-600 mt-1 leading-normal italic">To remain the most trusted and tech-forward spiritual travel partner in the region.</p>
+              <h4 className="font-bold text-[#C8102E] text-sm">{t.ourVision}</h4>
+              <p className="text-sm text-slate-600 mt-1 leading-normal italic">{t.visionText}</p>
             </div>
           </div>
         </div>
@@ -115,20 +115,20 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
         <div className="max-w-7xl mx-auto space-y-8">
           <div className="text-center space-y-2">
             <span className="text-xs font-bold uppercase tracking-widest text-[#C8102E]">
-              GUIDED BY KNOWLEDGE
+              {t.guidedByKnowledge}
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Meet Our Scholars & Mutawwif Team
+              {t.meetOurTeam}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">
-              Experienced religious leaders and ground logistics coordinators who accompany your group at every step.
+              {t.teamIntro}
             </p>
           </div>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 space-y-3">
               <Loader2 className="w-8 h-8 animate-spin text-[#C8102E]" />
-              <p className="text-xs text-slate-500">Loading team members...</p>
+              <p className="text-xs text-slate-500">{t.loadingTeamMembers}</p>
             </div>
           ) : error ? (
             <div className="text-center py-8">
@@ -137,14 +137,14 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
                 onClick={loadTeamMembers} 
                 className="mt-3 text-[#C8102E] text-xs font-bold underline hover:no-underline"
               >
-                Retry
+                {t.retry}
               </button>
             </div>
           ) : teamMembers.length === 0 ? (
             <div className="text-center py-12 bg-slate-50 rounded-xl border border-slate-200">
               <User className="w-12 h-12 mx-auto text-slate-300" />
-              <p className="text-slate-500 text-sm mt-3">No team members available yet.</p>
-              <p className="text-xs text-slate-400">Check back soon for updates.</p>
+              <p className="text-slate-500 text-sm mt-3">{t.noTeamMembers}</p>
+              <p className="text-xs text-slate-400">{t.checkBackSoon}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -182,25 +182,25 @@ export const About: React.FC<AboutProps> = ({ setActivePage, lang }) => {
       {/* Trust Badges & Licenses */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 text-center space-y-8">
         <h3 className="text-xl font-bold text-slate-900">
-          Licensed & Recognized by Official Authorities
+          {t.licensedRecognized}
         </h3>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto text-xs font-semibold text-slate-700">
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <ShieldCheck className="w-7 h-7 text-red-600" />
-            <span>Ministry of Hajj & Umrah (#4812)</span>
+            <span>{t.ministryLicense}</span>
           </div>
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <Building2 className="w-7 h-7 text-red-600" />
-            <span>IATA Accredited Travel Agency</span>
+            <span>{t.iataAccredited}</span>
           </div>
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <Award className="w-7 h-7 text-red-600" />
-            <span>Saudi Tourism Authority Partner</span>
+            <span>{t.saudiTourismPartner}</span>
           </div>
           <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm flex flex-col items-center gap-2">
             <HeartHandshake className="w-7 h-7 text-red-600" />
-            <span>Nusuk Official Service Provider</span>
+            <span>{t.nusukProvider}</span>
           </div>
         </div>
       </section>
