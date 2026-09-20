@@ -275,7 +275,7 @@ export const Contact: React.FC<OfficeProps> = ({
               </div>
             </div>
 
-            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+           {/* <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
               <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
                 <Mail className="w-5 h-5 text-[#7A0C1F]" />
               </div>
@@ -285,7 +285,7 @@ export const Contact: React.FC<OfficeProps> = ({
                 <p className="text-[#6B655A]">{t.umrahDesk || "Umrah Desk"}: umrah@deltatravel.com</p>
                 <p className="text-[#6B655A]">{t.supportDesk || "Support"}: support@deltatravel.com</p>
               </div>
-            </div>
+            </div> */}
 
             <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
               <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">

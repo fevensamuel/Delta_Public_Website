@@ -84,7 +84,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
           {/* Column 1: Brand & About - Using Logo component */}
           <div className="space-y-4">
   <div className="flex items-center gap-3">
-    <img src="/logo/logo-mark.png" alt="" className="h-9 w-auto object-contain flex-shrink-0" />
+     {/*<img src="/logo/logo-mark.png" alt="" className="h-9 w-auto object-contain flex-shrink-0" />*/}
     <div>
       <h3 className="font-serif text-lg text-white tracking-wide leading-none">
         {t.brandName || "Delta Travel & Tour"}
@@ -269,16 +269,10 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
         </div>
 
         {/* Bottom Footer */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-[12px] text-[#9A9488] text-center sm:text-left rtl:sm:text-right">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-center gap-3 text-[12px] text-[#9A9488] text-center sm:text-left rtl:sm:text-right">
           <p>
             {t.allRightsReserved || `© ${new Date().getFullYear()} Delta Travel & Tour. All Rights Reserved.`}
           </p>
-          <button
-            onClick={() => setActivePage('faqs')}
-            className="hover:text-[#D8B978] transition-colors"
-          >
-            {t.faqs || 'FAQs'}
-          </button>
         </div>
       </div>
     </footer>

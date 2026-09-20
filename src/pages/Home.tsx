@@ -573,6 +573,9 @@ export const Home: React.FC<HomeProps> = ({
               <a href="tel:+251956585555" dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
                 <Phone className="w-3.5 h-3.5 flex-shrink-0" /> +251 95 658 5555
               </a>
+              <a href="tel:+251956595555" dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
+                <Phone className="w-3.5 h-3.5 flex-shrink-0" /> +251 95 659 5555
+              </a>
               <a href="mailto:info@deltagrouptravelumrah.com" className="flex items-center gap-2 hover:text-[#7A0C1F] pt-1 border-t border-black/[0.06]">
                 <Mail className="w-3.5 h-3.5 flex-shrink-0" /> info@deltagrouptravelumrah.com
               </a>
