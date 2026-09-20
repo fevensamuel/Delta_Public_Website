@@ -383,11 +383,11 @@ export function getWhatsAppInquiryMessage(packageTitle?: string, priceUsd?: numb
   if (currentLang.startsWith('am')) {
     const pkgText = packageTitle ? ` ስለ "${packageTitle}"` : '';
     const priceText = priceUsd ? ` ($${priceUsd} ዶላር)` : '';
-    return `አሰላሙ አለይኩም ዴልታ ትራቭል! ስለ ኡምራ አገልግሎት${pkgText}${priceText} ዝርዝር መረጃ ማግኘት እፈልጋለሁ። እባክዎ ተጨማሪ መረጃ ያጋሩኝ።`;
+    return `ስለ ኡምራ አገልግሎት${pkgText}${priceText} ዝርዝር መረጃ ማግኘት እፈልጋለሁ። እባክዎ ተጨማሪ መረጃ ያጋሩኝ።`;
   }
   const titleText = packageTitle ? ` for "${packageTitle}"` : '';
   const priceText = priceUsd ? ` (USD $${priceUsd})` : '';
-  return `Assalamu Alaikum Delta Travel! I am interested in inquiring about Umrah services${titleText}${priceText}. Please share more details.`;
+  return `I am interested in inquiring about Umrah services${titleText}${priceText}. Please share more details.`;
 }
 
 export async function trackAndOpenWhatsApp(packageId?: string, packageTitle?: string, priceUsd?: number, lang?: string) {

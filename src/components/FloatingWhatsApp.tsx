@@ -9,7 +9,7 @@ export const FloatingWhatsApp: React.FC = () => {
   const phone = '251910136747';
 
   const handleSend = (text?: string) => {
-    const finalMsg = encodeURIComponent(text || userMsg || 'Assalamu Alaikum, I would like to inquire about Delta Travel Umrah packages.');
+    const finalMsg = encodeURIComponent(text || userMsg || ' I would like to inquire about Delta Travel Umrah packages.');
     window.open(`https://wa.me/${phone}?text=${finalMsg}`, '_blank');
     setUserMsg('');
     setIsOpen(false);
