@@ -249,7 +249,7 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
 
             {/* WhatsApp Button */}
             <a
-  href="https://wa.me/251910136747?text=Assalamu%20Alaikum%20Delta%20Travel!"
+  href="https://wa.me/251910136747"
   target="_blank"
   rel="noopener noreferrer"
   className="inline-flex items-center gap-2.5 border border-white/30 hover:border-white text-white text-xs tracking-wide px-5 py-3 transition-colors"
