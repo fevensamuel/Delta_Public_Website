@@ -34,7 +34,10 @@ import {
   Trophy,
   MapPin,
   Mail,
-  Phone
+  Phone,
+  ChevronLeft,
+  ChevronRight,
+  Quote
 } from 'lucide-react';
 
 interface HomeProps {
@@ -148,6 +151,24 @@ export const Home: React.FC<HomeProps> = ({
   useEffect(() => {
     loadHomeData();
   }, [loadHomeData]);
+
+  // Testimonial carousel: auto-advance every 7s, pausing while the user
+  // is hovering the card (see onMouseEnter/onMouseLeave below).
+  const [testimonialPaused, setTestimonialPaused] = useState(false);
+  useEffect(() => {
+    if (testimonials.length <= 1 || testimonialPaused) return;
+    const id = window.setInterval(() => {
+      setActiveTestimonialIdx((i) => (i + 1) % testimonials.length);
+    }, 7000);
+    return () => window.clearInterval(id);
+  }, [testimonials.length, testimonialPaused]);
+
+  const nextTestimonial = () => {
+    setActiveTestimonialIdx((i) => (i + 1) % testimonials.length);
+  };
+  const prevTestimonial = () => {
+    setActiveTestimonialIdx((i) => (i - 1 + testimonials.length) % testimonials.length);
+  };
 
   // Listen for focus events to refresh when user returns to tab
   useEffect(() => {
@@ -728,6 +749,85 @@ export const Home: React.FC<HomeProps> = ({
 
         </div>
       </section>
+
+      {/* PILGRIM TESTIMONIALS */}
+      {testimonials.length > 0 && (
+        <section className="py-20 reveal">
+          <div
+            className="max-w-3xl mx-auto px-4 sm:px-8 text-center"
+            onMouseEnter={() => setTestimonialPaused(true)}
+            onMouseLeave={() => setTestimonialPaused(false)}
+          >
+            <Quote className="w-8 h-8 mx-auto mb-6 text-[#A6853A]" strokeWidth={1.2} />
+
+            <h2 className="font-serif font-medium text-2xl sm:text-3xl leading-tight mb-2">{t.reviewsTitle}</h2>
+            <p className="text-sm text-[#6B655A] mb-10">{t.reviewsSub}</p>
+
+            {(() => {
+              const item = testimonials[activeTestimonialIdx % testimonials.length];
+              if (!item) return null;
+              const isAr = (lang || '').toUpperCase() === 'AR';
+              const isAm = (lang || '').toUpperCase() === 'AM';
+              const quoteText = isAr && item.textAr ? item.textAr : (isAm && item.textAm ? item.textAm : item.text);
+              const name = isAr && item.nameAr ? item.nameAr : (isAm && item.nameAm ? item.nameAm : item.name);
+              const location = isAr && item.locationAr ? item.locationAr : (isAm && item.locationAm ? item.locationAm : item.location);
+
+              return (
+                <div key={item.id}>
+                  <p className="font-serif italic text-xl sm:text-2xl leading-relaxed text-[#1A1712] mb-8">
+                    &ldquo;{quoteText}&rdquo;
+                  </p>
+
+                  <div className="flex items-center justify-center gap-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star
+                        key={i}
+                        className={`w-3.5 h-3.5 ${i < (item.rating || 5) ? 'fill-[#A6853A] text-[#A6853A]' : 'fill-black/10 text-black/10'}`}
+                      />
+                    ))}
+                  </div>
+
+                  <p className="text-sm font-medium text-[#1A1712]">{name}</p>
+                  <p className="text-xs text-[#9A9488] uppercase tracking-wide mt-0.5">{location}</p>
+                </div>
+              );
+            })()}
+
+            {testimonials.length > 1 && (
+              <div className="flex items-center justify-center gap-6 mt-10">
+                <button
+                  onClick={prevTestimonial}
+                  aria-label="Previous testimonial"
+                  className="w-9 h-9 rounded-full border border-black/10 text-[#4A463F] hover:border-[#7A0C1F] hover:text-[#7A0C1F] flex items-center justify-center transition-colors flex-shrink-0"
+                >
+                  <ChevronLeft className="w-4 h-4 rtl:rotate-180" />
+                </button>
+
+                <div className="flex items-center gap-2">
+                  {testimonials.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setActiveTestimonialIdx(idx)}
+                      aria-label={`Go to testimonial ${idx + 1}`}
+                      className={`rounded-full transition-all ${
+                        idx === activeTestimonialIdx ? 'w-5 h-1.5 bg-[#7A0C1F]' : 'w-1.5 h-1.5 bg-black/15 hover:bg-black/30'
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  onClick={nextTestimonial}
+                  aria-label="Next testimonial"
+                  className="w-9 h-9 rounded-full border border-black/10 text-[#4A463F] hover:border-[#7A0C1F] hover:text-[#7A0C1F] flex items-center justify-center transition-colors flex-shrink-0"
+                >
+                  <ChevronRight className="w-4 h-4 rtl:rotate-180" />
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* CLOSING CTA */}
       <section className="relative overflow-hidden">
