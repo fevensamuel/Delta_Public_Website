@@ -3,7 +3,7 @@ import { LANGUAGE_STORAGE_KEY } from '../i18n/config';
 
 const env = (import.meta as any).env || {};
 const API_BASE_URL = env.VITE_API_URL || 'http://localhost:3000/api';
-const WHATSAPP_PHONE = env.VITE_WHATSAPP_PHONE || '+251910493349 ';
+const WHATSAPP_PHONE = env.VITE_WHATSAPP_PHONE || '+251910136747 ';
 
 export function getCurrentLanguage(): string {
   if (typeof window !== 'undefined') {
@@ -175,7 +175,6 @@ export function mapPackageToFrontend(backendPkg: any, rate: number, activeLang?:
     isActive: d.isActive !== undefined ? d.isActive : true
   }));
 
-  // Resolve localized inclusions & exclusions
   const localizedInclusions = 
     currentLang.startsWith('ar') && inclusionsArData.length > 0 ? inclusionsArData :
     currentLang.startsWith('am') && inclusionsAmData.length > 0 ? inclusionsAmData :
@@ -351,10 +350,8 @@ export async function fetchGalleryItems(typeFilter: 'all' | 'photo' | 'video' = 
     const data = res?.data || [];
     const items = Array.isArray(data) ? data : [];
     return items.map((item: any) => {
-      // Determine thumbnail URL
       let thumbnailUrl = item.thumbnailUrl || item.imageUrl || '';
       
-      // For videos, try to use thumbnailUrl, fallback to imageUrl
       if (item.type === 'video') {
         thumbnailUrl = item.thumbnailUrl || item.imageUrl || '';
       }
@@ -362,7 +359,6 @@ export async function fetchGalleryItems(typeFilter: 'all' | 'photo' | 'video' = 
       return {
         ...item,
         thumbnailUrl: thumbnailUrl,
-        // For videos, imageUrl should be the thumbnail (for display in grid)
         imageUrl: item.type === 'video' ? thumbnailUrl : item.imageUrl,
         videoUrl: item.videoUrl || '',
       };
@@ -451,4 +447,35 @@ export async function getPublicTeamMembersApi(): Promise<any[]> {
     console.error('❌ Error fetching team members:', error);
     return [];
   }
+}
+
+/**
+ * Get public contact settings (WhatsApp, Phone, SMS)
+ */
+export async function getContactSettingsApi(): Promise<{
+  whatsappNumber: string | null;
+  phoneNumber: string | null;
+  smsNumber: string | null;
+} | null> {
+  try {
+    const res = await api.get<any>('/contact-settings');
+    const data = res?.data || res;
+    if (!data) return null;
+    return {
+      whatsappNumber: data.whatsappNumber || null,
+      phoneNumber: data.phoneNumber || null,
+      smsNumber: data.smsNumber || null,
+    };
+  } catch (error) {
+    console.error('❌ Error fetching contact settings:', error);
+    return null;
+  }
+}
+
+/**
+ * Strip non-numeric characters from phone numbers (for wa.me / tel: / sms: links)
+ */
+export function cleanPhone(raw: string | null | undefined, fallback = ''): string {
+  if (!raw) return fallback;
+  return raw.replace(/[^0-9+]/g, '');
 }

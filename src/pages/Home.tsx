@@ -15,6 +15,7 @@ import { getPublicTestimonialsApi } from '../api/testimonials';
 import { FlightBookingModal } from '../components/FlightBookingModal';
 import { AIRLINE_PARTNERS } from '../data/airlines';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useContactSettings } from '../hooks/useContactSettings';
 import { 
   CheckCircle, 
   Star, 
@@ -100,6 +101,9 @@ export const Home: React.FC<HomeProps> = ({
 }) => {
   const t = translations[lang] || translations.EN;
   const { rate } = useExchangeRate();
+  const { phoneNumber, whatsappNumber } = useContactSettings();
+  const cleanHomePhone = (phoneNumber || '+251910136747').replace(/[^0-9+]/g, '');
+  const cleanHomeWhatsApp = (whatsappNumber || '251910136747').replace(/[^0-9]/g, '');
   const [phoneInput, setPhoneInput] = useState('');
   const [emailInput, setEmailInput] = useState('');
   const [subscribedMessage, setSubscribedMessage] = useState(false);
@@ -115,7 +119,6 @@ export const Home: React.FC<HomeProps> = ({
   // Reveal sections as they scroll into view
   useScrollReveal([loading, packages.length, gallery.length]);
 
-  // Use useCallback to memoize the load function
   const loadHomeData = useCallback(async () => {
     setLoading(true);
     try {
@@ -147,13 +150,10 @@ export const Home: React.FC<HomeProps> = ({
     }
   }, [lang]);
 
-  // Load data on mount
   useEffect(() => {
     loadHomeData();
   }, [loadHomeData]);
 
-  // Testimonial carousel: auto-advance every 7s, pausing while the user
-  // is hovering the card (see onMouseEnter/onMouseLeave below).
   const [testimonialPaused, setTestimonialPaused] = useState(false);
   useEffect(() => {
     if (testimonials.length <= 1 || testimonialPaused) return;
@@ -170,7 +170,6 @@ export const Home: React.FC<HomeProps> = ({
     setActiveTestimonialIdx((i) => (i - 1 + testimonials.length) % testimonials.length);
   };
 
-  // Listen for focus events to refresh when user returns to tab
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
@@ -211,7 +210,6 @@ export const Home: React.FC<HomeProps> = ({
     return item.type === 'Video' || item.type === 'video';
   };
 
-  // Helper to get display price (handles both single and range)
   const getDisplayPrice = (pkg: PackageItem) => {
     const priceUsd = pkg.priceUsd ?? pkg.price;
     const priceEtb = pkg.priceEtb;
@@ -283,7 +281,12 @@ export const Home: React.FC<HomeProps> = ({
               </button>
 
               <button
-                onClick={() => trackAndOpenWhatsApp(undefined, 'General Umrah Inquiry')}
+                onClick={() =>
+                  window.open(
+                    `https://wa.me/${cleanHomeWhatsApp}?text=${encodeURIComponent('General Umrah Inquiry')}`,
+                    '_blank'
+                  )
+                }
                 className="border border-white/40 hover:border-white text-white text-xs sm:text-sm tracking-wide px-7 py-4 transition-colors flex items-center gap-2"
               >
                 <span>{t.chatWhatsapp}</span>
@@ -407,7 +410,7 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* WHY CHOOSE US — arch photo + checklist */}
+      {/* WHY CHOOSE US */}
       <section className="max-w-7xl mx-auto px-4 sm:px-8 py-14 grid grid-cols-1 lg:grid-cols-2 gap-14 items-center reveal">
         <div className="relative h-[360px] hidden lg:block">
           <div
@@ -445,32 +448,28 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-    {/* OFFICIAL FLIGHT PARTNERS — moving airline strip */}
-<section className="bg-[#0E0C0A] border-y border-white/10 overflow-hidden">
-  <div className="marquee-viewport py-5">
-    <div className="marquee-track">
-      {[0, 1].map((rep) => (
-        <div
-          key={rep}
-          className="flex items-center flex-shrink-0"
-          aria-hidden={rep === 1}
-        >
-          {AIRLINE_PARTNERS.map((a) => (
-            <span
-              key={`${rep}-${a.id}`}
-              className="flex items-center gap-3 text-[#CFCAC2] text-sm tracking-wide whitespace-nowrap px-8"
-            >
-              <Plane className="w-3.5 h-3.5 text-[#A6853A] rtl:-scale-x-100" />
-              {a.name}
-              <span className="text-[#A6853A]/50">|</span>
-              <span className="text-[#9A9488] text-xs">{a.code}</span>
-            </span>
-          ))}
+      {/* OFFICIAL FLIGHT PARTNERS */}
+      <section className="bg-[#0E0C0A] border-y border-white/10 overflow-hidden">
+        <div className="marquee-viewport py-5">
+          <div className="marquee-track">
+            {[0, 1].map((rep) => (
+              <div key={rep} className="flex items-center flex-shrink-0" aria-hidden={rep === 1}>
+                {AIRLINE_PARTNERS.map((a) => (
+                  <span
+                    key={`${rep}-${a.id}`}
+                    className="flex items-center gap-3 text-[#CFCAC2] text-sm tracking-wide whitespace-nowrap px-8"
+                  >
+                    <Plane className="w-3.5 h-3.5 text-[#A6853A] rtl:-scale-x-100" />
+                    {a.name}
+                    <span className="text-[#A6853A]/50">|</span>
+                    <span className="text-[#9A9488] text-xs">{a.code}</span>
+                  </span>
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
+      </section>
 
       <section className="py-20 reveal">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center mb-14">
@@ -516,7 +515,7 @@ export const Home: React.FC<HomeProps> = ({
         </div>
       </section>
 
-      {/* REQUEST A FLIGHT QUOTE — new feature, wired to FlightBookingModal */}
+      {/* REQUEST A FLIGHT QUOTE */}
       <section className="relative overflow-hidden">
         <div
           className="absolute inset-0 bg-cover bg-center"
@@ -545,7 +544,7 @@ export const Home: React.FC<HomeProps> = ({
               <span>{t.inquiry}</span>
             </button>
             <a
-              href="tel:+2519101367477"
+              href={`tel:${cleanHomePhone}`}
               className="border border-white/40 hover:border-white text-white text-xs sm:text-sm tracking-wide px-7 py-4 transition-colors flex items-center gap-2"
             >
               <Phone className="w-3.5 h-3.5" />
@@ -588,8 +587,8 @@ export const Home: React.FC<HomeProps> = ({
             </span>
             <h3 className="font-serif text-lg mb-2">{t.contactUs}</h3>
             <div className="space-y-1.5 text-[13px] text-[#6B655A]">
-              <a href="tel:+251910136747" dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
-                <Phone className="w-3.5 h-3.5 flex-shrink-0" /> +251 91 013 6747
+              <a href={`tel:${cleanHomePhone}`} dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
+                <Phone className="w-3.5 h-3.5 flex-shrink-0" /> {phoneNumber || '+251 91 013 6747'}
               </a>
               <a href="tel:+251956585555" dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
                 <Phone className="w-3.5 h-3.5 flex-shrink-0" /> +251 95 658 5555
@@ -597,8 +596,8 @@ export const Home: React.FC<HomeProps> = ({
               <a href="tel:+251956595555" dir="ltr" className="flex items-center gap-2 hover:text-[#7A0C1F] whitespace-nowrap">
                 <Phone className="w-3.5 h-3.5 flex-shrink-0" /> +251 95 659 5555
               </a>
-              <a href="mailto:info@deltagrouptravelumrah.com" className="flex items-center gap-2 hover:text-[#7A0C1F] pt-1 border-t border-black/[0.06]">
-                <Mail className="w-3.5 h-3.5 flex-shrink-0" /> info@deltagrouptravelumrah.com
+              <a href="mailto:businessdelta416@gmail.com" className="flex items-center gap-2 hover:text-[#7A0C1F] pt-1 border-t border-black/[0.06]">
+                <Mail className="w-3.5 h-3.5 flex-shrink-0" /> businessdelta416@gmail.com
               </a>
             </div>
           </div>

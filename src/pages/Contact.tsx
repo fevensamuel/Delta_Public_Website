@@ -270,22 +270,20 @@ export const Contact: React.FC<OfficeProps> = ({
                   {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
                 </p>
                 <p className="text-[#6B655A]">
-                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 049 3349</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
+                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
                 </p>
               </div>
             </div>
 
-           {/* <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
+            <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
               <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
                 <Mail className="w-5 h-5 text-[#7A0C1F]" />
               </div>
               <div>
                 <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.emailAddress}</h4>
-                <p className="text-[#6B655A] mt-0.5">{t.generalInquiries || "General Inquiries"}: info@deltatravel.com</p>
-                <p className="text-[#6B655A]">{t.umrahDesk || "Umrah Desk"}: umrah@deltatravel.com</p>
-                <p className="text-[#6B655A]">{t.supportDesk || "Support"}: support@deltatravel.com</p>
+                <p className="text-[#6B655A] mt-0.5">{t.generalInquiries || "General Inquiries"}: businessdelta416@gmail.com</p>
               </div>
-            </div> */}
+            </div>
 
             <div className="p-4 bg-white border border-black/[0.08] shadow-sm flex items-start gap-3">
               <div className="p-2.5 bg-[#F1EBE0] text-[#7A0C1F] flex-shrink-0">
