@@ -134,6 +134,7 @@
   "all": "All",
   "withDiscount": "With Discount",
   "noDiscount": "No Discount",
+  "sortByLabel": "Sort by",
   "priceLowToHigh": "Price: Low to High",
   "priceHighToLow": "Price: High to Low",
   "highestRating": "Highest Pilgrim Rating",
