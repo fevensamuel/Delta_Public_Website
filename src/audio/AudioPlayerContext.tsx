@@ -1,11 +1,25 @@
-import React, { createContext, useContext, useRef, useState, useEffect, ReactNode } from 'react';
-import { AUDIO_PLAYLIST } from '../data/audioTracks';
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
+import {
+  AudioPlaylistTrack,
+  AUDIO_PLAYLIST,
+  fetchAudioPlaylist,
+} from '../data/audioTracks';
+import { getCurrentLanguage } from '../api/client';
+import { useLanguage } from '../i18n/LanguageContext';
 
 interface AudioContextType {
   isPlaying: boolean;
   isMuted: boolean;
   currentTrackTitle: string | null;
   hasTracks: boolean;
+  isLoading: boolean;
   toggle: () => void;
   next: () => void;
   toggleMute: () => void;
@@ -16,7 +30,20 @@ const AudioPlayerContext = createContext<AudioContextType | undefined>(undefined
 const MUTE_STORAGE_KEY = 'dvt_audio_muted';
 
 export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  // Try to read active language from LanguageContext if present.
+  // Falls back to the localStorage-based helper.
+  let activeLanguage = 'en';
+  try {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { language } = useLanguage();
+    activeLanguage = language || 'en';
+  } catch {
+    activeLanguage = getCurrentLanguage();
+  }
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playlist, setPlaylist] = useState<AudioPlaylistTrack[]>(AUDIO_PLAYLIST);
+  const [isLoading, setIsLoading] = useState(true);
   const [trackIndex, setTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(() => {
@@ -27,19 +54,41 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   });
 
-  const hasTracks = AUDIO_PLAYLIST.length > 0;
-  const currentTrack = hasTracks ? AUDIO_PLAYLIST[trackIndex % AUDIO_PLAYLIST.length] : null;
+  const hasTracks = playlist.length > 0;
+  const currentTrack = hasTracks ? playlist[trackIndex % playlist.length] : null;
 
-  // Create the <audio> element once and keep it alive for the life of the
-  // app (mounted at the App root) so playback survives page navigation
-  // within this single-page app.
+  // Fetch the playlist from the backend whenever the language changes.
+  // The backend returns the same tracks regardless of language, but we
+  // re-pick localized titles here.
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+
+    fetchAudioPlaylist(activeLanguage)
+      .then((tracks) => {
+        if (!mounted) return;
+        setPlaylist(tracks);
+        setTrackIndex(0);
+      })
+      .finally(() => {
+        if (mounted) setIsLoading(false);
+      });
+
+    return () => {
+      mounted = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeLanguage]);
+
+  // Create the <audio> element once and keep it alive for the life of
+  // the app so playback survives navigation within the SPA.
   useEffect(() => {
     const audio = new Audio();
     audio.preload = 'none';
     audioRef.current = audio;
 
     const handleEnded = () => {
-      setTrackIndex((i) => (hasTracks ? (i + 1) % AUDIO_PLAYLIST.length : i));
+      setTrackIndex((i) => (playlist.length ? (i + 1) % playlist.length : i));
     };
     const handlePause = () => setIsPlaying(false);
     const handlePlay = () => setIsPlaying(true);
@@ -68,10 +117,8 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
     }
   }, [isMuted]);
 
-  // When the track index changes (either the user skipped, or one track
-  // finished and we auto-advanced), load the new source. If playback was
-  // already underway, keep it going with the next track — this is what
-  // makes the playlist "dynamic" rather than a single looping file.
+  // When the track index changes, load the new source. If playback was
+  // already underway, keep it going with the next track.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio || !currentTrack) return;
@@ -81,7 +128,7 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
       audio.play().catch(() => setIsPlaying(false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [trackIndex]);
+  }, [trackIndex, playlist]);
 
   const toggle = () => {
     const audio = audioRef.current;
@@ -92,8 +139,6 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
       return;
     }
 
-    // First play: the element has no src until now, since we never
-    // autoplay. Set it up on this user-initiated interaction.
     if (!audio.src) {
       audio.src = currentTrack.src;
     }
@@ -102,7 +147,7 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
 
   const next = () => {
     if (!hasTracks) return;
-    setTrackIndex((i) => (i + 1) % AUDIO_PLAYLIST.length);
+    setTrackIndex((i) => (i + 1) % playlist.length);
   };
 
   const toggleMute = () => setIsMuted((m) => !m);
@@ -114,6 +159,7 @@ export const AudioPlayerProvider: React.FC<{ children: ReactNode }> = ({ childre
         isMuted,
         currentTrackTitle: currentTrack?.title ?? null,
         hasTracks,
+        isLoading,
         toggle,
         next,
         toggleMute,

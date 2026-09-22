@@ -41,6 +41,18 @@ const TikTokIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+// Viber SVG Icon (official phone-in-speech-bubble glyph)
+const ViberIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M11.985 0C5.9 0 1.15 4.535 1.15 10.354c0 3.353 1.716 6.35 4.408 8.256v4.24c0 .404.48.617.786.357l4.38-3.678c.4.055.813.083 1.26.083 6.086 0 10.836-4.535 10.836-10.354S18.07 0 11.985 0zm.476 15.966a.626.626 0 0 1-.564-.351.617.617 0 0 1 .015-.606c.09-.14.19-.268.3-.382a3.816 3.816 0 0 0 1.058-2.65c0-1.056-.402-2.014-1.055-2.729-.114-.113-.238-.221-.368-.318a.63.63 0 0 1-.23-.73.617.617 0 0 1 .787-.365c.45.171.876.408 1.268.708a5.376 5.376 0 0 1 2.114 4.262 5.362 5.362 0 0 1-1.529 3.787c-.208.207-.44.393-.686.553a.622.622 0 0 1-.31.079zm2.596 1.244a.622.622 0 0 1-.374-.12.63.63 0 0 1-.151-.845c.065-.098.14-.19.222-.278a7.14 7.14 0 0 0 1.876-4.774 7.13 7.13 0 0 0-1.865-4.744 4.436 4.436 0 0 0-.235-.256.632.632 0 0 1-.055-.838.607.607 0 0 1 .848-.104c.14.108.272.222.398.345a8.35 8.35 0 0 1 2.51 6.028 8.36 8.36 0 0 1-2.42 5.85c-.208.202-.428.386-.658.548a.621.621 0 0 1-.096.048zm4.028-.715a.624.624 0 0 1-.552-.936.6.6 0 0 1 .102-.135c1.374-1.363 2.13-3.246 2.13-5.298 0-2.052-.756-3.934-2.13-5.297a.632.632 0 0 1-.102-.135.624.624 0 0 1 .661-.891.618.618 0 0 1 .35.19c1.653 1.634 2.564 3.879 2.564 6.332s-.91 4.699-2.563 6.333a.615.615 0 0 1-.46.196z"/>
+  </svg>
+);
+
 // Map platform names to icons
 const getSocialIcon = (platform: string, className: string = "w-3.5 h-3.5") => {
   const iconProps = { className };
@@ -51,6 +63,7 @@ const getSocialIcon = (platform: string, className: string = "w-3.5 h-3.5") => {
     case 'twitter': return <Twitter {...iconProps} />;
     case 'linkedin': return <Linkedin {...iconProps} />;
     case 'tiktok': return <TikTokIcon className={className} />;
+    case 'viber': return <ViberIcon className={className} />;
     case 'telegram': 
     case 'telegram2': 
     case 'telegram-support': 
@@ -73,8 +86,6 @@ export const Header: React.FC<HeaderProps> = ({
   const [loadingSocial, setLoadingSocial] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
-  // Header sits transparent over the hero, then solidifies once the user
-  // scrolls past it.
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     onScroll();
@@ -82,7 +93,6 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Close the mobile drawer whenever the page changes.
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [activePage]);
@@ -126,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({
           : 'bg-transparent'
       }`}
     >
-      {/* Top Utility Bar (currency, language, social) */}
+      {/* Top Utility Bar */}
       <div className={`text-xs py-1.5 px-4 transition-colors duration-300 ${
         scrolled ? 'bg-[#0E0C0A] text-white' : 'bg-black/25 backdrop-blur-sm text-white'
       }`}>
@@ -134,17 +144,14 @@ export const Header: React.FC<HeaderProps> = ({
           
           <div className="flex items-center space-x-3 rtl:space-x-reverse text-[#CFCAC2] text-[11px] sm:text-xs">
 
-            {/* Currency Selector */}
             <CurrencySwitcher currency={currency} setCurrency={setCurrency} />
 
             <span className="text-white/15">|</span>
 
-            {/* Language Selector Dropdown */}
             <LanguageSwitcher variant="dropdown" theme="dark" />
 
             <span className="text-white/15">|</span>
 
-            {/* Night theme toggle */}
             <ThemeToggle />
 
             <span className="text-white/15 hidden sm:inline">|</span>
@@ -174,13 +181,12 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Main Navigation Bar (White Background) */}
+      {/* Main Navigation Bar */}
       <div className={`py-4 px-4 sm:px-8 transition-colors duration-300 ${
         scrolled ? 'border-b border-black/[0.06]' : 'border-b border-white/10'
       }`}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           
-          {/* Brand Logo */}
           <button 
             onClick={() => setActivePage('home')} 
             className="flex items-center text-left rtl:text-right group cursor-pointer flex-shrink-0"
@@ -195,7 +201,6 @@ export const Header: React.FC<HeaderProps> = ({
             />
           </button>
 
-          {/* Desktop Links */}
           <nav className="hidden lg:flex items-center gap-7 rtl:space-x-reverse">
             {navItems.map((item) => {
               const isActive = activePage === item.id;
@@ -219,7 +224,6 @@ export const Header: React.FC<HeaderProps> = ({
             })}
           </nav>
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`lg:hidden p-2 transition-colors ${scrolled || mobileMenuOpen ? 'text-[#1A1712]' : 'text-white'}`}
@@ -252,7 +256,6 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
             ))}
 
-            {/* Mobile Language Switcher */}
             <div className="pt-3 pb-1 border-t border-black/[0.06] flex flex-col gap-1.5">
               <span className="text-[11px] text-[#9A9488] uppercase tracking-wider">
                 Language / ቋንቋ / اللغة
@@ -260,7 +263,6 @@ export const Header: React.FC<HeaderProps> = ({
               <LanguageSwitcher variant="toggle" className="w-full justify-between" />
             </div>
 
-            {/* Mobile Theme Toggle */}
             <div className="pt-3 pb-1 border-t border-black/[0.06] flex items-center justify-between">
               <span className="text-[11px] text-[#9A9488] uppercase tracking-wider">
                 Theme
