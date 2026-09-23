@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { PackageItem, Language, Currency } from '../types';
 import { PageBanner } from '../components/PageBanner';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useContactSettings } from '../hooks/useContactSettings';
 import { translations } from '../translations';
 import { formatPrice, formatPriceRange } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
-import { getFullImageUrl, trackAndOpenWhatsApp } from '../api/client';
+import { getFullImageUrl } from '../api/client';
 import { 
   Star, 
   CheckCircle, 
@@ -26,6 +27,9 @@ interface PackagesProps {
   currency: Currency;
 }
 
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api';
+
 export const Packages: React.FC<PackagesProps> = ({
   packages,
   onSelectPackage,
@@ -36,6 +40,10 @@ export const Packages: React.FC<PackagesProps> = ({
 
   useScrollReveal([]);
   const { rate } = useExchangeRate();
+  const { whatsappNumber } = useContactSettings();
+
+  // Clean WhatsApp number for wa.me links
+  const cleanWhatsApp = (whatsappNumber || '251910136747').replace(/[^0-9]/g, '');
 
   const [categoryFilter, setCategoryFilter] = useState<'All' | 'Economy' | 'Standard' | 'Premium' | 'VIP'>('All');
   const [discountFilter, setDiscountFilter] = useState<'All' | 'HasDiscount' | 'NoDiscount'>('All');
@@ -85,7 +93,6 @@ export const Packages: React.FC<PackagesProps> = ({
     return formatPrice(priceUsd, priceEtb, priceSar, currency, lang, rate);
   };
 
-  // Determine discount type from the discount object
   const getDiscountType = (discount: any): 'age' | 'group' | 'general' => {
     if (discount.discountType === 'age') return 'age';
     if (discount.discountType === 'group') return 'group';
@@ -102,26 +109,47 @@ export const Packages: React.FC<PackagesProps> = ({
     return 'general';
   };
 
-  // Get discount icon
   const getDiscountIcon = (type: 'age' | 'group' | 'general') => {
     if (type === 'age') return <User className="w-3.5 h-3.5 text-[#A6853A] flex-shrink-0" />;
     if (type === 'group') return <Users className="w-3.5 h-3.5 text-[#A6853A] flex-shrink-0" />;
     return <Percent className="w-3.5 h-3.5 text-[#A6853A] flex-shrink-0" />;
   };
 
-  // Discounts use the brass accent, consistent with the rest of the palette
-  const getDiscountColor = () => {
-    return 'bg-[#F1EBE0] border-[#A6853A]/30';
-  };
+  const getDiscountColor = () => 'bg-[#F1EBE0] border-[#A6853A]/30';
+  const getDiscountTextColor = () => 'text-[#7A0C1F]';
 
-  const getDiscountTextColor = () => {
-    return 'text-[#7A0C1F]';
+  // Build the WhatsApp message and open with the dynamic number
+  const openWhatsAppForPackage = (pkg: PackageItem) => {
+    const titleForWhatsapp = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
+      ? pkg.titleAr
+      : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
+
+    const priceUsd = pkg.priceUsd ?? pkg.price;
+
+    // Build language-aware message
+    const currentLang = (lang || 'en').toLowerCase();
+    let msg: string;
+    if (currentLang.startsWith('ar')) {
+      msg = `السلام عليكم دلتا للسياحة! أود الاستفسار عن باقة "${titleForWhatsapp}"${priceUsd ? ` (بقيمة $${priceUsd} دولار)` : ''}. يرجى تزويدي بمزيد من التفاصيل.`;
+    } else if (currentLang.startsWith('am')) {
+      msg = `ስለ "${titleForWhatsapp}" ጥቅል ዝርዝር መረጃ ማግኘት እፈልጋለሁ${priceUsd ? ` ($${priceUsd} ዶላር)` : ''}። እባክዎ ተጨማሪ መረጃ ያጋሩኝ።`;
+    } else {
+      msg = `I am interested in inquiring about the "${titleForWhatsapp}" package${priceUsd ? ` (USD $${priceUsd})` : ''}. Please share more details.`;
+    }
+
+    // Track the click in the backend (fire-and-forget)
+    fetch(`${API_BASE_URL}/packages/${pkg.id}/click-whatsapp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(() => {});
+
+    // Open WhatsApp with the dynamic number
+    window.open(`https://wa.me/${cleanWhatsApp}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
     <div className="pattern-texture">
       
-      {/* Banner */}
       <PageBanner 
         badge={t.packagesPageBadge}
         title={t.packagesPageTitle}
@@ -131,7 +159,6 @@ export const Packages: React.FC<PackagesProps> = ({
 <section className="max-w-7xl mx-auto px-4 sm:px-8 reveal pt-8 pb-6">
   <div className="border-b border-black/[0.08] dark:border-white/[0.08] pb-6">
 
-    {/* Category */}
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[var(--theme-muted)] w-[80px] flex-shrink-0">
         {t.categoryLabel}
@@ -154,7 +181,6 @@ export const Packages: React.FC<PackagesProps> = ({
       </div>
     </div>
 
-    {/* Discount + Sort */}
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mt-5">
 
       <div className="flex flex-wrap items-center gap-3">
@@ -198,7 +224,6 @@ export const Packages: React.FC<PackagesProps> = ({
         </div>
       </div>
 
-      {/* Sort */}
       <label className="flex items-center gap-3 lg:ml-auto">
         <span className="text-[11px] uppercase tracking-[0.16em] font-semibold text-[var(--theme-muted)]">
           {t.sortByLabel || 'Sort'}
@@ -287,7 +312,6 @@ export const Packages: React.FC<PackagesProps> = ({
                         {((lang || '').toUpperCase() === 'AR') ? (pkg.titleAr || pkg.titleEn) : (((lang || '').toUpperCase() === 'AM') && pkg.titleAm) ? pkg.titleAm : pkg.titleEn}
                       </h3>
 
-                      {/* Discounts Display - USING THE SAME LOGIC AS THE MODAL */}
                       {hasDiscounts && activeDiscounts.length > 0 && (
                         <div className="space-y-2 mb-4">
                           {activeDiscounts.map((discount, idx) => {
@@ -317,7 +341,6 @@ export const Packages: React.FC<PackagesProps> = ({
                                       {discount.type === 'percentage' ? `${discount.value}% ${t.offLabel || 'off'}` : `$${discount.value} ${t.offLabel || 'off'}`}
                                     </span>
                                   </div>
-                                  {/* USING THE SAME LOGIC AS THE MODAL */}
                                   <div className="mt-0.5">
                                     {discountDesc && (
                                       <span className={`text-xs ${getDiscountTextColor()} opacity-75`}>
@@ -334,7 +357,6 @@ export const Packages: React.FC<PackagesProps> = ({
                                         {t.ageLabel || 'Age:'} {ageGroup}
                                       </span>
                                     )}
-                                    {/* Handle ageMin/ageMax for "Ages" display */}
                                     {discount.ageMin !== undefined && discount.ageMin !== null && 
                                      discount.ageMax !== undefined && discount.ageMax !== null && (
                                       <span className={`block text-xs ${getDiscountTextColor()} opacity-75 mt-0.5`}>
@@ -379,12 +401,7 @@ export const Packages: React.FC<PackagesProps> = ({
                       </button>
 
                       <button
-                        onClick={() => {
-                          const titleForWhatsapp = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
-                            ? pkg.titleAr
-                            : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
-                          trackAndOpenWhatsApp(pkg.id, titleForWhatsapp, pkg.priceUsd ?? pkg.price, (lang || 'en').toLowerCase());
-                        }}
+                        onClick={() => openWhatsAppForPackage(pkg)}
                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 shadow-sm transition-colors flex items-center justify-center gap-1.5"
                       >
                         <svg 

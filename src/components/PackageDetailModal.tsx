@@ -7,6 +7,7 @@ import {
 import { formatPrice, formatPriceRange, getDiscountDisplay } from '../utils/formatPrice';
 import { useExchangeRate } from '../api/exchangeRate';
 import { trackAndOpenWhatsApp, getFullImageUrl } from '../api/client';
+import { useContactSettings } from '../hooks/useContactSettings';
 import { 
   X, 
   CheckCircle, 
@@ -34,10 +35,18 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
   lang,
   currency
 }) => {
-  if (!pkg) return null;
-
   const t = translations[lang] || translations.EN;
   const { rate } = useExchangeRate();
+  const { phoneNumber, whatsappNumber } = useContactSettings();
+
+  // Clean phone numbers for tel: / wa.me links
+  const cleanPhone = (phoneNumber || '+251910136747').replace(/[^0-9+]/g, '');
+  const cleanWhatsApp = (whatsappNumber || '251910136747').replace(/[^0-9]/g, '');
+
+  // Format phone for display (with spaces)
+  const displayPhone = phoneNumber || '+251 91 013 6747';
+
+  if (!pkg) return null;
 
   const getDisplayPrice = () => {
     const priceUsd = pkg.priceUsd ?? pkg.price;
@@ -62,6 +71,36 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
   };
 
   const hasDiscounts = pkg.discounts && pkg.discounts.length > 0;
+
+  // Build the WhatsApp inquiry message for a specific package
+  const openWhatsAppForPackage = () => {
+    const titleForWhatsapp = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
+      ? pkg.titleAr
+      : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
+
+    // Track click in the backend (fire-and-forget)
+    const priceUsd = pkg.priceUsd ?? pkg.price;
+    const message = encodeURIComponent(
+      (() => {
+        const currentLang = (lang || 'en').toLowerCase();
+        if (currentLang.startsWith('ar')) {
+          return `السلام عليكم دلتا للسياحة! أود الاستفسار عن باقة "${titleForWhatsapp}"${priceUsd ? ` (بقيمة $${priceUsd} دولار)` : ''}. يرجى تزويدي بمزيد من التفاصيل.`;
+        }
+        if (currentLang.startsWith('am')) {
+          return `ስለ "${titleForWhatsapp}" ጥቅል ዝርዝር መረጃ ማግኘት እፈልጋለሁ${priceUsd ? ` ($${priceUsd} ዶላር)` : ''}። እባክዎ ተጨማሪ መረጃ ያጋሩኝ።`;
+        }
+        return `I am interested in inquiring about the "${titleForWhatsapp}" package${priceUsd ? ` (USD $${priceUsd})` : ''}. Please share more details.`;
+      })()
+    );
+
+    // Track click (fire and forget)
+    fetch(`${(import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api'}/packages/${pkg.id}/click-whatsapp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    }).catch(() => {});
+
+    window.open(`https://wa.me/${cleanWhatsApp}?text=${message}`, '_blank');
+  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-[#0E0C0A]/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-200">
@@ -191,7 +230,6 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
             </h4>
             <div className="space-y-2 border-l-2 border-[#A6853A] rtl:border-r-2 rtl:border-l-0 pl-4 rtl:pr-4 rtl:pl-0">
               {pkg.itinerary.map((item) => {
-                // Remove "Day X:" or similar prefix from the title if it exists to avoid duplication
                 const cleanTitle = item.title.replace(/^(Day|ቀን|اليوم)\s+\d+:\s*/i, '');
                 const dayNum = item.dayNumber || (item as any).day;
                 
@@ -217,12 +255,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
 
             <div className="flex items-center gap-3 flex-wrap justify-center">
               <button
-                onClick={() => {
-                  const titleForWhatsapp = ((lang || '').toUpperCase() === 'AR' && pkg.titleAr)
-                    ? pkg.titleAr
-                    : (((lang || '').toUpperCase() === 'AM' && pkg.titleAm) ? pkg.titleAm : pkg.titleEn);
-                  trackAndOpenWhatsApp(pkg.id, titleForWhatsapp, pkg.priceUsd ?? pkg.price, (lang || 'en').toLowerCase());
-                }}
+                onClick={openWhatsAppForPackage}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 shadow transition-colors flex items-center gap-1.5"
               >
                 <svg 
@@ -236,11 +269,16 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
               </button>
 
               <a
-                href="tel:+251910136747"
+                href={`tel:${cleanPhone}`}
                 className="bg-[#7A0C1F] hover:bg-[#580815] text-white font-bold text-xs px-4 py-2.5 shadow transition-colors flex items-center gap-1.5"
               >
                 <Phone className="w-4 h-4" />
-                <span>{t.callUs || 'Call'} <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span></span>
+                <span>
+                  {t.callUs || 'Call'}{' '}
+                  <span dir="ltr" className="whitespace-nowrap inline-block">
+                    {displayPhone}
+                  </span>
+                </span>
               </a>
             </div>
           </div>

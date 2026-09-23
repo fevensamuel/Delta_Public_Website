@@ -1,5 +1,5 @@
 // src/data/audioTracks.ts
-import { api } from '../api/client';
+import { api, getFullImageUrl } from '../api/client';
 
 /**
  * A single track as consumed by the AudioPlayerContext.
@@ -17,9 +17,9 @@ export interface AudioPlaylistTrack {
 
 /**
  * Static fallback playlist.
- * Keep empty by default — the frontend now fetches real tracks from the
- * backend at /api/audio. If the API fails or returns nothing, the player
- * will simply have no tracks and hide itself.
+ * Kept empty by default — the frontend fetches real tracks from the backend
+ * at /api/audio. If the API fails or returns nothing, the player simply has
+ * no tracks and hides itself.
  */
 export const AUDIO_PLAYLIST: AudioPlaylistTrack[] = [];
 
@@ -43,8 +43,9 @@ function pickTitle(
 
 /**
  * Fetch active audio tracks from the backend.
- * Returns a normalized playlist ready for the AudioPlayerContext.
- * Returns [] on any error so the player never crashes.
+ * Converts relative /uploads/audio/... paths into full API URLs so the
+ * browser loads them from api.deltagrouptravelumrah.com instead of the
+ * frontend domain.
  */
 export async function fetchAudioPlaylist(lang: string): Promise<AudioPlaylistTrack[]> {
   try {
@@ -57,7 +58,8 @@ export async function fetchAudioPlaylist(lang: string): Promise<AudioPlaylistTra
       .map((t: any) => ({
         id: String(t.id),
         title: pickTitle(t, lang),
-        src: t.audioUrl,
+        // ✅ Convert "/uploads/audio/file.m4a" → full API URL
+        src: getFullImageUrl(t.audioUrl),
         titleEn: t.titleEn || '',
         titleAm: t.titleAm || '',
         titleAr: t.titleAr || '',
