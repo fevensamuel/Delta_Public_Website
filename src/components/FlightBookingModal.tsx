@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { X, Plane, Calendar, Users, Send, Clock, MapPin } from 'lucide-react';
 import { AIRLINE_PARTNERS } from '../data/airlines';
+import { useContactSettings } from '../hooks/useContactSettings';
 
 interface FlightBookingModalProps {
   isOpen: boolean;
@@ -24,6 +25,8 @@ interface FlightBookingForm {
 }
 
 export const FlightBookingModal: React.FC<FlightBookingModalProps> = ({ isOpen, onClose }) => {
+  const { whatsappNumber } = useContactSettings();
+
   const [formData, setFormData] = useState<FlightBookingForm>({
     airline: '',
     departureDate: '',
@@ -42,7 +45,7 @@ export const FlightBookingModal: React.FC<FlightBookingModalProps> = ({ isOpen, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const selectedAirline = AIRLINE_PARTNERS.find(a => a.id === formData.airline);
 
     // Format a yyyy-mm-dd value as e.g. "17 Sep 2026" (falls back to raw value)
@@ -96,14 +99,13 @@ export const FlightBookingModal: React.FC<FlightBookingModalProps> = ({ isOpen, 
 
     const message = lines.join('\n');
 
-    // Encode for WhatsApp
+    // ✅ Dynamic WhatsApp number from admin settings
+    const cleanWhatsApp = (whatsappNumber || '251910136747').replace(/[^0-9]/g, '');
+
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/251910136747?text=${encodedMessage}`;
-    
-    // Open WhatsApp
+    const whatsappUrl = `https://wa.me/${cleanWhatsApp}?text=${encodedMessage}`;
+
     window.open(whatsappUrl, '_blank');
-    
-    // Close modal
     onClose();
   };
 
