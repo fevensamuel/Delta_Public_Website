@@ -77,8 +77,11 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
   const t = translations[lang] || translations.EN;
   const [socialLinks, setSocialLinks] = useState<SocialLink[]>([]);
   const [loading, setLoading] = useState(true);
-  const { whatsappNumber } = useContactSettings();
+  const { phoneNumber, whatsappNumber } = useContactSettings();
 
+  // Dynamic first phone; the other two stay hardcoded
+  const displayPhone = phoneNumber || '+251 91 013 6747';
+  const cleanPhone = (phoneNumber || '+251910136747').replace(/[^0-9+]/g, '');
   const cleanWhatsApp = (whatsappNumber || '251910136747').replace(/[^0-9]/g, '');
 
   useEffect(() => {
@@ -162,11 +165,11 @@ export const Footer: React.FC<FooterProps> = ({ setActivePage, lang }) => {
                 <Phone className="w-4 h-4 text-[#A6853A] flex-shrink-0 mt-0.5" />
                 <div className="flex flex-col gap-1 text-[#B8B2A6]">
                   <a
-                    href="tel:+251910136747"
+                    href={`tel:${cleanPhone}`}
                     dir="ltr"
                     className="whitespace-nowrap hover:text-[#D8B978] transition-colors inline-block text-start"
                   >
-                    +251 91 013 6747
+                    {displayPhone}
                   </a>
                   <a
                     href="tel:+251956585555"

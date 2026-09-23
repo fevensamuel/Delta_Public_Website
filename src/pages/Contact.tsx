@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { OfficeImage, Language, PackageItem, PageId, Currency } from '../types';
 import { PageBanner } from '../components/PageBanner';
 import { useScrollReveal } from '../hooks/useScrollReveal';
+import { useContactSettings } from '../hooks/useContactSettings';
 import { translations } from '../translations';
 import { getPublicOfficeImagesApi } from '../api/officeImages';
 import { getFullImageUrl } from '../api/client';
@@ -39,7 +40,12 @@ export const Contact: React.FC<OfficeProps> = ({
 
   useScrollReveal([]);
   const { rate } = useExchangeRate();
-  
+  const { phoneNumber, whatsappNumber } = useContactSettings();
+
+  // Dynamic display values — first number of each pair is dynamic; the rest stay hardcoded
+  const displayPhone = phoneNumber || '+251 91 013 6747';
+  const displayWhatsApp = whatsappNumber || '+251 91 013 6747';
+
   // Office images state
   const [images, setImages] = useState<OfficeImage[]>([]);
   const [loadingImages, setLoadingImages] = useState(true);
@@ -121,7 +127,7 @@ export const Contact: React.FC<OfficeProps> = ({
           .replace('{ref}', refNo);
 
         onTriggerSmsToast(
-          phone || '+251 91 013 6747',
+          phone || displayPhone,
           formattedMsg
         );
       }
@@ -267,10 +273,10 @@ export const Contact: React.FC<OfficeProps> = ({
               <div>
                 <h4 className="font-serif font-medium text-[#1A1712] text-sm">{t.phoneLines}</h4>
                 <p className="text-[#6B655A] mt-0.5">
-                  {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
+                  {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">{displayPhone}</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
                 </p>
                 <p className="text-[#6B655A]">
-                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
+                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">{displayWhatsApp}</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
                 </p>
               </div>
             </div>
