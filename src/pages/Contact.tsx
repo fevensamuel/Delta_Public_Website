@@ -276,7 +276,7 @@ export const Contact: React.FC<OfficeProps> = ({
                   {t.mainHotline || "Main Hotline"}: <span dir="ltr" className="whitespace-nowrap inline-block">{displayPhone}</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 658 5555</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 95 659 5555</span>
                 </p>
                 <p className="text-[#6B655A]">
-                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">{displayWhatsApp}</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 013 6747</span>
+                  {t.whatsapp || "WhatsApp"}: <span dir="ltr" className="whitespace-nowrap inline-block">{displayWhatsApp}</span> / <span dir="ltr" className="whitespace-nowrap inline-block">+251 91 049 3349</span>
                 </p>
               </div>
             </div>
