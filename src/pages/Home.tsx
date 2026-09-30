@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { 
   PackageItem, 
   Language, 
@@ -116,11 +116,15 @@ export const Home: React.FC<HomeProps> = ({
   const [testimonials, setTestimonials] = useState<Testimonial[]>(FALLBACK_TESTIMONIALS);
   const [loading, setLoading] = useState(true);
 
+  // ✅ Track when data was last loaded so we don't spam the API on every tab switch
+  const lastLoadRef = useRef<number>(0);
+
   // Reveal sections as they scroll into view
   useScrollReveal([loading, packages.length, gallery.length]);
 
   const loadHomeData = useCallback(async () => {
     setLoading(true);
+    lastLoadRef.current = Date.now(); // ✅ record load time
     try {
       const [pkgData, galData, testimonialData] = await Promise.all([
         fetchPackages(undefined, lang),
@@ -170,15 +174,25 @@ export const Home: React.FC<HomeProps> = ({
     setActiveTestimonialIdx((i) => (i - 1 + testimonials.length) % testimonials.length);
   };
 
+  // ✅ Throttled refetch — only reload if data is older than 5 minutes
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
+    const STALE_MS = 5 * 60 * 1000; // 5 minutes
+
+    const maybeReload = () => {
+      if (Date.now() - lastLoadRef.current > STALE_MS) {
         loadHomeData();
       }
     };
-    const handleFocus = () => {
-      loadHomeData();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        maybeReload();
+      }
     };
+    const handleFocus = () => {
+      maybeReload();
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('focus', handleFocus);
     return () => {
