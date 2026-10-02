@@ -5,6 +5,9 @@ import { X, Plane, Calendar, Users, Send, Clock, MapPin } from 'lucide-react';
 import { AIRLINE_PARTNERS } from '../data/airlines';
 import { useContactSettings } from '../hooks/useContactSettings';
 
+const API_BASE_URL =
+  (import.meta as any).env?.VITE_API_URL || 'http://localhost:3000/api';
+
 interface FlightBookingModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -59,8 +62,44 @@ export const FlightBookingModal: React.FC<FlightBookingModalProps> = ({ isOpen, 
     const tripType = formData.returnDate ? 'Return trip' : 'One way';
     const passengerWord = Number(formData.passengers) === 1 ? 'passenger' : 'passengers';
 
+    // ============================================================
+    // ✅ Save to backend FIRST (fire-and-forget — don't block WhatsApp)
+    // ============================================================
+    try {
+      const tripTypeForDB = formData.returnDate ? 'Round Trip' : 'One Way';
+      fetch(`${API_BASE_URL}/flight-inquiries`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fullName: formData.fullName,
+          phone: formData.phone,
+          email: formData.email,
+          fromCity: formData.from,
+          destination: formData.destination,
+          departureDate: formData.departureDate,
+          returnDate: formData.returnDate,
+          tripType: tripTypeForDB,
+          passengers: Number(formData.passengers) || 1,
+          cabinClass: formData.cabinClass,
+          preferredAirline: selectedAirline?.name || '',
+          notes: formData.notes,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('✅ Flight inquiry saved to backend:', data);
+        })
+        .catch((err) => {
+          console.warn('⚠️ Failed to save flight inquiry to backend:', err);
+        });
+    } catch (err) {
+      console.warn('⚠️ Flight inquiry save error:', err);
+    }
+
+    // ============================================================
     // Only include lines the user actually filled in, so the message
     // never shows empty values like "N/A".
+    // ============================================================
     const lines: string[] = [
       'Hello Delta Travel & Tour,',
       '',
