@@ -12,6 +12,7 @@ import { formatPrice, formatPriceRange } from '../utils/formatPrice';
 import { subscribePhoneSms, trackAndOpenWhatsApp, fetchPackages, fetchGalleryItems, getFullImageUrl } from '../api/client';
 import { useExchangeRate } from '../api/exchangeRate';
 import { getPublicTestimonialsApi } from '../api/testimonials';
+import { VideoThumbnail } from '../components/VideoThumbnail';
 import { FlightBookingModal } from '../components/FlightBookingModal';
 import { AIRLINE_PARTNERS } from '../data/airlines';
 import { useScrollReveal } from '../hooks/useScrollReveal';
@@ -648,9 +649,13 @@ export const Home: React.FC<HomeProps> = ({
                 {fullImageUrl ? (
                   <img src={fullImageUrl} alt={item.titleEn} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                 ) : isVideoItem ? (
-                  <div className="w-full h-full bg-[#17130F] flex items-center justify-center">
-                    <Video className="w-7 h-7 text-[#A6853A] opacity-60" />
-                  </div>
+                  <VideoThumbnail
+                    thumbnailUrl={item.thumbnailUrl}
+                    imageUrl={item.imageUrl}
+                    videoUrl={item.videoUrl}
+                    alt={item.titleEn}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <ImageIcon className="w-7 h-7 text-[#C9C2B3] opacity-60" />

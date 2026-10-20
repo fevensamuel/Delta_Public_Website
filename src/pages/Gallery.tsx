@@ -3,6 +3,7 @@ import { GalleryItem, Language } from '../types';
 import { PageBanner } from '../components/PageBanner';
 import { useScrollReveal } from '../hooks/useScrollReveal';
 import { fetchGalleryItems, getFullImageUrl } from '../api/client';
+import { VideoThumbnail } from '../components/VideoThumbnail';
 import { translations } from '../translations';
 import { 
   X, 
@@ -249,7 +250,15 @@ export const Gallery: React.FC<GalleryProps> = ({ lang }) => {
                   className="group relative bg-white overflow-hidden shadow-sm border border-black/[0.08] cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col aspect-[16/10]"
                 >
                   <div className="w-full h-full relative overflow-hidden bg-[#0E0C0A]">
-                    {imageUrl ? (
+                    {item.type === 'video' ? (
+                      <VideoThumbnail
+                        thumbnailUrl={item.thumbnailUrl}
+                        imageUrl={item.imageUrl}
+                        videoUrl={item.videoUrl}
+                        alt={(lang || '').toUpperCase() === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : imageUrl ? (
                       <img
                         src={imageUrl}
                         alt={(lang || '').toUpperCase() === 'AR' ? (item.titleAr || item.titleEn) : item.titleEn}
