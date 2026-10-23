@@ -84,7 +84,7 @@ export const Contact: React.FC<OfficeProps> = ({
   const loadPackages = async () => {
     setLoadingPackages(true);
     try {
-      const data = await fetchPackages();
+      const data = (await fetchPackages()).filter((p: any) => p.status !== 'Inactive');
       setPackages(data);
       if (data.length > 0) {
         const firstPkg = data[0];

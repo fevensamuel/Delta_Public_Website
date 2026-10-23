@@ -130,6 +130,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
 
         <div className="p-5 sm:p-6 max-h-[75vh] overflow-y-auto space-y-6 text-xs sm:text-sm">
           
+          {pkg.status !== 'Inactive' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="bg-[#F1EBE0] p-4 border border-[#E7C6C6]">
               <div className="flex items-center justify-between">
@@ -148,6 +149,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
               </div>
             </div>
           </div>
+          )}
 
           {hasDiscounts && pkg.discounts && (
             <div className="bg-emerald-50 p-4 border border-emerald-200">
@@ -247,6 +249,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
             </div>
           </div>
 
+              {pkg.status !== 'Inactive' && (
           <div className="bg-[#0E0C0A] text-white p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="space-y-1 text-center sm:text-left rtl:sm:text-right">
               <h5 className="font-bold text-sm text-white">{t.haveQuestions || 'Have Questions About This Package?'}</h5>
@@ -282,6 +285,7 @@ export const PackageDetailModal: React.FC<PackageDetailModalProps> = ({
               </a>
             </div>
           </div>
+          )}
 
         </div>
       </div>

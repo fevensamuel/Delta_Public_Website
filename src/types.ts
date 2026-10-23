@@ -119,6 +119,7 @@ export interface PackageItem {
   itinerary: ItineraryDay[];
   whatsappClicks?: number;
   isActive?: boolean;
+  status?: 'Active' | 'Inactive' | 'Archived';
   createdAt?: string;
   updatedAt?: string;
 }

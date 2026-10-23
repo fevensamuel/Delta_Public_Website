@@ -65,6 +65,12 @@ export const Packages: React.FC<PackagesProps> = ({
       return true;
     })
     .sort((a, b) => {
+      if (sortBy === 'price-asc' || sortBy === 'price-desc') {
+        const aNoPrice = a.status === 'Inactive';
+        const bNoPrice = b.status === 'Inactive';
+        if (aNoPrice !== bNoPrice) return aNoPrice ? 1 : -1;
+        if (aNoPrice && bNoPrice) return 0;
+      }
       if (sortBy === 'price-asc') return (a.priceUsd ?? a.price) - (b.priceUsd ?? b.price);
       if (sortBy === 'price-desc') return (b.priceUsd ?? b.price) - (a.priceUsd ?? a.price);
       if (sortBy === 'rating') return (b.rating || 0) - (a.rating || 0);
@@ -292,9 +298,11 @@ export const Packages: React.FC<PackagesProps> = ({
                       <span className="bg-[#0E0C0A]/80 backdrop-blur-md px-2.5 py-1 border border-white/10/50 text-[11px] flex items-center gap-1">
                         <Clock className="w-3 h-3 text-[#A6853A]" /> {pkg.durationDays} Days
                       </span>
+                      {pkg.status !== 'Inactive' && (
                       <div className="bg-white text-[#7A0C1F] font-medium text-xs px-3 py-1.5 shadow">
                         <span>{priceDisplay}</span>
                       </div>
+                        )}
                     </div>
                   </div>
 

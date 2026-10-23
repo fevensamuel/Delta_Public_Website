@@ -393,8 +393,12 @@ export const Home: React.FC<HomeProps> = ({
                 </div>
 
                 <div className="pt-5 border-t border-black/[0.08] mt-auto flex items-baseline justify-between">
-                  <span className="text-xs text-[#6B655A]">{t.perPerson}</span>
-                  <span className="font-serif text-2xl text-[#7A0C1F]">{displayPrice}</span>
+                  {pkg.status !== 'Inactive' && (
+                    <>
+                      <span className="text-xs text-[#6B655A]">{t.perPerson}</span>
+                      <span className="font-serif text-2xl text-[#7A0C1F]">{displayPrice}</span>
+                    </>
+                  )}
                 </div>
 
                 {hasDiscounts && (
