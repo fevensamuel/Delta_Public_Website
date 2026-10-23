@@ -268,11 +268,14 @@ export const Packages: React.FC<PackagesProps> = ({
                 >
                   <div className="relative h-48 overflow-hidden bg-[#F1EBE0]">
                     {fullImageUrl ? (
-                      <img
-                        src={fullImageUrl}
-                        alt={pkg.titleEn || (pkg as any).title || 'Package image'}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
+                                            <>
+                        <img src={fullImageUrl} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover blur-xl scale-125 opacity-60" />
+                        <img
+                          src={fullImageUrl}
+                          alt={pkg.titleEn || (pkg as any).title || 'Package image'}
+                          className="relative w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </>
                     ) : (
                       <div className="w-full h-full bg-[#EAE4D8] flex items-center justify-center text-[#9A9488]">No Image</div>
                     )}

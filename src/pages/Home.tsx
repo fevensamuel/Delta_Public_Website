@@ -372,8 +372,10 @@ export const Home: React.FC<HomeProps> = ({
                 className={`p-8 border-b border-black/[0.08] hover:bg-[#F1EBE0]/60 transition-colors flex flex-col ${idx % 2 === 0 ? 'sm:border-r' : ''} ${idx % 3 !== 2 ? 'lg:border-r' : 'lg:border-r-0'}`}
               >
                 <div className="relative h-44 arch-crop overflow-hidden bg-[#EAE4D8] mb-6">
-                  {imageUrl ? (
-                    <img src={imageUrl} alt={pkg.titleEn} className="w-full h-full object-cover" />
+                  {imageUrl ? (                    <>
+                      <img src={imageUrl} alt="" aria-hidden="true" className="absolute inset-0 w-full h-full object-cover blur-xl scale-125 opacity-60" />
+                      <img src={imageUrl} alt={pkg.titleEn} className="relative w-full h-full object-contain pt-3" />
+                    </>
                   ) : (
                     <div className="w-full h-full flex items-end justify-center pb-4 text-[10px] tracking-wide text-[#9A9488]">
                       {pkg.category}
