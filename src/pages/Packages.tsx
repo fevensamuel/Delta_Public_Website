@@ -409,6 +409,8 @@ export const Packages: React.FC<PackagesProps> = ({
                         <ChevronRight className="w-3.5 h-3.5 rtl:rotate-180" />
                       </button>
 
+                      {pkg.status !== 'Inactive' && (
+
                       <button
                         onClick={() => openWhatsAppForPackage(pkg)}
                         className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 shadow-sm transition-colors flex items-center justify-center gap-1.5"
@@ -422,6 +424,7 @@ export const Packages: React.FC<PackagesProps> = ({
                         </svg>
                         <span>{t.chatOnWhatsApp || 'Chat on WhatsApp'}</span>
                       </button>
+                      )}
                     </div>
                   </div>
                 </div>
