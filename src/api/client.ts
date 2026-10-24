@@ -265,7 +265,7 @@ export function mapPackageToFrontend(backendPkg: any, rate: number, activeLang?:
     }),
     whatsappClicks: backendPkg.whatsappClicks || 0,
     isActive: backendPkg.isActive !== undefined ? backendPkg.isActive : true,
-    status: backendPkg.status || (backendPkg.isActive === false ? 'Archived' : 'Active'),
+        status: backendPkg.status || (backendPkg.isActive === false ? 'Inactive' : 'Active'),
     createdAt: safeString(backendPkg.createdAt, new Date().toISOString()),
     updatedAt: safeString(backendPkg.updatedAt, new Date().toISOString()),
   };
